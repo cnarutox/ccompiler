@@ -284,10 +284,10 @@ int main(void)
 	int n = 1;
 	mylexer lexer;
 	myparser parser;
- 	FILE *stream;
-	errno_t err = freopen_s(&stream, "in.txt", "r", stdin);
-	cout<<'err'<< err << endl;
-	freopen_s(&stream, "out.txt", "w", stdout);
+//  	FILE *stream;
+// 	errno_t err = freopen_s(&stream, "in.txt", "r", stdin);
+// 	cout<<'err'<< err << endl;
+// 	freopen_s(&stream, "out.txt", "w", stdout);
 	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {

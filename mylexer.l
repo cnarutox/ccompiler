@@ -3,7 +3,7 @@
 mylexer.l
 ParserWizard generated Lex file.
 
-Date: 2018Äê10ÔÂ28ÈÕ
+Date: 2018ï¿½ï¿½10ï¿½ï¿½28ï¿½ï¿½
 ****************************************************************************/
 
 #include "myparser.h"
@@ -40,22 +40,21 @@ using namespace std;
 #define ELSE 27
 #define ENUM 28
 #define EXTERN 29
-#define FOR 30
-#define GOTO 31
-#define RETURN 32
-#define REGISTER 33
-#define SIGNED 34
-#define SIZEOF 35
-#define STATIC 36
-#define STRUCT 37
-#define SWITCH 38
-#define TYPEDEF 39
-#define UNION 40
-#define UNSIGNED 41
-#define VOLATILE 42
-#define WHILE 43
-#define COLON 44
-string Words[] = { "END", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID", "SEMICOL", "FOR", "ASSIGN", "NUMBER", "LESS", "ADD", "MINUS", "IF", "MORE", "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST", "CONTINUE", "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "FOR", "GOTO", "RETURN", "REGISTER", "COLON"};
+#define GOTO 30
+#define RETURN 31
+#define REGISTER 32
+#define SIGNED 33
+#define SIZEOF 34
+#define STATIC 35
+#define STRUCT 36
+#define SWITCH 37
+#define TYPEDEF 38
+#define UNION 39
+#define UNSIGNED 40
+#define VOLATILE 41
+#define WHILE 42
+#define COLON 43
+string Words[] = { "END", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID", "SEMICOL", "FOR", "ASSIGN", "NUMBER", "LESS", "ADD", "MINUS", "IF", "MORE", "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST", "CONTINUE", "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN", "REGISTER", "COLON"};
 struct Symbol
 {
 	Symbol(int word, string element, string value = "") :word(word), element(element), value(value) {}
@@ -66,7 +65,7 @@ struct Symbol
 vector<Symbol> symbols;
 void reserve(int word, string element)
 {
-	// ÒÑ´æÔÚ·ûºÅ±íÖÐ
+	// ï¿½Ñ´ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½ï¿½
 	for (int i = 0; i < symbols.size(); i++)
 		if (symbols[i].element == element)
 		{
@@ -78,7 +77,7 @@ void reserve(int word, string element)
 					cout << Words[word] << "\t\t" << element << endl; return;
 			}
 		}
-	//Î´´æÔÚ·ûºÅ±íÖÐ
+	//Î´ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½ï¿½
 	symbols.push_back(Symbol(word, element));
 	switch (word)
 	{
@@ -132,7 +131,7 @@ number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
 {ws}		{}
 void		{reserve(VOID, yytext); }
 main		{reserve(MAIN, yytext); }
-":"         {reverve(COLON, yytext);}
+":"         {reserve(COLON, yytext);}
 "("			{reserve(LP, yytext); }
 ")"			{reserve(RP, yytext); }
 "{"			{reserve(LBRACE, yytext); }
@@ -149,30 +148,30 @@ if			{reserve(IF, yytext); }
 ">"			{reserve(MORE, yytext); }
 "*"			{reserve(MUTIPLY, yytext); }
 "/"			{reserve(DIVIDE, yytext); }
-then        {reverve(THEN, yytext);}     
-break       {reverve(BREAK, yytext);}
-case        {reverve(CASE, yytext);}
-const       {reverve(CONST, yytext);}
-continue    {reverve(CONTINUE, yytext);}
-default     {reverve(DEFAULT, yytext);}
-do          {reverve(DO, yytext);}
-else        {reverve(DOUBLE, yytext);}
-enum        {reverve(ENUM, yytextt);}
-extern      {reverve(EXTERN, yytext);}
-for         {reverve(FLOAT, yytext);}
-goto        {reverve(GOTO, yytext);}
-return      {reverve(RETURN, yytext);}
-register    {reverve(REGISTER, yytext);}
-signed      {reverve(SHORT, yytext);}
-unsigned    {reverve(UNSIGNED, yytext);}
-sizeof      {reverve(SIZEOF, yytext);}
-static      {reverve(STATIC, yytext);}
-struct      {reverve(STRUCT, yytext);}
-switch      {reverve(SWITVH, yytext);}
-typedef     {reverve(TYPEDEF, yytext);}
-union       {reverve(TYPEDEF, yytext);}
-volatile    {reverve(VOLATILE, yytext);}
-while       {reverve(WHILE, yytext);}
+then        {reserve(THEN, yytext);}     
+break       {reserve(BREAK, yytext);}
+case        {reserve(CASE, yytext);}
+const       {reserve(CONST, yytext);}
+continue    {reserve(CONTINUE, yytext);}
+default     {reserve(DEFAULT, yytext);}
+do          {reserve(DO, yytext);}
+else        {reserve(ELSE, yytext);}
+enum        {reserve(ENUM, yytext);}
+extern      {reserve(EXTERN, yytext);}
+for         {reserve(FOR, yytext);}
+goto        {reserve(GOTO, yytext);}
+return      {reserve(RETURN, yytext);}
+register    {reserve(REGISTER, yytext);}
+signed      {reserve(SIGNED, yytext);}
+unsigned    {reserve(UNSIGNED, yytext);}
+sizeof      {reserve(SIZEOF, yytext);}
+static      {reserve(STATIC, yytext);}
+struct      {reserve(STRUCT, yytext);}
+switch      {reserve(SWITCH, yytext);}
+typedef     {reserve(TYPEDEF, yytext);}
+union       {reserve(TYPEDEF, yytext);}
+volatile    {reserve(VOLATILE, yytext);}
+while       {reserve(WHILE, yytext);}
 {id}		{reserve(ID, yytext);}
 %%
 /////////////////////////////////////////////////////////////////////////////
