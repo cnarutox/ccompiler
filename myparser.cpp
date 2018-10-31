@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 21 of your 30 day trial period.
+* You are on day 22 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -19,7 +19,7 @@
 * C++ source file generated from myparser.y.
 * 
 * Date: 10/31/18
-* Time: 10:50:01
+* Time: 16:38:57
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -284,10 +284,9 @@ int main(void)
 	int n = 1;
 	mylexer lexer;
 	myparser parser;
-//  	FILE *stream;
-// 	errno_t err = freopen_s(&stream, "in.txt", "r", stdin);
-// 	cout<<'err'<< err << endl;
-// 	freopen_s(&stream, "out.txt", "w", stdout);
+  	//FILE *stream;
+	//freopen_s(&stream, "in.txt", "r", stdin);
+	//freopen_s(&stream, "out.txt", "w", stdout);
 	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {
