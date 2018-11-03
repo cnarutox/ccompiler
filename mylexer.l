@@ -138,6 +138,7 @@ id		({letter}|_)({letter}|{digit}|_)*
 number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
 literal \"(\\.|[^"\\])*\"
 annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
+//annotation "/*".*"*/"
 %%
 /////////////////////////////////////////////////////////////////////////////
 // rules section
@@ -163,6 +164,7 @@ int|float|char|double|short	{reserve(TYPE, yytext); }
 ;			{reserve(SEMICOL, yytext); }
 for			{reserve(FOR, yytext); }
 "="			{reserve(ASSIGN, yytext); }
+{number}+{id}	{reserve(END, yytext);}
 {number}	{reserve(NUMBER, yytext); }
 "<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
 "+"			{reserve(ADD, yytext); }
