@@ -23,11 +23,11 @@ using namespace std;
 #define FOR 10
 #define ASSIGN 11
 #define NUMBER 12
-#define LESS 13
+#define COMPARISON 13
 #define ADD 14
 #define MINUS 15
 #define IF 16
-#define MORE 17
+#define ANNOTATION 17
 #define MUTIPLY 18
 #define DIVIDE 19
 #define THEN 20
@@ -54,13 +54,14 @@ using namespace std;
 #define VOLATILE 41
 #define WHILE 42
 #define COLON 43
+#define LITERAL 44
 string Words[] = {
     "END", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
-    "SEMICOL", "FOR", "ASSIGN", "NUMBER", "LESS", "ADD", "MINUS", "IF", "MORE",
+    "SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF", "ANNOTATION",
     "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST", "CONTINUE",
     "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN", "REGISTER",
     "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE", "UNION ",
-    "UNSIGN", "VOLATI", "WHILE", "COLON"
+    "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL"
 };
 struct Symbol
 {
@@ -79,7 +80,8 @@ void reserve(int word, string element)
 			switch (word)
 			{
 				case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols[i] << endl; return;
-				case NUMBER: cout << Words[word] << "\t\t" << element << "\t\t" << element << endl; return;
+				case NUMBER: 
+				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << endl; return;
 				default:
 					cout << Words[word] << "\t\t" << element << endl; return;
 			}
@@ -89,10 +91,19 @@ void reserve(int word, string element)
 	switch (word)
 	{
 		case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols.back() << endl; return;
-		case NUMBER: cout << Words[word] << "\t\t" << element << "\t\t" << element << endl; return;
+		case NUMBER: 
+		case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << endl; return;
 		default:
 			cout << Words[word] << "\t\t" << element << endl; return;
 	}
+}
+
+void comment()
+{
+	char c;
+	cin >> c;
+    while (c != '\n')
+        cin >> c;
 }
 
 %}
@@ -125,6 +136,8 @@ letter	[A-Za-z]
 digit	[0-9]
 id		{letter}({letter}|{digit})*
 number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
+literal \"(\\.|[^"\\])*\"
+annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
 %%
 /////////////////////////////////////////////////////////////////////////////
 // rules section
@@ -136,6 +149,9 @@ number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
 
 // place your Lex rules here
 {ws}		{}
+{annotation}		{}
+{literal}   {reserve(LITERAL, yytext);}
+"//"		comment();
 void		{reserve(VOID, yytext); }
 main		{reserve(MAIN, yytext); }
 ":"         {reserve(COLON, yytext);}
@@ -143,18 +159,16 @@ main		{reserve(MAIN, yytext); }
 ")"			{reserve(RP, yytext); }
 "{"			{reserve(LBRACE, yytext); }
 "}"			{reserve(RBRACE, yytext); }
-int|float|char|double|float|short	{reserve(TYPE, yytext); }
+int|float|char|double|short	{reserve(TYPE, yytext); }
 ;			{reserve(SEMICOL, yytext); }
 for			{reserve(FOR, yytext); }
 "="			{reserve(ASSIGN, yytext); }
 {number}	{reserve(NUMBER, yytext); }
-"<"			{reserve(LESS, yytext); }
+"<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
 "+"			{reserve(ADD, yytext); }
 "-"			{reserve(MINUS, yytext); }
 if			{reserve(IF, yytext); }
-">"			{reserve(MORE, yytext); }
 "*"			{reserve(MUTIPLY, yytext); }
-"/"			{reserve(DIVIDE, yytext); }
 then        {reserve(THEN, yytext);}     
 break       {reserve(BREAK, yytext);}
 case        {reserve(CASE, yytext);}
@@ -176,7 +190,7 @@ static      {reserve(STATIC, yytext);}
 struct      {reserve(STRUCT, yytext);}
 switch      {reserve(SWITCH, yytext);}
 typedef     {reserve(TYPEDEF, yytext);}
-union       {reserve(TYPEDEF, yytext);}
+union       {reserve(UNION, yytext);}
 volatile    {reserve(VOLATILE, yytext);}
 while       {reserve(WHILE, yytext);}
 {id}		{reserve(ID, yytext);}
