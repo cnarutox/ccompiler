@@ -19,7 +19,11 @@
 * C++ source file generated from myparser.y.
 * 
 * Date: 10/31/18
+<<<<<<< HEAD
 * Time: 16:38:57
+=======
+* Time: 16:30:45
+>>>>>>> Fix bugs.
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -284,9 +288,15 @@ int main(void)
 	int n = 1;
 	mylexer lexer;
 	myparser parser;
+<<<<<<< HEAD
   	//FILE *stream;
 	//freopen_s(&stream, "in.txt", "r", stdin);
 	//freopen_s(&stream, "out.txt", "w", stdout);
+=======
+// 	FILE *stream;
+// 	freopen_s(&stream, "in.txt", "r", stdin);
+// 	freopen_s(&stream, "out.txt", "w", stdout);
+>>>>>>> Fix bugs.
 	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {

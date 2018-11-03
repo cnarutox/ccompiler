@@ -19,7 +19,11 @@
 # YACC verbose file generated from myparser.y.
 # 
 # Date: 10/31/18
+<<<<<<< HEAD
 # Time: 16:38:57
+=======
+# Time: 16:30:45
+>>>>>>> Fix bugs.
 # 
 # AYACC Version: 2.07
 #############################################################################

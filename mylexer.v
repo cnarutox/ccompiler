@@ -19,7 +19,11 @@
 # Lex verbose file generated from mylexer.l.
 # 
 # Date: 10/31/18
+<<<<<<< HEAD
 # Time: 16:38:54
+=======
+# Time: 17:01:27
+>>>>>>> Fix bugs.
 # 
 # ALex Version: 2.07
 #############################################################################
