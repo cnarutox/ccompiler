@@ -6,6 +6,10 @@ ReadOnly=0
 WindowPlacement1=0 1 -1 -1 -8 -31 0 0 766 768
 WindowOrder1=1
 Position001=0 1
+<<<<<<< Updated upstream
 Cursor001=23 13 23 13
+=======
+Cursor001=14 16 14 16
+>>>>>>> Stashed changes
 SyntaxColouring=2
 TargetSyntaxColouring=3

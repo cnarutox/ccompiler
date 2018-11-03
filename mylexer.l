@@ -134,7 +134,7 @@ delim	[ \t\n]
 ws		{delim}+
 letter	[A-Za-z]
 digit	[0-9]
-id		{letter}({letter}|{digit})*
+id		({letter}|_)({letter}|{digit}|_)*
 number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
 literal \"(\\.|[^"\\])*\"
 annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
@@ -194,6 +194,7 @@ union       {reserve(UNION, yytext);}
 volatile    {reserve(VOLATILE, yytext);}
 while       {reserve(WHILE, yytext);}
 {id}		{reserve(ID, yytext);}
+.			{reserve(END, yytext);}
 %%
 /////////////////////////////////////////////////////////////////////////////
 // programs section
