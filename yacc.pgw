@@ -3,37 +3,9 @@ WindowPlacement=2 3 -1 -1 -1 -1 245 70 1397 693
 [Editor1]
 FileName=.\myparser.y
 ReadOnly=0
-<<<<<<< HEAD
-WindowPlacement1=0 1 -1 -1 -8 -31 0 0 384 768
-WindowOrder1=2
+WindowPlacement1=0 1 -1 -1 -8 -31 0 0 766 768
+WindowOrder1=1
 Position001=0 1
-Cursor001=14 16 14 16
-=======
-WindowPlacement1=0 1 -1 -1 -8 -31 1012 0 1532 768
-WindowOrder1=2
-Position001=0 22
-Cursor001=1 24 1 24
->>>>>>> Fix bugs.
+Cursor001=23 13 23 13
 SyntaxColouring=2
 TargetSyntaxColouring=3
-[Editor2]
-FileName=.\mylexer.l
-ReadOnly=0
-<<<<<<< HEAD
-WindowPlacement1=2 3 -1 -1 -8 -31 85 -14 1195 754
-WindowOrder1=1
-Position001=322 11
-Cursor001=17 25 17 25
-=======
-WindowPlacement1=0 1 -1 -1 -1 -1 0 0 1532 768
-WindowOrder1=1
-Position001=0 32
-Cursor001=57 60 57 60
->>>>>>> Fix bugs.
-SyntaxColouring=1
-TargetSyntaxColouring=3
-[Output]
-WindowPlacement1=0 1 -1 -1 -1 -1 78 78 1376 612
-WindowOrder1=3
-Position1=0 1
-Cursor1=0 4 0 4
