@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 22 of your 30 day trial period.
+* You are on day 25 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,12 +18,8 @@
 * mylexer.cpp
 * C++ source file generated from mylexer.l.
 * 
-* Date: 10/31/18
-<<<<<<< HEAD
-* Time: 16:38:54
-=======
-* Time: 17:01:27
->>>>>>> Fix bugs.
+* Date: 11/03/18
+* Time: 21:30:32
 * 
 * ALex Version: 2.07
 ****************************************************************************/
@@ -95,9 +91,6 @@ using namespace std;
 #define VOLATILE 41
 #define WHILE 42
 #define COLON 43
-<<<<<<< HEAD
-string Words[] = { "END", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID", "SEMICOL", "FOR", "ASSIGN", "NUMBER", "LESS", "ADD", "MINUS", "IF", "MORE", "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST", "CONTINUE", "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN", "REGISTER", "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDEF", "UNION", "UNSIGNED", "VOLATILE", "WHILE", "COLON"};
-=======
 string Words[] = {
     "END", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
     "SEMICOL", "FOR", "ASSIGN", "NUMBER", "LESS", "ADD", "MINUS", "IF", "MORE",
@@ -106,7 +99,6 @@ string Words[] = {
     "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE", "UNION ",
     "UNSIGN", "VOLATI", "WHILE", "COLON"
 };
->>>>>>> Fix bugs.
 struct Symbol
 {
 	Symbol(int word, string element, string value = "") :word(word), element(element), value(value) {}
