@@ -124,7 +124,7 @@ void reserve(int word, string element)
 // place any declarations here
 delim	[ \t\n]
 ws		{delim}+
-letter	[A-Za-z]
+letter	[A-Za-z_]
 digit	[0-9]
 id		{letter}({letter}|{digit})*
 number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
@@ -142,8 +142,8 @@ single \/\/[^\n]*
 
 // place your Lex rules here
 {ws}		{}
-{annotation}	{}
-{single}	{}
+{annotation}	{printf("%s\n", yytext);}
+{single}	{printf("%s\n", yytext);}
 {literal}   {reserve(LITERAL, yytext);}
 void		{reserve(VOID, yytext); }
 main		{reserve(MAIN, yytext); }
@@ -156,6 +156,7 @@ int|float|char|double|short	{reserve(TYPE, yytext); }
 ;			{reserve(SEMICOL, yytext); }
 for			{reserve(FOR, yytext); }
 "="			{reserve(ASSIGN, yytext); }
+{number}+{id}	{reserve(END, yytext);}
 {number}	{reserve(NUMBER, yytext); }
 "<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
 "+"			{reserve(ADD, yytext); }
@@ -188,6 +189,7 @@ union       {reserve(UNION, yytext);}
 volatile    {reserve(VOLATILE, yytext);}
 while       {reserve(WHILE, yytext);}
 {id}		{reserve(ID, yytext);}
+.			{reserve(END, yytext);}
 %%
 /////////////////////////////////////////////////////////////////////////////
 // programs section
