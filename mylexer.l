@@ -109,6 +109,7 @@ void comment(string val)
 	for (int i = 0; i < val.length(); i++)
 		if(val[i] == '\n')
 			Line++;
+	cout << val << endl;
 }
 
 %}
@@ -156,7 +157,7 @@ single \/\/[^\n]*
 // place your Lex rules here
 {ws}		{}
 {annotation}	{comment(yytext);}
-{single}	{printf("%s\n", yytext);}
+{single}	{comment(yytext);}
 {literal}   {reserve(LITERAL, yytext);}
 \n			{Line++;}
 void		{reserve(VOID, yytext); }
