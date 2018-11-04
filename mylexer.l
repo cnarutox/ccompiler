@@ -138,6 +138,10 @@ id		{letter}({letter}|{digit})*
 number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
 literal \"(\\.|[^"\\])*\"
 annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
+<<<<<<< HEAD
+single \/\/[^\n]*
+=======
+>>>>>>> f1aa43d2b8898dcd0e6e0a0e8d6e473451ebbb72
 %%
 /////////////////////////////////////////////////////////////////////////////
 // rules section
@@ -149,9 +153,15 @@ annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
 
 // place your Lex rules here
 {ws}		{}
+<<<<<<< HEAD
+{annotation}	{}
+{single}	{}
+{literal}   {reserve(LITERAL, yytext);}
+=======
 {annotation}		{}
 {literal}   {reserve(LITERAL, yytext);}
 "//"		comment();
+>>>>>>> f1aa43d2b8898dcd0e6e0a0e8d6e473451ebbb72
 void		{reserve(VOID, yytext); }
 main		{reserve(MAIN, yytext); }
 ":"         {reserve(COLON, yytext);}
@@ -167,6 +177,7 @@ for			{reserve(FOR, yytext); }
 "<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
 "+"			{reserve(ADD, yytext); }
 "-"			{reserve(MINUS, yytext); }
+"/"			{reserve(DIVIDE, yytext);}
 if			{reserve(IF, yytext); }
 "*"			{reserve(MUTIPLY, yytext); }
 then        {reserve(THEN, yytext);}     
