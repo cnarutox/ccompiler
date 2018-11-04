@@ -19,7 +19,7 @@
 * C++ header file generated from mylexer.l.
 * 
 * Date: 11/04/18
-* Time: 11:22:31
+* Time: 11:33:39
 * 
 * ALex Version: 2.07
 ****************************************************************************/
@@ -57,7 +57,7 @@ protected:
 	virtual int yyaction(int action);
 
 public:
-#line 120 ".\\mylexer.l"
+#line 123 ".\\mylexer.l"
 
 	// place any extra class members here
 

@@ -57,14 +57,17 @@ using namespace std;
 #define LITERAL 44
 #define LOGIC 45
 #define BOOLOP 46
+#define LSQUBRAC 47
+#define RSQUBRAC 48
 int Line = 1;
 string Words[] = {
     "ERROR", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
-    "SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF", "ANNOTATION",
-    "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST", "CONTINUE",
-    "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN", "REGISTER",
-    "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE", "UNION ",
-    "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL", "LOGIC", "BOOLOP"
+    "SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF",
+    "ANNOTATION", "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST",
+    "CONTINUE", "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN",
+    "REGISTER", "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE",
+    "UNION ", "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL", "LOGIC",
+    "BOOLOP", "LSQUBRAC", "RSQUBRAC"
 };
 struct Symbol
 {
@@ -163,6 +166,8 @@ main		{reserve(MAIN, yytext); }
 ")"			{reserve(RP, yytext); }
 "{"			{reserve(LBRACE, yytext); }
 "}"			{reserve(RBRACE, yytext); }
+"["			{reserve(RBRACE, yytext); }
+"]"			{reserve(RBRACE, yytext); }
 int|float|char|double|short	{reserve(TYPE, yytext); }
 ;			{reserve(SEMICOL, yytext); }
 for			{reserve(FOR, yytext); }
