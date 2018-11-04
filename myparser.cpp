@@ -18,8 +18,8 @@
 * myparser.cpp
 * C++ source file generated from myparser.y.
 * 
-* Date: 11/03/18
-* Time: 21:30:32
+* Date: 11/04/18
+* Time: 09:35:41
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -236,7 +236,7 @@ void YYPARSERNAME::yytables()
 	yytokenaction_size = 2;
 
 	static const yytokenaction_t YYNEARFAR YYBASED_CODE tokenaction[] = {
-		{ 3, YYAT_ACCEPT, 0 },
+		{ 2, YYAT_ACCEPT, 0 },
 		{ 0, YYAT_SHIFT, 1 }
 	};
 	yytokenaction = tokenaction;
@@ -244,16 +244,16 @@ void YYPARSERNAME::yytables()
 	static const yystateaction_t YYNEARFAR YYBASED_CODE stateaction[] = {
 		{ -256, 1, YYAT_ERROR, 0 },
 		{ 0, 0, YYAT_REDUCE, 2 },
-		{ 0, 0, YYAT_REDUCE, 1 },
-		{ 0, 1, YYAT_ERROR, 0 }
+		{ 0, 1, YYAT_ERROR, 0 },
+		{ 0, 0, YYAT_REDUCE, 1 }
 	};
 	yystateaction = stateaction;
 
 	yynontermgoto_size = 2;
 
 	static const yynontermgoto_t YYNEARFAR YYBASED_CODE nontermgoto[] = {
-		{ 0, 3 },
-		{ 0, 2 }
+		{ 0, 2 },
+		{ 0, 3 }
 	};
 	yynontermgoto = nontermgoto;
 
@@ -284,9 +284,9 @@ int main(void)
 	int n = 1;
 	mylexer lexer;
 	myparser parser;
-// 	FILE *stream;
-// 	freopen_s(&stream, "in.txt", "r", stdin);
-// 	freopen_s(&stream, "out.txt", "w", stdout);
+//  FILE *stream;
+//	freopen_s(&stream, "in.txt", "r", stdin);
+//	freopen_s(&stream, "out.txt", "w", stdout);
 	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {

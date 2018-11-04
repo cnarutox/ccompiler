@@ -18,8 +18,8 @@
 # myparser.v
 # YACC verbose file generated from myparser.y.
 # 
-# Date: 11/03/18
-# Time: 21:30:32
+# Date: 11/04/18
+# Time: 09:35:41
 # 
 # AYACC Version: 2.07
 #############################################################################
@@ -45,8 +45,8 @@ state 0
 
 	object  shift 1
 
-	obj  goto 2
-	sectence  goto 3
+	sectence  goto 2
+	obj  goto 3
 
 
 state 1
@@ -56,15 +56,15 @@ state 1
 
 
 state 2
-	sectence : obj .  (1)
-
-	.  reduce 1
-
-
-state 3
 	$accept : sectence . $end  (0)
 
 	$end  accept
+
+
+state 3
+	sectence : obj .  (1)
+
+	.  reduce 1
 
 
 ##############################################################################
