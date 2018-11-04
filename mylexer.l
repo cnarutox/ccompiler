@@ -134,11 +134,10 @@ delim	[ \t\n]
 ws		{delim}+
 letter	[A-Za-z]
 digit	[0-9]
-id		({letter}|_)({letter}|{digit}|_)*
+id		{letter}({letter}|{digit})*
 number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
 literal \"(\\.|[^"\\])*\"
 annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
-//annotation "/*".*"*/"
 %%
 /////////////////////////////////////////////////////////////////////////////
 // rules section
@@ -164,7 +163,6 @@ int|float|char|double|short	{reserve(TYPE, yytext); }
 ;			{reserve(SEMICOL, yytext); }
 for			{reserve(FOR, yytext); }
 "="			{reserve(ASSIGN, yytext); }
-{number}+{id}	{reserve(END, yytext);}
 {number}	{reserve(NUMBER, yytext); }
 "<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
 "+"			{reserve(ADD, yytext); }
@@ -196,7 +194,6 @@ union       {reserve(UNION, yytext);}
 volatile    {reserve(VOLATILE, yytext);}
 while       {reserve(WHILE, yytext);}
 {id}		{reserve(ID, yytext);}
-.			{reserve(END, yytext);}
 %%
 /////////////////////////////////////////////////////////////////////////////
 // programs section
