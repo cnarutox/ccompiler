@@ -10,7 +10,7 @@ Date: 2018��10��28��
 #include <vector>
 #include <string>
 using namespace std;
-#define END 0
+#define ERROR 0
 #define VOID 1
 #define MAIN 2
 #define LP 3  
@@ -56,7 +56,7 @@ using namespace std;
 #define COLON 43
 #define LITERAL 44
 string Words[] = {
-    "END", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
+    "ERROR", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
     "SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF", "ANNOTATION",
     "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST", "CONTINUE",
     "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN", "REGISTER",
@@ -156,7 +156,7 @@ int|float|char|double|short	{reserve(TYPE, yytext); }
 ;			{reserve(SEMICOL, yytext); }
 for			{reserve(FOR, yytext); }
 "="			{reserve(ASSIGN, yytext); }
-{number}+{id}	{reserve(END, yytext);}
+{number}+{id}	{reserve(ERROR, yytext);}
 {number}	{reserve(NUMBER, yytext); }
 "<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
 "+"			{reserve(ADD, yytext); }
@@ -189,7 +189,7 @@ union       {reserve(UNION, yytext);}
 volatile    {reserve(VOLATILE, yytext);}
 while       {reserve(WHILE, yytext);}
 {id}		{reserve(ID, yytext);}
-.			{reserve(END, yytext);}
+.			{reserve(ERROR, yytext);}
 %%
 /////////////////////////////////////////////////////////////////////////////
 // programs section
