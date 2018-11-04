@@ -55,6 +55,7 @@ using namespace std;
 #define WHILE 42
 #define COLON 43
 #define LITERAL 44
+int Line = 1;
 string Words[] = {
     "ERROR", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
     "SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF", "ANNOTATION",
@@ -65,13 +66,14 @@ string Words[] = {
 };
 struct Symbol
 {
-	Symbol(int word, string element, string value = "") :word(word), element(element), value(value) {}
+	Symbol(int word, string element, int line, string value = "") :word(word), element(element), value(value), line(line) {}
 	int word;
 	string element;
 	string value;
+	int line;
 };
 vector<Symbol> symbols;
-void reserve(int word, string element)
+void reserve(int word, string element, int line = Line)
 {
 	// �Ѵ��ڷ��ű���
 	for (int i = 0; i < symbols.size(); i++)
@@ -79,23 +81,29 @@ void reserve(int word, string element)
 		{
 			switch (word)
 			{
-				case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols[i] << endl; return;
+				case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols[i] << "\t\t" << line << endl; return;
 				case NUMBER: 
-				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << endl; return;
+				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << "\t\t" << line << endl; return;
 				default:
-					cout << Words[word] << "\t\t" << element << endl; return;
+					cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl; return;
 			}
 		}
 	//δ���ڷ��ű���
-	symbols.push_back(Symbol(word, element));
+	symbols.push_back(Symbol(word, element, line));
 	switch (word)
 	{
-		case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols.back() << endl; return;
+		case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols.back() << "\t\t" << line << endl; return;
 		case NUMBER: 
-		case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << endl; return;
+		case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << "\t\t" << line << endl; return;
 		default:
-			cout << Words[word] << "\t\t" << element << endl; return;
+			cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl; return;
 	}
+}
+void comment(string val)
+{
+	for (int i = 0; i < val.length(); i++)
+		if(val[i] == '\n')
+			Line++;
 }
 
 %}
@@ -122,7 +130,7 @@ void reserve(int word, string element)
 }
 
 // place any declarations here
-delim	[ \t\n]
+delim	[ \t]
 ws		{delim}+
 letter	[A-Za-z_]
 digit	[0-9]
@@ -142,9 +150,10 @@ single \/\/[^\n]*
 
 // place your Lex rules here
 {ws}		{}
-{annotation}	{printf("%s\n", yytext);}
+{annotation}	{comment(yytext);}
 {single}	{printf("%s\n", yytext);}
 {literal}   {reserve(LITERAL, yytext);}
+\n			{Line++;}
 void		{reserve(VOID, yytext); }
 main		{reserve(MAIN, yytext); }
 ":"         {reserve(COLON, yytext);}

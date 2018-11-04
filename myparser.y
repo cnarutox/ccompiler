@@ -63,7 +63,7 @@ int main(void)
 //  FILE *stream;
 //	freopen_s(&stream, "in.txt", "r", stdin);
 //	freopen_s(&stream, "out.txt", "w", stdout);
-	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ" << endl;
+	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ\t\tÐÐºÅ" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {
 			n = parser.yyparse();
