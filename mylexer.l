@@ -55,6 +55,8 @@ using namespace std;
 #define WHILE 42
 #define COLON 43
 #define LITERAL 44
+#define LOGIC 45
+#define BOOLOP 46
 int Line = 1;
 string Words[] = {
     "ERROR", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
@@ -62,7 +64,7 @@ string Words[] = {
     "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST", "CONTINUE",
     "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN", "REGISTER",
     "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE", "UNION ",
-    "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL"
+    "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL", "LOGIC", "BOOLOP"
 };
 struct Symbol
 {
@@ -171,6 +173,8 @@ for			{reserve(FOR, yytext); }
 "+"			{reserve(ADD, yytext); }
 "-"			{reserve(MINUS, yytext); }
 "/"			{reserve(DIVIDE, yytext);}
+&|"|"|~|"^"	{reserve(LOGIC, yytext);}
+&&|"||"|!	{reserve(BOOLOP, yytext);}
 if			{reserve(IF, yytext); }
 "*"			{reserve(MUTIPLY, yytext); }
 then        {reserve(THEN, yytext);}     
