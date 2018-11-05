@@ -1,0 +1,65 @@
+/Library/Java/JavaVirtualMachines/jdk-11.0.1.jdk/Contents/Home/bin/java "-javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=50312:/Applications/IntelliJ IDEA.app/Contents/bin" -Dfile.encoding=UTF-8 -classpath /Users/xuanchuanbu/IdeaProjects/Compiler/out/production/Compiler Parser
+STATE: FILE
+src/in.c
+|       TYPE |      VALUE |      QUOTE |
+| ANNOTATION |    AnnoLin |       null |
+| ANNOTATION |  AnnoBlock |       null |
+|      ARRAY |    {1,2,3} |       null |
+|        INT |        int |       null |
+|     LBRACE |          { |       null |
+|         RP |          ) |       null |
+|         LP |          ( |       null |
+|       MAIN |       main |       null |
+|        INT |        int |       null |
+|    SEMICOL |          ; |       null |
+|     ASSIGN |          = |       null |
+|        INT |        int |       null |
+|    SEMICOL |          ; |       null |
+|     NUMBER |          0 |       null |
+|     ASSIGN |          = |       null |
+|        INT |        int |       null |
+|         LP |          ( |       null |
+|        FOR |        for |       null |
+|     LBRACE |          { |       null |
+|         RP |          ) |       null |
+|        ADD |          + |       null |
+|        ADD |          + |       null |
+|    SEMICOL |          ; |       null |
+|     NUMBER |         10 |       null |
+|       LESS |          < |       null |
+|    SEMICOL |          ; |       null |
+|     NUMBER |          0 |       null |
+|     ASSIGN |          = |       null |
+|    SEMICOL |          ; |       null |
+|     ASSIGN |          = |       null |
+|        ADD |          + |       null |
+|     RBRACE |          } |       null |
+|     RBRACE |          } |       null |
+|         ID |        arr | 1347870667 |
+|         ID |          a | 1702146597 |
+@single
+STATE: SINGLE
+int a=0
+|       TYPE |      VALUE |      QUOTE |
+|        INT |        int |       null |
+|     NUMBER |          0 |       null |
+|     ASSIGN |          = |       null |
+|         ID |          a |  519821334 |
+int a=1
+|       TYPE |      VALUE |      QUOTE |
+|        INT |        int |       null |
+|     NUMBER |          1 |       null |
+|     ASSIGN |          = |       null |
+|         ID |          a | 1781256139 |
+@series
+STATE: SERIES
+int a=0
+a=1
+@show
+|       TYPE |      VALUE |      QUOTE |
+|        INT |        int |       null |
+|     NUMBER |          0 |       null |
+|     ASSIGN |          = |       null |
+|     NUMBER |          1 |       null |
+|     ASSIGN |          = |       null |
+|         ID |          a | 1307096070 |
