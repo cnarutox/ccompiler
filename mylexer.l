@@ -71,10 +71,10 @@ string Words[] = {
 };
 struct Symbol
 {
-	Symbol(int word, string element, int line, string value = "") :word(word), element(element), value(value), line(line) {}
+	Symbol(int word, string element, int line, Symbol* value = NULL) :word(word), element(element), value(value), line(line) {}
 	int word;
 	string element;
-	string value;
+	Symbol* value = NULL;
 	int line;
 };
 vector<Symbol> symbols;
@@ -86,7 +86,7 @@ void reserve(int word, string element, int line = Line)
 		{
 			switch (word)
 			{
-				case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols[i] << "\t\t" << line << endl; return;
+				case ID: cout << Words[word] << "\t\t" << element << "\t\t" << symbols[i].value << "\t\t" << line << endl; return;
 				case NUMBER: 
 				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << "\t\t" << line << endl; return;
 				default:
@@ -95,6 +95,7 @@ void reserve(int word, string element, int line = Line)
 		}
 	//δ���ڷ��ű���
 	symbols.push_back(Symbol(word, element, line));
+	symbols.back().value = &symbols[symbols.size() - 1];
 	switch (word)
 	{
 		case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols.back() << "\t\t" << line << endl; return;

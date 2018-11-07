@@ -1,7 +1,7 @@
 #############################################################################
 #                     U N R E G I S T E R E D   C O P Y
 # 
-# You are on day 25 of your 30 day trial period.
+# You are on day 29 of your 30 day trial period.
 # 
 # This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 # for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 # myparser.v
 # YACC verbose file generated from myparser.y.
 # 
-# Date: 11/04/18
-# Time: 10:48:25
+# Date: 11/07/18
+# Time: 17:33:06
 # 
 # AYACC Version: 2.07
 #############################################################################
