@@ -285,8 +285,8 @@ int main(void)
 	mylexer lexer;
 	myparser parser;
 //  FILE *stream;
-//	freopen_s(&stream, "in.txt", "r", stdin);
-//	freopen_s(&stream, "out.txt", "w", stdout);
+// 	freopen_s(&stream, "in.txt", "r", stdin);
+// 	freopen_s(&stream, "out.txt", "w", stdout);
 	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ\t\tÐÐºÅ" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {

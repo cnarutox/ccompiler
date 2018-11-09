@@ -1,7 +1,7 @@
 #############################################################################
 #                     U N R E G I S T E R E D   C O P Y
 # 
-# You are on day 29 of your 30 day trial period.
+# You are on day 31 of your 30 day trial period.
 # 
 # This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 # for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 # mylexer.v
 # Lex verbose file generated from mylexer.l.
 # 
-# Date: 11/07/18
-# Time: 17:32:54
+# Date: 11/09/18
+# Time: 20:10:07
 # 
 # ALex Version: 2.07
 #############################################################################
@@ -65,9 +65,9 @@
 
    18  "="
 
-   19  [0-9]+(\.[0-9]+)?(E[+-]?[0-9]+)?+[A-Za-z_]([A-Za-z_]|[0-9])*
+   19  [0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?+[A-Za-z_]([A-Za-z_]|[0-9])*
 
-   20  [0-9]+(\.[0-9]+)?(E[+-]?[0-9]+)?
+   20  [0-9]+(\.[0-9]+)?([Ee][+-]?[0-9]+)?
 
    21  "<"|">"|"<="|">="|"!="|"=="
 
@@ -336,7 +336,9 @@ state 15
 	0x45               goto 50
 	0x46 - 0x5a (21)   goto 49
 	0x5f               goto 49
-	0x61 - 0x7a (26)   goto 49
+	0x61 - 0x64 (4)    goto 49
+	0x65               goto 50
+	0x66 - 0x7a (21)   goto 49
 
 	match 20
 
@@ -927,7 +929,9 @@ state 77
 	0x45               goto 50
 	0x46 - 0x5a (21)   goto 49
 	0x5f               goto 49
-	0x61 - 0x7a (26)   goto 49
+	0x61 - 0x64 (4)    goto 49
+	0x65               goto 50
+	0x66 - 0x7a (21)   goto 49
 
 	match 20
 
@@ -942,7 +946,9 @@ state 79
 	0x45               goto 111
 	0x46 - 0x5a (21)   goto 49
 	0x5f               goto 49
-	0x61 - 0x7a (26)   goto 49
+	0x61 - 0x64 (4)    goto 49
+	0x65               goto 111
+	0x66 - 0x7a (21)   goto 49
 
 	match 19
 
@@ -1269,7 +1275,9 @@ state 110
 	0x45               goto 111
 	0x46 - 0x5a (21)   goto 49
 	0x5f               goto 49
-	0x61 - 0x7a (26)   goto 49
+	0x61 - 0x64 (4)    goto 49
+	0x65               goto 111
+	0x66 - 0x7a (21)   goto 49
 
 	match 20
 
@@ -1746,7 +1754,9 @@ state 156
 	0x45               goto 111
 	0x46 - 0x5a (21)   goto 49
 	0x5f               goto 49
-	0x61 - 0x7a (26)   goto 49
+	0x61 - 0x64 (4)    goto 49
+	0x65               goto 111
+	0x66 - 0x7a (21)   goto 49
 
 
 state 157

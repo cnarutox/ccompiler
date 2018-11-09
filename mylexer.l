@@ -71,16 +71,20 @@ string Words[] = {
 };
 struct Symbol
 {
-	Symbol(int word, string element, int line, Symbol* value = NULL) :word(word), element(element), value(value), line(line) {}
+	Symbol(int word, string element, int line, void* value = NULL) :word(word), element(element), value(value), line(line) 
+	{
+		if (value)
+			value = new string(element);
+	}
 	int word;
 	string element;
-	Symbol* value = NULL;
+	void* value;
 	int line;
 };
 vector<Symbol> symbols;
 void reserve(int word, string element, int line = Line)
 {
-	// ï¿½Ñ´ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½ï¿½
+	// Èç¹û·ûºÅ±íÄÚÒÑ´æ¸ÃÏî
 	for (int i = 0; i < symbols.size(); i++)
 		if (symbols[i].element == element)
 		{
@@ -88,19 +92,19 @@ void reserve(int word, string element, int line = Line)
 			{
 				case ID: cout << Words[word] << "\t\t" << element << "\t\t" << symbols[i].value << "\t\t" << line << endl; return;
 				case NUMBER: 
-				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << "\t\t" << line << endl; return;
+				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << *(string*)(symbols.back().value) << "\t\t" << line << endl; return;
 				default:
 					cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl; return;
 			}
 		}
-	//Î´ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½ï¿½
-	symbols.push_back(Symbol(word, element, line));
-	symbols.back().value = &symbols[symbols.size() - 1];
+	//Èç¹û·ûºÅ±íÄÚÎ´´æ¸ÃÏî
 	switch (word)
 	{
-		case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols.back() << "\t\t" << line << endl; return;
+		case ID: symbols.push_back(Symbol(word, element, line)); symbols.back().value = &symbols.back().value;
+			cout << Words[word] << "\t\t" << element << "\t\t" << symbols.back().value << "\t\t" << line << endl; return;
 		case NUMBER: 
-		case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << "\t\t" << line << endl; return;
+		case LITERAL: symbols.push_back(Symbol(word, element, line, &element));
+			cout << Words[word] << "\t\t" << element << "\t\t" << *(string*)(symbols.back().value) << "\t\t" << line << endl; return;
 		default:
 			cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl; return;
 	}
@@ -142,7 +146,7 @@ ws		{delim}+
 letter	[A-Za-z_]
 digit	[0-9]
 id		{letter}({letter}|{digit})*
-number	{digit}+(\.{digit}+)?(E[+-]?{digit}+)?
+number	{digit}+(\.{digit}+)?([Ee][+-]?{digit}+)?
 literal \"(\\.|[^"\\])*\"
 annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
 single \/\/[^\n]*

@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 29 of your 30 day trial period.
+* You are on day 31 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * mylexer.cpp
 * C++ source file generated from mylexer.l.
 * 
-* Date: 11/07/18
-* Time: 17:32:54
+* Date: 11/09/18
+* Time: 20:10:07
 * 
 * ALex Version: 2.07
 ****************************************************************************/
@@ -108,16 +108,20 @@ string Words[] = {
 };
 struct Symbol
 {
-	Symbol(int word, string element, int line, Symbol* value = NULL) :word(word), element(element), value(value), line(line) {}
+	Symbol(int word, string element, int line, void* value = NULL) :word(word), element(element), value(value), line(line) 
+	{
+		if (value)
+			value = new string(element);
+	}
 	int word;
 	string element;
-	Symbol* value = NULL;
+	void* value;
 	int line;
 };
 vector<Symbol> symbols;
 void reserve(int word, string element, int line = Line)
 {
-	// ï¿½Ñ´ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½ï¿½
+	// Èç¹û·ûºÅ±íÄÚÒÑ´æ¸ÃÏî
 	for (int i = 0; i < symbols.size(); i++)
 		if (symbols[i].element == element)
 		{
@@ -125,19 +129,19 @@ void reserve(int word, string element, int line = Line)
 			{
 				case ID: cout << Words[word] << "\t\t" << element << "\t\t" << symbols[i].value << "\t\t" << line << endl; return;
 				case NUMBER: 
-				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << "\t\t" << line << endl; return;
+				case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << *(string*)(symbols.back().value) << "\t\t" << line << endl; return;
 				default:
 					cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl; return;
 			}
 		}
-	//Î´ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å±ï¿½ï¿½ï¿½
-	symbols.push_back(Symbol(word, element, line));
-	symbols.back().value = &symbols[symbols.size() - 1];
+	//Èç¹û·ûºÅ±íÄÚÎ´´æ¸ÃÏî
 	switch (word)
 	{
-		case ID: cout << Words[word] << "\t\t" << element << "\t\t" << &symbols.back() << "\t\t" << line << endl; return;
+		case ID: symbols.push_back(Symbol(word, element, line)); symbols.back().value = &symbols.back().value;
+			cout << Words[word] << "\t\t" << element << "\t\t" << symbols.back().value << "\t\t" << line << endl; return;
 		case NUMBER: 
-		case LITERAL: cout << Words[word] << "\t\t" << element << "\t\t" << element << "\t\t" << line << endl; return;
+		case LITERAL: symbols.push_back(Symbol(word, element, line, &element));
+			cout << Words[word] << "\t\t" << element << "\t\t" << *(string*)(symbols.back().value) << "\t\t" << line << endl; return;
 		default:
 			cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl; return;
 	}
@@ -151,7 +155,7 @@ void comment(string val)
 }
 
 
-#line 155 "mylexer.cpp"
+#line 159 "mylexer.cpp"
 // repeated because of possible precompiled header
 #include <yyclex.h>
 
@@ -171,11 +175,11 @@ using namespace yl;
 YYLEXERNAME::YYLEXERNAME()
 {
 	yytables();
-#line 130 ".\\mylexer.l"
+#line 134 ".\\mylexer.l"
 
 	// place any extra initialisation code here
 
-#line 179 "mylexer.cpp"
+#line 183 "mylexer.cpp"
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -183,11 +187,11 @@ YYLEXERNAME::YYLEXERNAME()
 
 YYLEXERNAME::~YYLEXERNAME()
 {
-#line 135 ".\\mylexer.l"
+#line 139 ".\\mylexer.l"
 
 	// place any extra cleanup code here
 
-#line 191 "mylexer.cpp"
+#line 195 "mylexer.cpp"
 }
 
 #ifndef YYTEXT_SIZE
@@ -253,390 +257,390 @@ void YYLEXERNAME::yyunput(int ch)
 
 int YYLEXERNAME::yyaction(int action)
 {
-#line 153 ".\\mylexer.l"
+#line 157 ".\\mylexer.l"
 
 	// extract yylval for use later on in actions
 	YYSTYPE YYFAR& yylval = *(YYSTYPE YYFAR*)yyparserptr->yylvalptr;
 
-#line 262 "mylexer.cpp"
+#line 266 "mylexer.cpp"
 	yyreturnflg = yytrue;
 	switch (action) {
 	case 1:
 		{
-#line 159 ".\\mylexer.l"
+#line 163 ".\\mylexer.l"
 
-#line 269 "mylexer.cpp"
+#line 273 "mylexer.cpp"
 		}
 		break;
 	case 2:
 		{
-#line 160 ".\\mylexer.l"
+#line 164 ".\\mylexer.l"
 comment(yytext);
-#line 276 "mylexer.cpp"
+#line 280 "mylexer.cpp"
 		}
 		break;
 	case 3:
 		{
-#line 161 ".\\mylexer.l"
+#line 165 ".\\mylexer.l"
 comment(yytext);
-#line 283 "mylexer.cpp"
+#line 287 "mylexer.cpp"
 		}
 		break;
 	case 4:
 		{
-#line 162 ".\\mylexer.l"
+#line 166 ".\\mylexer.l"
 reserve(LITERAL, yytext);
-#line 290 "mylexer.cpp"
+#line 294 "mylexer.cpp"
 		}
 		break;
 	case 5:
 		{
-#line 163 ".\\mylexer.l"
+#line 167 ".\\mylexer.l"
 Line++;
-#line 297 "mylexer.cpp"
+#line 301 "mylexer.cpp"
 		}
 		break;
 	case 6:
 		{
-#line 164 ".\\mylexer.l"
+#line 168 ".\\mylexer.l"
 reserve(VOID, yytext); 
-#line 304 "mylexer.cpp"
+#line 308 "mylexer.cpp"
 		}
 		break;
 	case 7:
 		{
-#line 165 ".\\mylexer.l"
+#line 169 ".\\mylexer.l"
 reserve(MAIN, yytext); 
-#line 311 "mylexer.cpp"
+#line 315 "mylexer.cpp"
 		}
 		break;
 	case 8:
 		{
-#line 166 ".\\mylexer.l"
+#line 170 ".\\mylexer.l"
 reserve(COLON, yytext);
-#line 318 "mylexer.cpp"
+#line 322 "mylexer.cpp"
 		}
 		break;
 	case 9:
 		{
-#line 167 ".\\mylexer.l"
+#line 171 ".\\mylexer.l"
 reserve(LP, yytext); 
-#line 325 "mylexer.cpp"
+#line 329 "mylexer.cpp"
 		}
 		break;
 	case 10:
 		{
-#line 168 ".\\mylexer.l"
+#line 172 ".\\mylexer.l"
 reserve(RP, yytext); 
-#line 332 "mylexer.cpp"
+#line 336 "mylexer.cpp"
 		}
 		break;
 	case 11:
 		{
-#line 169 ".\\mylexer.l"
+#line 173 ".\\mylexer.l"
 reserve(LBRACE, yytext); 
-#line 339 "mylexer.cpp"
+#line 343 "mylexer.cpp"
 		}
 		break;
 	case 12:
 		{
-#line 170 ".\\mylexer.l"
+#line 174 ".\\mylexer.l"
 reserve(RBRACE, yytext); 
-#line 346 "mylexer.cpp"
+#line 350 "mylexer.cpp"
 		}
 		break;
 	case 13:
 		{
-#line 171 ".\\mylexer.l"
+#line 175 ".\\mylexer.l"
 reserve(RBRACE, yytext); 
-#line 353 "mylexer.cpp"
+#line 357 "mylexer.cpp"
 		}
 		break;
 	case 14:
 		{
-#line 172 ".\\mylexer.l"
+#line 176 ".\\mylexer.l"
 reserve(RBRACE, yytext); 
-#line 360 "mylexer.cpp"
+#line 364 "mylexer.cpp"
 		}
 		break;
 	case 15:
 		{
-#line 173 ".\\mylexer.l"
+#line 177 ".\\mylexer.l"
 reserve(TYPE, yytext); 
-#line 367 "mylexer.cpp"
+#line 371 "mylexer.cpp"
 		}
 		break;
 	case 16:
 		{
-#line 174 ".\\mylexer.l"
+#line 178 ".\\mylexer.l"
 reserve(SEMICOL, yytext); 
-#line 374 "mylexer.cpp"
+#line 378 "mylexer.cpp"
 		}
 		break;
 	case 17:
 		{
-#line 175 ".\\mylexer.l"
+#line 179 ".\\mylexer.l"
 reserve(FOR, yytext); 
-#line 381 "mylexer.cpp"
+#line 385 "mylexer.cpp"
 		}
 		break;
 	case 18:
 		{
-#line 176 ".\\mylexer.l"
+#line 180 ".\\mylexer.l"
 reserve(ASSIGN, yytext); 
-#line 388 "mylexer.cpp"
+#line 392 "mylexer.cpp"
 		}
 		break;
 	case 19:
 		{
-#line 177 ".\\mylexer.l"
+#line 181 ".\\mylexer.l"
 reserve(ERROR, yytext);
-#line 395 "mylexer.cpp"
+#line 399 "mylexer.cpp"
 		}
 		break;
 	case 20:
 		{
-#line 178 ".\\mylexer.l"
+#line 182 ".\\mylexer.l"
 reserve(NUMBER, yytext); 
-#line 402 "mylexer.cpp"
+#line 406 "mylexer.cpp"
 		}
 		break;
 	case 21:
 		{
-#line 179 ".\\mylexer.l"
+#line 183 ".\\mylexer.l"
 reserve(COMPARISON, yytext);
-#line 409 "mylexer.cpp"
+#line 413 "mylexer.cpp"
 		}
 		break;
 	case 22:
 		{
-#line 180 ".\\mylexer.l"
+#line 184 ".\\mylexer.l"
 reserve(ADD, yytext); 
-#line 416 "mylexer.cpp"
+#line 420 "mylexer.cpp"
 		}
 		break;
 	case 23:
 		{
-#line 181 ".\\mylexer.l"
+#line 185 ".\\mylexer.l"
 reserve(MINUS, yytext); 
-#line 423 "mylexer.cpp"
+#line 427 "mylexer.cpp"
 		}
 		break;
 	case 24:
 		{
-#line 182 ".\\mylexer.l"
+#line 186 ".\\mylexer.l"
 reserve(DIVIDE, yytext);
-#line 430 "mylexer.cpp"
+#line 434 "mylexer.cpp"
 		}
 		break;
 	case 25:
 		{
-#line 183 ".\\mylexer.l"
+#line 187 ".\\mylexer.l"
 reserve(LOGIC, yytext);
-#line 437 "mylexer.cpp"
+#line 441 "mylexer.cpp"
 		}
 		break;
 	case 26:
 		{
-#line 184 ".\\mylexer.l"
+#line 188 ".\\mylexer.l"
 reserve(BOOLOP, yytext);
-#line 444 "mylexer.cpp"
+#line 448 "mylexer.cpp"
 		}
 		break;
 	case 27:
 		{
-#line 185 ".\\mylexer.l"
+#line 189 ".\\mylexer.l"
 reserve(IF, yytext); 
-#line 451 "mylexer.cpp"
+#line 455 "mylexer.cpp"
 		}
 		break;
 	case 28:
 		{
-#line 186 ".\\mylexer.l"
+#line 190 ".\\mylexer.l"
 reserve(MUTIPLY, yytext); 
-#line 458 "mylexer.cpp"
+#line 462 "mylexer.cpp"
 		}
 		break;
 	case 29:
 		{
-#line 187 ".\\mylexer.l"
+#line 191 ".\\mylexer.l"
 reserve(THEN, yytext);
-#line 465 "mylexer.cpp"
+#line 469 "mylexer.cpp"
 		}
 		break;
 	case 30:
 		{
-#line 188 ".\\mylexer.l"
+#line 192 ".\\mylexer.l"
 reserve(BREAK, yytext);
-#line 472 "mylexer.cpp"
+#line 476 "mylexer.cpp"
 		}
 		break;
 	case 31:
 		{
-#line 189 ".\\mylexer.l"
+#line 193 ".\\mylexer.l"
 reserve(CASE, yytext);
-#line 479 "mylexer.cpp"
+#line 483 "mylexer.cpp"
 		}
 		break;
 	case 32:
 		{
-#line 190 ".\\mylexer.l"
+#line 194 ".\\mylexer.l"
 reserve(CONST, yytext);
-#line 486 "mylexer.cpp"
+#line 490 "mylexer.cpp"
 		}
 		break;
 	case 33:
 		{
-#line 191 ".\\mylexer.l"
+#line 195 ".\\mylexer.l"
 reserve(CONTINUE, yytext);
-#line 493 "mylexer.cpp"
+#line 497 "mylexer.cpp"
 		}
 		break;
 	case 34:
 		{
-#line 192 ".\\mylexer.l"
+#line 196 ".\\mylexer.l"
 reserve(DEFAULT, yytext);
-#line 500 "mylexer.cpp"
+#line 504 "mylexer.cpp"
 		}
 		break;
 	case 35:
 		{
-#line 193 ".\\mylexer.l"
+#line 197 ".\\mylexer.l"
 reserve(DO, yytext);
-#line 507 "mylexer.cpp"
+#line 511 "mylexer.cpp"
 		}
 		break;
 	case 36:
 		{
-#line 194 ".\\mylexer.l"
+#line 198 ".\\mylexer.l"
 reserve(ELSE, yytext);
-#line 514 "mylexer.cpp"
+#line 518 "mylexer.cpp"
 		}
 		break;
 	case 37:
 		{
-#line 195 ".\\mylexer.l"
+#line 199 ".\\mylexer.l"
 reserve(ENUM, yytext);
-#line 521 "mylexer.cpp"
+#line 525 "mylexer.cpp"
 		}
 		break;
 	case 38:
 		{
-#line 196 ".\\mylexer.l"
+#line 200 ".\\mylexer.l"
 reserve(EXTERN, yytext);
-#line 528 "mylexer.cpp"
+#line 532 "mylexer.cpp"
 		}
 		break;
 	case 39:
 		{
-#line 197 ".\\mylexer.l"
+#line 201 ".\\mylexer.l"
 reserve(FOR, yytext);
-#line 535 "mylexer.cpp"
+#line 539 "mylexer.cpp"
 		}
 		break;
 	case 40:
 		{
-#line 198 ".\\mylexer.l"
+#line 202 ".\\mylexer.l"
 reserve(GOTO, yytext);
-#line 542 "mylexer.cpp"
+#line 546 "mylexer.cpp"
 		}
 		break;
 	case 41:
 		{
-#line 199 ".\\mylexer.l"
+#line 203 ".\\mylexer.l"
 reserve(RETURN, yytext);
-#line 549 "mylexer.cpp"
+#line 553 "mylexer.cpp"
 		}
 		break;
 	case 42:
 		{
-#line 200 ".\\mylexer.l"
+#line 204 ".\\mylexer.l"
 reserve(REGISTER, yytext);
-#line 556 "mylexer.cpp"
+#line 560 "mylexer.cpp"
 		}
 		break;
 	case 43:
 		{
-#line 201 ".\\mylexer.l"
+#line 205 ".\\mylexer.l"
 reserve(SIGNED, yytext);
-#line 563 "mylexer.cpp"
+#line 567 "mylexer.cpp"
 		}
 		break;
 	case 44:
 		{
-#line 202 ".\\mylexer.l"
+#line 206 ".\\mylexer.l"
 reserve(UNSIGNED, yytext);
-#line 570 "mylexer.cpp"
+#line 574 "mylexer.cpp"
 		}
 		break;
 	case 45:
 		{
-#line 203 ".\\mylexer.l"
+#line 207 ".\\mylexer.l"
 reserve(SIZEOF, yytext);
-#line 577 "mylexer.cpp"
+#line 581 "mylexer.cpp"
 		}
 		break;
 	case 46:
 		{
-#line 204 ".\\mylexer.l"
+#line 208 ".\\mylexer.l"
 reserve(STATIC, yytext);
-#line 584 "mylexer.cpp"
+#line 588 "mylexer.cpp"
 		}
 		break;
 	case 47:
 		{
-#line 205 ".\\mylexer.l"
+#line 209 ".\\mylexer.l"
 reserve(STRUCT, yytext);
-#line 591 "mylexer.cpp"
+#line 595 "mylexer.cpp"
 		}
 		break;
 	case 48:
 		{
-#line 206 ".\\mylexer.l"
+#line 210 ".\\mylexer.l"
 reserve(SWITCH, yytext);
-#line 598 "mylexer.cpp"
+#line 602 "mylexer.cpp"
 		}
 		break;
 	case 49:
 		{
-#line 207 ".\\mylexer.l"
+#line 211 ".\\mylexer.l"
 reserve(TYPEDEF, yytext);
-#line 605 "mylexer.cpp"
+#line 609 "mylexer.cpp"
 		}
 		break;
 	case 50:
 		{
-#line 208 ".\\mylexer.l"
+#line 212 ".\\mylexer.l"
 reserve(UNION, yytext);
-#line 612 "mylexer.cpp"
+#line 616 "mylexer.cpp"
 		}
 		break;
 	case 51:
 		{
-#line 209 ".\\mylexer.l"
+#line 213 ".\\mylexer.l"
 reserve(VOLATILE, yytext);
-#line 619 "mylexer.cpp"
+#line 623 "mylexer.cpp"
 		}
 		break;
 	case 52:
 		{
-#line 210 ".\\mylexer.l"
+#line 214 ".\\mylexer.l"
 reserve(WHILE, yytext);
-#line 626 "mylexer.cpp"
+#line 630 "mylexer.cpp"
 		}
 		break;
 	case 53:
 		{
-#line 211 ".\\mylexer.l"
+#line 215 ".\\mylexer.l"
 reserve(ID, yytext);
-#line 633 "mylexer.cpp"
+#line 637 "mylexer.cpp"
 		}
 		break;
 	case 54:
 		{
-#line 212 ".\\mylexer.l"
+#line 216 ".\\mylexer.l"
 reserve(ERROR, yytext);
-#line 640 "mylexer.cpp"
+#line 644 "mylexer.cpp"
 		}
 		break;
 	default:
@@ -665,47 +669,47 @@ void YYLEXERNAME::yytables()
 	};
 	yymatch = match;
 
-	yytransitionmax = 432;
+	yytransitionmax = 435;
 	static const yytransition_t YYNEARFAR YYBASED_CODE transition[] = {
 		{ 0, 0 },
 		{ 4, 1 },
 		{ 5, 1 },
-		{ 0, 79 },
-		{ 4, 4 },
-		{ 0, 79 },
-		{ 71, 34 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
-		{ 77, 77 },
 		{ 97, 68 },
+		{ 4, 4 },
+		{ 52, 25 },
+		{ 71, 34 },
 		{ 94, 66 },
+		{ 104, 73 },
+		{ 63, 30 },
+		{ 46, 14 },
+		{ 99, 69 },
+		{ 53, 25 },
 		{ 106, 74 },
 		{ 82, 53 },
-		{ 99, 69 },
+		{ 47, 14 },
 		{ 107, 74 },
+		{ 64, 30 },
+		{ 105, 73 },
+		{ 54, 25 },
+		{ 95, 66 },
+		{ 55, 26 },
+		{ 98, 68 },
 		{ 72, 34 },
 		{ 4, 1 },
 		{ 6, 1 },
 		{ 7, 1 },
 		{ 4, 4 },
-		{ 50, 77 },
-		{ 111, 79 },
+		{ 100, 69 },
+		{ 83, 54 },
 		{ 8, 1 },
-		{ 95, 66 },
+		{ 56, 26 },
 		{ 9, 1 },
 		{ 10, 1 },
 		{ 11, 1 },
 		{ 12, 1 },
-		{ 98, 68 },
+		{ 78, 50 },
 		{ 13, 1 },
-		{ 100, 69 },
+		{ 78, 50 },
 		{ 14, 1 },
 		{ 15, 1 },
 		{ 15, 1 },
@@ -751,11 +755,11 @@ void YYLEXERNAME::yytables()
 		{ 20, 1 },
 		{ 20, 1 },
 		{ 21, 1 },
-		{ 83, 54 },
+		{ 84, 55 },
 		{ 22, 1 },
 		{ 23, 1 },
 		{ 20, 1 },
-		{ 84, 55 },
+		{ 85, 56 },
 		{ 20, 1 },
 		{ 24, 1 },
 		{ 25, 1 },
@@ -796,45 +800,13 @@ void YYLEXERNAME::yytables()
 		{ 20, 179 },
 		{ 20, 179 },
 		{ 20, 179 },
-		{ 46, 14 },
 		{ 76, 76 },
-		{ 78, 50 },
-		{ 85, 56 },
-		{ 78, 50 },
-		{ 47, 14 },
-		{ 109, 76 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 20, 179 },
-		{ 43, 42 },
-		{ 86, 57 },
 		{ 60, 28 },
+		{ 86, 57 },
 		{ 87, 58 },
-		{ 20, 179 },
 		{ 61, 28 },
+		{ 109, 76 },
+		{ 88, 59 },
 		{ 20, 179 },
 		{ 20, 179 },
 		{ 20, 179 },
@@ -861,6 +833,67 @@ void YYLEXERNAME::yytables()
 		{ 20, 179 },
 		{ 20, 179 },
 		{ 20, 179 },
+		{ 89, 60 },
+		{ 43, 42 },
+		{ 90, 61 },
+		{ 91, 62 },
+		{ 20, 179 },
+		{ 92, 64 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 20, 179 },
+		{ 0, 79 },
+		{ 93, 65 },
+		{ 0, 79 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 77, 77 },
+		{ 67, 33 },
+		{ 68, 33 },
+		{ 51, 24 },
+		{ 96, 67 },
+		{ 45, 8 },
+		{ 73, 35 },
+		{ 101, 70 },
+		{ 102, 71 },
+		{ 103, 72 },
+		{ 74, 36 },
+		{ 75, 37 },
+		{ 50, 77 },
+		{ 69, 33 },
+		{ 111, 79 },
+		{ 44, 42 },
+		{ 70, 33 },
 		{ 49, 156 },
 		{ 49, 156 },
 		{ 49, 156 },
@@ -887,142 +920,48 @@ void YYLEXERNAME::yytables()
 		{ 49, 156 },
 		{ 49, 156 },
 		{ 49, 156 },
-		{ 44, 42 },
-		{ 88, 59 },
-		{ 89, 60 },
-		{ 90, 61 },
-		{ 49, 156 },
-		{ 91, 62 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 156 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 49, 49 },
-		{ 67, 33 },
-		{ 68, 33 },
-		{ 52, 25 },
-		{ 104, 73 },
-		{ 55, 26 },
-		{ 92, 64 },
-		{ 57, 27 },
-		{ 93, 65 },
-		{ 58, 27 },
-		{ 53, 25 },
-		{ 51, 24 },
-		{ 49, 49 },
-		{ 69, 33 },
-		{ 105, 73 },
-		{ 56, 26 },
-		{ 70, 33 },
-		{ 54, 25 },
-		{ 137, 111 },
-		{ 59, 27 },
-		{ 137, 111 },
-		{ 96, 67 },
-		{ 45, 8 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 79, 111 },
-		{ 48, 15 },
-		{ 73, 35 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 15, 15 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 110, 78 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 156, 137 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 77, 48 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 110, 110 },
-		{ 63, 30 },
-		{ 101, 70 },
-		{ 102, 71 },
-		{ 103, 72 },
-		{ 74, 36 },
-		{ 75, 37 },
 		{ 108, 75 },
+		{ 50, 77 },
 		{ 45, 39 },
-		{ 64, 30 },
+		{ 111, 79 },
+		{ 49, 156 },
 		{ 62, 29 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 111, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 156 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
+		{ 49, 49 },
 		{ 0, 44 },
 		{ 76, 46 },
 		{ 112, 80 },
@@ -1030,9 +969,24 @@ void YYLEXERNAME::yytables()
 		{ 92, 82 },
 		{ 0, 47 },
 		{ 116, 84 },
+		{ 137, 111 },
 		{ 117, 85 },
+		{ 137, 111 },
 		{ 118, 86 },
+		{ 49, 49 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 79, 111 },
+		{ 57, 27 },
 		{ 119, 87 },
+		{ 58, 27 },
 		{ 120, 88 },
 		{ 64, 89 },
 		{ 121, 91 },
@@ -1042,6 +996,7 @@ void YYLEXERNAME::yytables()
 		{ 64, 96 },
 		{ 125, 97 },
 		{ 126, 98 },
+		{ 59, 27 },
 		{ 127, 99 },
 		{ 128, 100 },
 		{ 129, 101 },
@@ -1049,6 +1004,58 @@ void YYLEXERNAME::yytables()
 		{ 131, 103 },
 		{ 132, 104 },
 		{ 133, 105 },
+		{ 48, 15 },
+		{ 49, 49 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 15, 15 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 110, 78 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 156, 137 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 77, 48 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
+		{ 110, 110 },
 		{ 134, 106 },
 		{ 135, 107 },
 		{ 136, 108 },
@@ -1111,174 +1118,174 @@ void YYLEXERNAME::yytables()
 		{ 0, 0, 5 },
 		{ 19, 0, 26 },
 		{ 42, 0, 54 },
-		{ 0, 245, 25 },
+		{ 0, 173, 25 },
 		{ 0, 0, 9 },
 		{ 0, 0, 10 },
 		{ 0, 0, 28 },
 		{ 0, 0, 22 },
 		{ 0, 0, 23 },
-		{ 0, 87, 24 },
-		{ 77, 248, 20 },
+		{ 0, -32, 24 },
+		{ 77, 287, 20 },
 		{ 0, 0, 8 },
 		{ 0, 0, 16 },
 		{ 19, 0, 21 },
-		{ 0, 324, 18 },
+		{ 0, 327, 18 },
 		{ 179, 0, 53 },
 		{ 0, 0, 13 },
 		{ 0, 0, 14 },
 		{ 0, 0, 25 },
-		{ 179, 158, 53 },
-		{ 179, 167, 53 },
-		{ 179, 165, 53 },
-		{ 179, 160, 53 },
-		{ 179, 56, 53 },
-		{ 179, 244, 53 },
-		{ 179, 244, 53 },
-		{ 179, 289, 53 },
-		{ 179, 304, 53 },
-		{ 179, 158, 53 },
+		{ 179, 95, 53 },
+		{ 179, -92, 53 },
+		{ 179, -80, 53 },
+		{ 179, 205, 53 },
+		{ 179, 22, 53 },
+		{ 179, 143, 53 },
+		{ 179, -93, 53 },
+		{ 179, 292, 53 },
+		{ 179, 307, 53 },
+		{ 179, 103, 53 },
 		{ 179, -98, 53 },
-		{ 179, 185, 53 },
-		{ 179, 239, 53 },
-		{ 179, 247, 53 },
+		{ 179, 102, 53 },
+		{ 179, 105, 53 },
+		{ 179, 113, 53 },
 		{ 0, 0, 11 },
-		{ 0, 229, 25 },
+		{ 0, 127, 25 },
 		{ 0, 0, 12 },
 		{ 0, 0, 21 },
-		{ -42, 128, 0 },
+		{ -42, 129, 0 },
 		{ 0, 0, 4 },
-		{ -42, 346, 0 },
+		{ -42, 281, 0 },
 		{ 0, 0, 26 },
-		{ -46, 315, 0 },
-		{ -47, 351, 3 },
-		{ 0, 278, 0 },
-		{ 156, 204, 19 },
-		{ 111, 88, 19 },
+		{ -46, 250, 0 },
+		{ -47, 286, 3 },
+		{ 0, 317, 0 },
+		{ 156, 233, 19 },
+		{ 111, -7, 19 },
+		{ 179, 322, 53 },
 		{ 179, 319, 53 },
-		{ 179, 316, 53 },
-		{ 179, -77, 53 },
-		{ 179, -26, 53 },
-		{ 179, -14, 53 },
-		{ 179, 15, 35 },
-		{ 179, 48, 53 },
-		{ 179, 48, 53 },
-		{ 179, 105, 53 },
-		{ 179, 111, 53 },
-		{ 179, 109, 53 },
-		{ 179, 109, 53 },
+		{ 179, -83, 53 },
+		{ 179, -81, 53 },
+		{ 179, -18, 53 },
+		{ 179, -29, 35 },
+		{ 179, 16, 53 },
+		{ 179, 15, 53 },
+		{ 179, 19, 53 },
+		{ 179, 51, 53 },
+		{ 179, 50, 53 },
+		{ 179, 49, 53 },
 		{ 179, 0, 27 },
-		{ 179, 151, 53 },
-		{ 179, 164, 53 },
-		{ 179, -85, 53 },
-		{ 179, 171, 53 },
+		{ 179, 51, 53 },
+		{ 179, 90, 53 },
+		{ 179, -96, 53 },
+		{ 179, 99, 53 },
+		{ 179, -100, 53 },
 		{ 179, -86, 53 },
-		{ 179, -76, 53 },
-		{ 179, 242, 53 },
-		{ 179, 247, 53 },
-		{ 179, 237, 53 },
-		{ 179, 160, 53 },
-		{ 179, -86, 53 },
-		{ 179, 247, 53 },
-		{ -46, 88, 0 },
-		{ 156, -41, 20 },
-		{ 0, 258, 0 },
-		{ 111, -40, 19 },
-		{ 179, 261, 53 },
-		{ 179, 258, 53 },
-		{ 179, 246, 53 },
+		{ 179, 108, 53 },
+		{ 179, 113, 53 },
+		{ 179, 103, 53 },
+		{ 179, -97, 53 },
+		{ 179, -92, 53 },
+		{ 179, 144, 53 },
+		{ -46, 87, 0 },
+		{ 156, 149, 20 },
+		{ 0, 297, 0 },
+		{ 111, 151, 19 },
+		{ 179, 196, 53 },
+		{ 179, 193, 53 },
+		{ 179, 181, 53 },
 		{ 179, -60, 53 },
-		{ 179, 265, 53 },
-		{ 179, 265, 53 },
-		{ 179, 263, 53 },
-		{ 179, 256, 53 },
-		{ 179, 265, 53 },
-		{ 179, 270, 53 },
+		{ 179, 200, 53 },
+		{ 179, 201, 53 },
+		{ 179, 200, 53 },
+		{ 179, 205, 53 },
+		{ 179, 215, 53 },
+		{ 179, 220, 53 },
 		{ 179, 0, 17 },
-		{ 179, 257, 53 },
+		{ 179, 207, 53 },
 		{ 179, 0, 15 },
-		{ 179, 259, 53 },
-		{ 179, 265, 53 },
-		{ 179, 254, 53 },
-		{ 179, 258, 53 },
-		{ 179, 263, 53 },
-		{ 179, 273, 53 },
-		{ 179, 259, 53 },
-		{ 179, 259, 53 },
-		{ 179, 261, 53 },
-		{ 179, 268, 53 },
-		{ 179, 278, 53 },
-		{ 179, 269, 53 },
-		{ 179, 276, 53 },
-		{ 179, 282, 53 },
-		{ 179, 286, 53 },
-		{ 179, 276, 53 },
+		{ 179, 209, 53 },
+		{ 179, 215, 53 },
+		{ 179, 204, 53 },
+		{ 179, 208, 53 },
+		{ 179, 213, 53 },
+		{ 179, 223, 53 },
+		{ 179, 210, 53 },
+		{ 179, 210, 53 },
+		{ 179, 212, 53 },
+		{ 179, 219, 53 },
+		{ 179, 229, 53 },
+		{ 179, 220, 53 },
+		{ 179, 227, 53 },
+		{ 179, 285, 53 },
+		{ 179, 289, 53 },
+		{ 179, 279, 53 },
 		{ 0, 0, 2 },
-		{ 156, 288, 20 },
-		{ 49, 236, 19 },
-		{ 179, 280, 53 },
-		{ 179, 0, 31 },
-		{ 179, 272, 53 },
-		{ 179, 284, 53 },
-		{ 179, 273, 53 },
+		{ 156, 327, 20 },
+		{ 49, 255, 19 },
 		{ 179, 283, 53 },
+		{ 179, 0, 31 },
+		{ 179, 275, 53 },
+		{ 179, 287, 53 },
+		{ 179, 276, 53 },
+		{ 179, 286, 53 },
 		{ 179, 0, 36 },
 		{ 179, 0, 37 },
-		{ 179, 278, 53 },
+		{ 179, 281, 53 },
 		{ 179, 0, 40 },
 		{ 179, 0, 7 },
-		{ 179, 278, 53 },
-		{ 179, 280, 53 },
-		{ 179, 294, 53 },
-		{ 179, 285, 53 },
-		{ 179, 292, 53 },
-		{ 179, 299, 53 },
-		{ 179, 300, 53 },
-		{ 179, 0, 29 },
-		{ 179, 300, 53 },
-		{ 179, 291, 53 },
-		{ 179, 299, 53 },
-		{ 179, 0, 6 },
-		{ 179, 287, 53 },
+		{ 179, 281, 53 },
+		{ 179, 283, 53 },
+		{ 179, 297, 53 },
+		{ 179, 288, 53 },
+		{ 179, 295, 53 },
+		{ 179, 302, 53 },
 		{ 179, 303, 53 },
-		{ 0, 268, 0 },
+		{ 179, 0, 29 },
+		{ 179, 303, 53 },
+		{ 179, 294, 53 },
+		{ 179, 302, 53 },
+		{ 179, 0, 6 },
+		{ 179, 290, 53 },
+		{ 179, 306, 53 },
+		{ 0, 307, 0 },
 		{ 179, 0, 30 },
 		{ 179, 0, 32 },
-		{ 179, 296, 53 },
 		{ 179, 299, 53 },
-		{ 179, 307, 53 },
-		{ 179, 299, 53 },
-		{ 179, 294, 53 },
-		{ 179, 301, 53 },
-		{ 179, 312, 53 },
-		{ 179, 311, 53 },
-		{ 179, 315, 53 },
-		{ 179, 299, 53 },
-		{ 179, 312, 53 },
-		{ 179, 316, 53 },
-		{ 179, 0, 50 },
-		{ 179, 308, 53 },
-		{ 179, 314, 53 },
-		{ 179, 0, 52 },
-		{ 137, 129, 0 },
+		{ 179, 302, 53 },
+		{ 179, 310, 53 },
+		{ 179, 302, 53 },
+		{ 179, 297, 53 },
 		{ 179, 304, 53 },
-		{ 179, 306, 53 },
+		{ 179, 315, 53 },
+		{ 179, 314, 53 },
+		{ 179, 318, 53 },
+		{ 179, 302, 53 },
+		{ 179, 315, 53 },
+		{ 179, 319, 53 },
+		{ 179, 0, 50 },
+		{ 179, 311, 53 },
+		{ 179, 317, 53 },
+		{ 179, 0, 52 },
+		{ 137, 158, 0 },
+		{ 179, 307, 53 },
+		{ 179, 309, 53 },
 		{ 179, 0, 38 },
-		{ 179, 322, 53 },
+		{ 179, 325, 53 },
 		{ 179, 0, 41 },
 		{ 179, 0, 43 },
 		{ 179, 0, 45 },
 		{ 179, 0, 46 },
 		{ 179, 0, 47 },
 		{ 179, 0, 48 },
-		{ 179, 322, 53 },
-		{ 179, 324, 53 },
-		{ 179, 318, 53 },
-		{ 179, 326, 53 },
+		{ 179, 325, 53 },
+		{ 179, 327, 53 },
+		{ 179, 321, 53 },
+		{ 179, 329, 53 },
 		{ 179, 0, 34 },
-		{ 179, 314, 53 },
+		{ 179, 317, 53 },
 		{ 179, 0, 49 },
-		{ 179, 329, 53 },
-		{ 179, 329, 53 },
+		{ 179, 332, 53 },
+		{ 179, 332, 53 },
 		{ 179, 0, 33 },
 		{ 179, 0, 42 },
 		{ 179, 0, 44 },
@@ -1345,7 +1352,7 @@ void YYLEXERNAME::yytables()
 	};
 	yybackup = backup;
 }
-#line 213 ".\\mylexer.l"
+#line 217 ".\\mylexer.l"
 
 /////////////////////////////////////////////////////////////////////////////
 // programs section
