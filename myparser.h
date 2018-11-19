@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 29 of your 30 day trial period.
+* You are on day 41 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.h
 * C++ header file generated from myparser.y.
 * 
-* Date: 11/07/18
-* Time: 17:33:06
+* Date: 11/19/18
+* Time: 21:46:35
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -29,8 +29,7 @@
 
 #include <yycpars.h>
 
-#define object 257
-#define bracket 258
+#define NUMBER 257
 /////////////////////////////////////////////////////////////////////////////
 // myparser
 
@@ -67,7 +66,7 @@ public:
 
 	// place any extra class members here
 
-#line 71 "myparser.h"
+#line 70 "myparser.h"
 };
 
 #ifndef YYPARSERNAME
@@ -80,5 +79,5 @@ public:
 #define YYSTYPE int
 #endif
 
-#line 84 "myparser.h"
+#line 83 "myparser.h"
 #endif

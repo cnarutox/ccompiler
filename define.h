@@ -13,7 +13,7 @@ using namespace std;
 #define SEMICOL 9
 #define FOR 10
 #define ASSIGN 11
-#define NUMBER 12
+// #define NUMBER 12
 #define COMPARISON 13
 #define ADD 14
 #define MINUS 15
@@ -81,14 +81,14 @@ void reserve(int word, string element, int line = Line)
             switch (word)
             {
             case ID:
-                cout << Words[word] << "\t\t" << element << "\t\t" << symbols[i].value << "\t\t" << line << endl;
+                ////cout << Words[word] << "\t\t" << element << "\t\t" << symbols[i].value << "\t\t" << line << endl;
                 return;
             case NUMBER:
             case LITERAL:
-                cout << Words[word] << "\t\t" << element << "\t\t" << *(string *)(symbols.back().value) << "\t\t" << line << endl;
+                ////cout << Words[word] << "\t\t" << element << "\t\t" << *(string *)(symbols.back().value) << "\t\t" << line << endl;
                 return;
             default:
-                cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl;
+                ////cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl;
                 return;
             }
         }
@@ -98,15 +98,15 @@ void reserve(int word, string element, int line = Line)
     case ID:
         symbols.push_back(Symbol(word, element, line));
         symbols.back().value = &symbols.back().value;
-        cout << Words[word] << "\t\t" << element << "\t\t" << symbols.back().value << "\t\t" << line << endl;
+        ////cout << Words[word] << "\t\t" << element << "\t\t" << symbols.back().value << "\t\t" << line << endl;
         return;
     case NUMBER:
     case LITERAL:
         symbols.push_back(Symbol(word, element, line, &element));
-        cout << Words[word] << "\t\t" << element << "\t\t" << *(string *)(symbols.back().value) << "\t\t" << line << endl;
+        ////cout << Words[word] << "\t\t" << element << "\t\t" << *(string *)(symbols.back().value) << "\t\t" << line << endl;
         return;
     default:
-        cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl;
+        ////cout << Words[word] << "\t\t" << element << "\t\t\t\t" << line << endl;
         return;
     }
 }
@@ -115,5 +115,5 @@ void comment(string val)
     for (int i = 0; i < val.length(); i++)
         if (val[i] == '\n')
             Line++;
-    cout << val << endl;
+    ////cout << val << endl;
 }

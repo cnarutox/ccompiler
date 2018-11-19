@@ -71,9 +71,9 @@ int|float|char|double|short	{reserve(TYPE, yytext); }
 for			{reserve(FOR, yytext); }
 "="			{reserve(ASSIGN, yytext); }
 {number}+{id}	{reserve(ERROR, yytext);}
-{number}	{reserve(NUMBER, yytext); }
+{number}	{reserve(NUMBER, yytext); yylval = atoi(yytext); return NUMBER; }
 "<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
-"+"			{reserve(ADD, yytext); }
+"+"			{reserve(ADD, yytext); yylval = yytext[0]; return yytext[0];}
 "-"			{reserve(MINUS, yytext); }
 "/"			{reserve(DIVIDE, yytext);}
 &|"|"|~|"^"	{reserve(LOGIC, yytext);}

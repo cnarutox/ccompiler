@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 29 of your 30 day trial period.
+* You are on day 41 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.cpp
 * C++ source file generated from myparser.y.
 * 
-* Date: 11/07/18
-* Time: 17:33:06
+* Date: 11/19/18
+* Time: 21:46:35
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -40,7 +40,7 @@ using namespace yl;
 myparser.y
 ParserWizard generated YACC file.
 
-Date: 2018Äê10ÔÂ28ÈÕ
+Date: 2018ï¿½ï¿½10ï¿½ï¿½28ï¿½ï¿½
 ****************************************************************************/
 
 #include "mylexer.h"
@@ -187,12 +187,12 @@ void YYPARSERNAME::yyaction(int action)
 	case 0:
 		{
 #ifdef YYDEBUG
-			YYSTYPE YYFAR* yya[2];
-			yyinitdebug((void YYFAR**)yya, 2);
+			YYSTYPE YYFAR* yya[4];
+			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
 #line 49 ".\\myparser.y"
-
+printf("%d\n", yyattribute(1 - 3) + yyattribute(3 - 3));
 #line 197 "myparser.cpp"
 			}
 		}
@@ -212,53 +212,55 @@ void YYPARSERNAME::yytables()
 #ifdef YYDEBUG
 	static const yysymbol_t YYNEARFAR YYBASED_CODE symbol[] = {
 		{ "$end", 0 },
+		{ "\'+\'", 43 },
 		{ "error", 256 },
-		{ "object", 257 },
+		{ "NUMBER", 257 },
 		{ NULL, 0 }
 	};
 	yysymbol = symbol;
 
 	static const char* const YYNEARFAR YYBASED_CODE rule[] = {
-		"$accept: sectence",
-		"sectence: obj",
-		"obj: object"
+		"$accept: expr",
+		"expr: NUMBER \'+\' NUMBER"
 	};
 	yyrule = rule;
 #endif
 
 	static const yyreduction_t YYNEARFAR YYBASED_CODE reduction[] = {
 		{ 0, 1, -1 },
-		{ 1, 1, 0 },
-		{ 2, 1, -1 }
+		{ 1, 3, 0 }
 	};
 	yyreduction = reduction;
 
-	yytokenaction_size = 2;
+	yytokenaction_size = 4;
 
 	static const yytokenaction_t YYNEARFAR YYBASED_CODE tokenaction[] = {
-		{ 3, YYAT_ACCEPT, 0 },
+		{ 3, YYAT_SHIFT, 4 },
+		{ 2, YYAT_ACCEPT, 0 },
+		{ 1, YYAT_SHIFT, 3 },
 		{ 0, YYAT_SHIFT, 1 }
 	};
 	yytokenaction = tokenaction;
 
 	static const yystateaction_t YYNEARFAR YYBASED_CODE stateaction[] = {
-		{ -256, 1, YYAT_ERROR, 0 },
-		{ 0, 0, YYAT_REDUCE, 2 },
-		{ 0, 0, YYAT_REDUCE, 1 },
-		{ 0, 1, YYAT_ERROR, 0 }
+		{ -254, 1, YYAT_ERROR, 0 },
+		{ -41, 1, YYAT_ERROR, 0 },
+		{ 1, 1, YYAT_ERROR, 0 },
+		{ -257, 1, YYAT_ERROR, 0 },
+		{ 0, 0, YYAT_REDUCE, 1 }
 	};
 	yystateaction = stateaction;
 
-	yynontermgoto_size = 2;
+	yynontermgoto_size = 1;
 
 	static const yynontermgoto_t YYNEARFAR YYBASED_CODE nontermgoto[] = {
-		{ 0, 3 },
 		{ 0, 2 }
 	};
 	yynontermgoto = nontermgoto;
 
 	static const yystategoto_t YYNEARFAR YYBASED_CODE stategoto[] = {
 		{ -1, -1 },
+		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 }
@@ -273,7 +275,7 @@ void YYPARSERNAME::yytables()
 	yytokendestbaseptr = NULL;
 	yytokendestbase_size = 0;
 }
-#line 53 ".\\myparser.y"
+#line 51 ".\\myparser.y"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -285,9 +287,9 @@ int main(void)
 	mylexer lexer;
 	myparser parser;
 //  FILE *stream;
-// 	freopen_s(&stream, "in.txt", "r", stdin);
-// 	freopen_s(&stream, "out.txt", "w", stdout);
-	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ\t\tÐÐºÅ" << endl;
+//	freopen_s(&stream, "in.txt", "r", stdin);
+//	freopen_s(&stream, "out.txt", "w", stdout);
+	cout << "ï¿½ï¿½ï¿½ï¿½\t\tï¿½ï¿½ï¿½ï¿½\t\tï¿½ï¿½ï¿½ï¿½\t\tï¿½Ðºï¿½" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {
 			n = parser.yyparse();

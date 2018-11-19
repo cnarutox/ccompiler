@@ -19,7 +19,7 @@
 * C++ source file generated from mylexer.l.
 * 
 * Date: 11/19/18
-* Time: 19:55:04
+* Time: 21:48:36
 * 
 * ALex Version: 2.07
 ****************************************************************************/
@@ -293,7 +293,7 @@ reserve(ERROR, yytext);
 	case 20:
 		{
 #line 74 ".\\mylexer.l"
-reserve(NUMBER, yytext); 
+reserve(NUMBER, yytext); yylval = atoi(yytext); return NUMBER; 
 #line 298 "mylexer.cpp"
 		}
 		break;
@@ -307,7 +307,7 @@ reserve(COMPARISON, yytext);
 	case 22:
 		{
 #line 76 ".\\mylexer.l"
-reserve(ADD, yytext); 
+reserve(ADD, yytext); yylval = yytext[0]; return yytext[0];
 #line 312 "mylexer.cpp"
 		}
 		break;

@@ -3,7 +3,7 @@
 myparser.y
 ParserWizard generated YACC file.
 
-Date: 2018Äê10ÔÂ28ÈÕ
+Date: 2018ï¿½ï¿½10ï¿½ï¿½28ï¿½ï¿½
 ****************************************************************************/
 
 #include "mylexer.h"
@@ -11,7 +11,7 @@ Date: 2018Äê10ÔÂ28ÈÕ
 
 /////////////////////////////////////////////////////////////////////////////
 // declarations section
-%token object bracket
+%token NUMBER
 // parser name
 %name myparser
 
@@ -46,10 +46,8 @@ Date: 2018Äê10ÔÂ28ÈÕ
 
 // place your YACC rules here (there must be at least one)
 
-sectence	:	obj {}
-	;
-obj	:	object
-	;
+expr	:	NUMBER '+' NUMBER {printf("%d\n", $1 + $3);}
+		;
 %%
 
 /////////////////////////////////////////////////////////////////////////////
@@ -63,7 +61,7 @@ int main(void)
 //  FILE *stream;
 //	freopen_s(&stream, "in.txt", "r", stdin);
 //	freopen_s(&stream, "out.txt", "w", stdout);
-	cout << "µ¥´Ê\t\t´ÊËØ\t\tÊôÐÔ\t\tÐÐºÅ" << endl;
+	cout << "ï¿½ï¿½ï¿½ï¿½\t\tï¿½ï¿½ï¿½ï¿½\t\tï¿½ï¿½ï¿½ï¿½\t\tï¿½Ðºï¿½" << endl;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {
 			n = parser.yyparse();

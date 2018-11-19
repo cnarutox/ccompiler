@@ -1,7 +1,7 @@
 #############################################################################
 #                     U N R E G I S T E R E D   C O P Y
 # 
-# You are on day 29 of your 30 day trial period.
+# You are on day 41 of your 30 day trial period.
 # 
 # This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 # for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 # myparser.v
 # YACC verbose file generated from myparser.y.
 # 
-# Date: 11/07/18
-# Time: 17:33:06
+# Date: 11/19/18
+# Time: 21:46:35
 # 
 # AYACC Version: 2.07
 #############################################################################
@@ -29,11 +29,9 @@
 # Rules
 ##############################################################################
 
-    0  $accept : sectence $end
+    0  $accept : expr $end
 
-    1  sectence : obj
-
-    2  obj : object
+    1  expr : NUMBER '+' NUMBER
 
 
 ##############################################################################
@@ -41,38 +39,43 @@
 ##############################################################################
 
 state 0
-	$accept : . sectence $end
+	$accept : . expr $end
 
-	object  shift 1
+	NUMBER  shift 1
 
-	obj  goto 2
-	sectence  goto 3
+	expr  goto 2
 
 
 state 1
-	obj : object .  (2)
+	expr : NUMBER . '+' NUMBER
 
-	.  reduce 2
+	'+'  shift 3
 
 
 state 2
-	sectence : obj .  (1)
+	$accept : expr . $end  (0)
 
-	.  reduce 1
+	$end  accept
 
 
 state 3
-	$accept : sectence . $end  (0)
+	expr : NUMBER '+' . NUMBER
 
-	$end  accept
+	NUMBER  shift 4
+
+
+state 4
+	expr : NUMBER '+' NUMBER .  (1)
+
+	.  reduce 1
 
 
 ##############################################################################
 # Summary
 ##############################################################################
 
-3 token(s), 3 nonterminal(s)
-3 grammar rule(s), 4 state(s)
+4 token(s), 2 nonterminal(s)
+2 grammar rule(s), 5 state(s)
 
 
 ##############################################################################
