@@ -19,7 +19,7 @@
 # YACC verbose file generated from myparser.y.
 # 
 # Date: 11/21/18
-# Time: 21:05:31
+# Time: 21:18:53
 # 
 # AYACC Version: 2.07
 #############################################################################
@@ -32,9 +32,10 @@
     0  $accept : stmt $end
 
     1  stmt : expr ';' expr
+    2       | stmt ';' expr
 
-    2  expr : NUMBER '+' NUMBER
-    3       | expr '+' NUMBER
+    3  expr : NUMBER '+' NUMBER
+    4       | expr '+' NUMBER
 
 
 ##############################################################################
@@ -58,55 +59,73 @@ state 1
 
 state 2
 	$accept : stmt . $end  (0)
+	stmt : stmt . ';' expr
 
 	$end  accept
+	';'  shift 5
 
 
 state 3
 	stmt : expr . ';' expr
 	expr : expr . '+' NUMBER
 
-	'+'  shift 5
-	';'  shift 6
+	'+'  shift 6
+	';'  shift 7
 
 
 state 4
 	expr : NUMBER '+' . NUMBER
 
-	NUMBER  shift 7
-
-
-state 5
-	expr : expr '+' . NUMBER
-
 	NUMBER  shift 8
 
 
-state 6
-	stmt : expr ';' . expr
+state 5
+	stmt : stmt ';' . expr
 
 	NUMBER  shift 1
 
 	expr  goto 9
 
 
-state 7
-	expr : NUMBER '+' NUMBER .  (2)
+state 6
+	expr : expr '+' . NUMBER
 
-	.  reduce 2
+	NUMBER  shift 10
+
+
+state 7
+	stmt : expr ';' . expr
+
+	NUMBER  shift 1
+
+	expr  goto 11
 
 
 state 8
-	expr : expr '+' NUMBER .  (3)
+	expr : NUMBER '+' NUMBER .  (3)
 
 	.  reduce 3
 
 
 state 9
+	stmt : stmt ';' expr .  (2)
+	expr : expr . '+' NUMBER
+
+	'+'  shift 6
+	.  reduce 2
+
+
+state 10
+	expr : expr '+' NUMBER .  (4)
+
+	.  reduce 4
+
+
+state 11
 	stmt : expr ';' expr .  (1)
 	expr : expr . '+' NUMBER
 
-	'+'  shift 5
+	'+'  shift 6
 	.  reduce 1
 
 
@@ -115,7 +134,7 @@ state 9
 ##############################################################################
 
 5 token(s), 3 nonterminal(s)
-4 grammar rule(s), 10 state(s)
+5 grammar rule(s), 12 state(s)
 
 
 ##############################################################################

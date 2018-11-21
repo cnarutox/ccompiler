@@ -19,7 +19,7 @@
 * C++ source file generated from myparser.y.
 * 
 * Date: 11/21/18
-* Time: 21:05:31
+* Time: 21:18:53
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -221,7 +221,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 76 ".\\myparser.y"
+#line 75 ".\\myparser.y"
 
 			(*(YYSTYPE YYFAR*)yyvalptr).ntnode = new node(yyattribute(1 - 3).ntnode->value + yyattribute(3 - 3).ntnode->value);
 			printf("%d\n", (*(YYSTYPE YYFAR*)yyvalptr).ntnode->value) ;
@@ -229,9 +229,8 @@ void YYPARSERNAME::yyaction(int action)
 			(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[0] = yyattribute(1 - 3).ntnode;
 			(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[1] = yyattribute(2 - 3).ntnode;
 			(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[2] = yyattribute(3 - 3).ntnode;
-				
-			
-#line 235 "myparser.cpp"
+		
+#line 234 "myparser.cpp"
 			}
 		}
 		break;
@@ -242,7 +241,28 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 85 ".\\myparser.y"
+#line 84 ".\\myparser.y"
+
+			(*(YYSTYPE YYFAR*)yyvalptr).ntnode = new node(yyattribute(1 - 3).ntnode->value + yyattribute(3 - 3).ntnode->value);
+			printf("%d\n", (*(YYSTYPE YYFAR*)yyvalptr).ntnode->value) ;
+			(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children=new node* [3];
+			(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[0] = yyattribute(1 - 3).ntnode;
+			(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[1] = yyattribute(2 - 3).ntnode;
+			(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[2] = yyattribute(3 - 3).ntnode;
+				
+			
+#line 255 "myparser.cpp"
+			}
+		}
+		break;
+	case 3:
+		{
+#ifdef YYDEBUG
+			YYSTYPE YYFAR* yya[4];
+			yyinitdebug((void YYFAR**)yya, 4);
+#endif
+			{
+#line 93 ".\\myparser.y"
 
 		        (*(YYSTYPE YYFAR*)yyvalptr).ntnode = new node(yyattribute(1 - 3).ntnode->value + yyattribute(3 - 3).ntnode->value);
 				printf("%d\n", (*(YYSTYPE YYFAR*)yyvalptr).ntnode->value) ;
@@ -251,7 +271,7 @@ void YYPARSERNAME::yyaction(int action)
 				(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[1] = yyattribute(2 - 3).ntnode;
 				(*(YYSTYPE YYFAR*)yyvalptr).ntnode->children[2] = yyattribute(3 - 3).ntnode;
 		
-#line 255 "myparser.cpp"
+#line 275 "myparser.cpp"
 			}
 		}
 		break;
@@ -281,6 +301,7 @@ void YYPARSERNAME::yytables()
 	static const char* const YYNEARFAR YYBASED_CODE rule[] = {
 		"$accept: stmt",
 		"stmt: expr \';\' expr",
+		"stmt: stmt \';\' expr",
 		"expr: NUMBER \'+\' NUMBER",
 		"expr: expr \'+\' NUMBER"
 	};
@@ -290,20 +311,22 @@ void YYPARSERNAME::yytables()
 	static const yyreduction_t YYNEARFAR YYBASED_CODE reduction[] = {
 		{ 0, 1, -1 },
 		{ 1, 3, 0 },
-		{ 2, 3, 1 },
-		{ 2, 3, 2 }
+		{ 1, 3, 1 },
+		{ 2, 3, 2 },
+		{ 2, 3, 3 }
 	};
 	yyreduction = reduction;
 
-	yytokenaction_size = 17;
+	yytokenaction_size = 60;
 
 	static const yytokenaction_t YYNEARFAR YYBASED_CODE tokenaction[] = {
-		{ 3, YYAT_SHIFT, 5 },
-		{ 9, YYAT_SHIFT, 5 },
-		{ 6, YYAT_SHIFT, 1 },
-		{ 5, YYAT_SHIFT, 8 },
-		{ 4, YYAT_SHIFT, 7 },
 		{ 2, YYAT_ACCEPT, 0 },
+		{ 3, YYAT_SHIFT, 6 },
+		{ 11, YYAT_SHIFT, 6 },
+		{ 9, YYAT_SHIFT, 6 },
+		{ 7, YYAT_SHIFT, 1 },
+		{ 6, YYAT_SHIFT, 10 },
+		{ 4, YYAT_SHIFT, 8 },
 		{ 1, YYAT_SHIFT, 4 },
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
@@ -314,30 +337,75 @@ void YYPARSERNAME::yytables()
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
-		{ 3, YYAT_SHIFT, 6 }
+		{ 3, YYAT_SHIFT, 7 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ -1, YYAT_ERROR, 0 },
+		{ 2, YYAT_SHIFT, 5 }
 	};
 	yytokenaction = tokenaction;
 
 	static const yystateaction_t YYNEARFAR YYBASED_CODE stateaction[] = {
-		{ 0, 0, YYAT_DEFAULT, 6 },
-		{ -37, 1, YYAT_ERROR, 0 },
-		{ 5, 1, YYAT_ERROR, 0 },
-		{ -43, 1, YYAT_ERROR, 0 },
+		{ 0, 0, YYAT_DEFAULT, 7 },
+		{ -36, 1, YYAT_ERROR, 0 },
+		{ 0, 1, YYAT_ERROR, 0 },
+		{ -42, 1, YYAT_ERROR, 0 },
+		{ -251, 1, YYAT_ERROR, 0 },
+		{ 0, 0, YYAT_DEFAULT, 7 },
+		{ -252, 1, YYAT_ERROR, 0 },
 		{ -253, 1, YYAT_ERROR, 0 },
-		{ -254, 1, YYAT_ERROR, 0 },
-		{ -255, 1, YYAT_ERROR, 0 },
-		{ 0, 0, YYAT_REDUCE, 2 },
 		{ 0, 0, YYAT_REDUCE, 3 },
-		{ -42, 1, YYAT_REDUCE, 1 }
+		{ -40, 1, YYAT_REDUCE, 2 },
+		{ 0, 0, YYAT_REDUCE, 4 },
+		{ -41, 1, YYAT_REDUCE, 1 }
 	};
 	yystateaction = stateaction;
 
-	yynontermgoto_size = 3;
+	yynontermgoto_size = 4;
 
 	static const yynontermgoto_t YYNEARFAR YYBASED_CODE nontermgoto[] = {
 		{ 0, 2 },
 		{ 0, 3 },
-		{ 6, 9 }
+		{ 7, 11 },
+		{ 5, 9 }
 	};
 	yynontermgoto = nontermgoto;
 
@@ -346,6 +414,8 @@ void YYPARSERNAME::yytables()
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
+		{ 0, -1 },
+		{ 1, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
@@ -363,7 +433,7 @@ void YYPARSERNAME::yytables()
 	yytokendestbaseptr = NULL;
 	yytokendestbase_size = 0;
 }
-#line 94 ".\\myparser.y"
+#line 102 ".\\myparser.y"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -375,7 +445,7 @@ int main(void)
 //  FILE *stream;
 //	freopen_s(&stream, "in.txt", "r", stdin);
 //	freopen_s(&stream, "out.txt", "w", stdout);
-	cout << "����\t\t����\t\t����\t\t�к�" << endl;
+	cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
 	int n = 1;
 	mylexer lexer;
 	myparser parser;

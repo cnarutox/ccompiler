@@ -72,6 +72,14 @@ stmt	:   expr ';' expr	{
 			$$->children[1] = $2.ntnode;
 			$$->children[2] = $3;
 		}
+		|   stmt ';' expr	{
+			$$ = new node($1->value + $3->value);
+			printf("%d\n", $$->value) ;
+			$$->children=new node* [3];
+			$$->children[0] = $1;
+			$$->children[1] = $2.ntnode;
+			$$->children[2] = $3;
+		}
 		;
 expr	:	NUMBER '+' NUMBER	{
 			$$ = new node($1.ntnode->value + $3.ntnode->value);
@@ -102,7 +110,7 @@ int main(void)
 //  FILE *stream;
 //	freopen_s(&stream, "in.txt", "r", stdin);
 //	freopen_s(&stream, "out.txt", "w", stdout);
-	cout << "����\t\t����\t\t����\t\t�к�" << endl;
+	cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
 	int n = 1;
 	mylexer lexer;
 	myparser parser;
