@@ -1,5 +1,7 @@
 #include <vector>
 #include <string>
+#include<iostream>
+#include<typeinfo>
 using namespace std;
 #define ERROR 0
 #define VOID 1

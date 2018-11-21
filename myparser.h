@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 41 of your 30 day trial period.
+* You are on day 43 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.h
 * C++ header file generated from myparser.y.
 * 
-* Date: 11/19/18
-* Time: 21:46:35
+* Date: 11/21/18
+* Time: 21:05:31
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -28,6 +28,19 @@
 #define _MYPARSER_H
 
 #include <yycpars.h>
+
+#ifndef YYSTYPE
+union tagYYSTYPE {
+#line 21 ".\\myparser.y"
+
+	struct node* ntnode;
+	int value;
+
+#line 40 "myparser.h"
+};
+
+#define YYSTYPE union tagYYSTYPE
+#endif
 
 #define NUMBER 257
 /////////////////////////////////////////////////////////////////////////////
@@ -62,22 +75,22 @@ protected:
 	virtual void yycopyattribute(void YYFAR* dest, const void YYFAR* src, int count);
 
 public:
-#line 19 ".\\myparser.y"
+#line 35 ".\\myparser.y"
 
 	// place any extra class members here
 
-#line 70 "myparser.h"
+#line 83 "myparser.h"
 };
 
 #ifndef YYPARSERNAME
 #define YYPARSERNAME myparser
 #endif
 
-#line 34 ".\\myparser.y"
+#line 50 ".\\myparser.y"
 
 #ifndef YYSTYPE
 #define YYSTYPE int
 #endif
 
-#line 83 "myparser.h"
+#line 96 "myparser.h"
 #endif

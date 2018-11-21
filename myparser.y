@@ -7,12 +7,28 @@ Date: 2018��10��28��
 ****************************************************************************/
 
 #include "mylexer.h"
+#include <string>
+struct node {
+	string name;
+	int value;
+	node** children;
+	node(int v = 0)
+	{
+		value = v;
+	}
+	};
 %}
+%union {
+	struct node* ntnode;
+	int value;
+}
+
+%type <ntnode> stmt, expr
 
 /////////////////////////////////////////////////////////////////////////////
 // declarations section
-%token NUMBER
 // parser name
+%token  NUMBER
 %name myparser
 
 // class definition
@@ -39,14 +55,41 @@ Date: 2018��10��28��
 
 // place any declarations here
 
+// %token <ival> NUMBER
+
+
 %%
 
 /////////////////////////////////////////////////////////////////////////////
 // rules section
 
 // place your YACC rules here (there must be at least one)
-
-expr	:	NUMBER '+' NUMBER {printf("%d\n", $1 + $3);}
+stmt	:   expr ';' expr	{
+			$$ = new node($1->value + $3->value);
+			printf("%d\n", $$->value) ;
+			$$->children=new node* [3];
+			$$->children[0] = $1;
+			$$->children[1] = $2.ntnode;
+			$$->children[2] = $3;
+		}
+		;
+expr	:	NUMBER '+' NUMBER	{
+			$$ = new node($1.ntnode->value + $3.ntnode->value);
+			printf("%d\n", $$->value) ;
+			$$->children=new node* [3];
+			$$->children[0] = $1.ntnode;
+			$$->children[1] = $2.ntnode;
+			$$->children[2] = $3.ntnode;
+				
+			}
+		|   expr '+' NUMBER		{
+		        $$ = new node($1->value + $3.ntnode->value);
+				printf("%d\n", $$->value) ;
+				$$->children=new node* [3];
+				$$->children[0] = $1;
+				$$->children[1] = $2.ntnode;
+				$$->children[2] = $3.ntnode;
+		}
 		;
 %%
 
@@ -55,19 +98,20 @@ expr	:	NUMBER '+' NUMBER {printf("%d\n", $1 + $3);}
 
 int main(void)
 {
-	int n = 1;
-	mylexer lexer;
-	myparser parser;
+	
 //  FILE *stream;
 //	freopen_s(&stream, "in.txt", "r", stdin);
 //	freopen_s(&stream, "out.txt", "w", stdout);
 	cout << "����\t\t����\t\t����\t\t�к�" << endl;
+	int n = 1;
+	mylexer lexer;
+	myparser parser;
 	if (parser.yycreate(&lexer)) {
 		if (lexer.yycreate(&parser)) {
 			n = parser.yyparse();
 		}
 	}
 	getchar();
-	return n;
+	return 0;
 }
 

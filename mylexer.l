@@ -8,7 +8,15 @@ Date: 2018��10��28��
 
 #include "myparser.h"
 #include "define.h"
-
+extern struct node {
+	string name;
+	int value;
+	node** children;
+	node(int v = 0)
+	{
+		value = v;
+	}
+	};
 %}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -67,13 +75,13 @@ main		{reserve(MAIN, yytext); }
 "["			{reserve(RBRACE, yytext); }
 "]"			{reserve(RBRACE, yytext); }
 int|float|char|double|short	{reserve(TYPE, yytext); }
-;			{reserve(SEMICOL, yytext); }
+;			{reserve(SEMICOL, yytext);yylval.ntnode = new node(yytext[0]); return yytext[0];}
 for			{reserve(FOR, yytext); }
 "="			{reserve(ASSIGN, yytext); }
 {number}+{id}	{reserve(ERROR, yytext);}
-{number}	{reserve(NUMBER, yytext); yylval = atoi(yytext); return NUMBER; }
+{number}	{reserve(NUMBER, yytext); yylval.ntnode = new node(atoi(yytext)); return NUMBER; }
 "<"|">"|"<="|">="|"!="|"==" {reserve(COMPARISON, yytext);}
-"+"			{reserve(ADD, yytext); yylval = yytext[0]; return yytext[0];}
+"+"		{reserve(ADD, yytext); yylval.ntnode = new node(yytext[0]); return yytext[0];}
 "-"			{reserve(MINUS, yytext); }
 "/"			{reserve(DIVIDE, yytext);}
 &|"|"|~|"^"	{reserve(LOGIC, yytext);}
@@ -90,7 +98,6 @@ do          {reserve(DO, yytext);}
 else        {reserve(ELSE, yytext);}
 enum        {reserve(ENUM, yytext);}
 extern      {reserve(EXTERN, yytext);}
-for         {reserve(FOR, yytext);}
 goto        {reserve(GOTO, yytext);}
 return      {reserve(RETURN, yytext);}
 register    {reserve(REGISTER, yytext);}
