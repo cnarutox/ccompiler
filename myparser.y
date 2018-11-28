@@ -29,6 +29,7 @@ struct node {
 /////////////////////////////////////////////////////////////////////////////
 // declarations section
 // parser name
+%token NUMBER
 %token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
@@ -435,14 +436,14 @@ declaration_specifiers
 	;
 
 init_declarator_list
-	: init_declarators{
+	: init_declarator{
 		$$ -> length = 1;
 		$$ = new node();
 		$$->name="init_declarator_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
-	| init_declarator_list ',' init_declarators{
+	| init_declarator_list ',' init_declarator{
 		$$ -> length = 3;
 		$$ = new node();
 		$$->name="init_declarator_list";
