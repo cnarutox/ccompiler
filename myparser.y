@@ -114,107 +114,508 @@ expr	:	NUMBER '+' NUMBER	{
 		}
 		;
 primary_expression
-	: IDENTIFIER
-	| CONSTANT
-	| STRING_LITERAL
-	| '(' expression ')'
+	: IDENTIFIER{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="primary_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
+	| CONSTANT{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="primary_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
+	| STRING_LITERAL{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="primary_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;	
+	}
+	| '(' expression ')'{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="primary_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2;
+		$$->children[2] = $3.ntnode;	
+	}
 	;
 
 postfix_expression
-	: primary_expression
-	| postfix_expression '[' expression ']'
-	| postfix_expression '(' ')'
-	| postfix_expression '(' argument_expression_list ')'
-	| postfix_expression '.' IDENTIFIER
-	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP
-	| postfix_expression DEC_OP
+	: primary_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| postfix_expression '[' expression ']'{
+		$$ -> length = 4;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [4];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+		$$->children[3] = $4.ntnode;
+	}
+	| postfix_expression '(' ')'{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3.ntnode;
+	}
+	| postfix_expression '(' argument_expression_list ')'{
+		$$ -> length = 4;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [4];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+		$$->children[3] = $4.ntnode;
+	}
+	| postfix_expression '.' IDENTIFIER{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| postfix_expression PTR_OP IDENTIFIER{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3.ntnode;
+	}
+	| postfix_expression INC_OP{
+		$$ -> length = 2;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [2];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+	}
+	| postfix_expression DEC_OP{
+		$$ -> length = 2;
+		$$ = new node();
+		$$->name="postfix_expression";
+		$$->children=new node* [2];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+	}
 	;
 
 argument_expression_list
-	: assignment_expression
-	| argument_expression_list ',' assignment_expression
+	: assignment_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="argument_expression_list";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+		$$->children[1] = $2;
+	}
+	| argument_expression_list ',' assignment_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="argument_expression_list";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 unary_expression
-	: postfix_expression
-	| INC_OP unary_expression
-	| DEC_OP unary_expression
-	| unary_operator cast_expression
-	| SIZEOF unary_expression
-	| SIZEOF '(' type_name ')'
+	: postfix_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="unary_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| INC_OP unary_expression{
+		$$ -> length = 2;
+		$$ = new node();
+		$$->name="unary_expression";
+		$$->children=new node* [2];
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2;
+	}
+	| DEC_OP unary_expression{
+		$$ -> length = 2;
+		$$ = new node();
+		$$->name="unary_expression";
+		$$->children=new node* [2];
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2;
+	}
+	| unary_operator cast_expression{
+		$$ -> length = 2;
+		$$ = new node();
+		$$->name="unary_expression";
+		$$->children=new node* [2];
+		$$->children[0] = $1;
+		$$->children[1] = $2;
+	}
+	| SIZEOF unary_expression{
+		$$ -> length = 2;
+		$$ = new node();
+		$$->name="unary_expression";
+		$$->children=new node* [2];
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2;
+	}
+	| SIZEOF '(' type_name ')'{
+		$$ -> length = 4;
+		$$ = new node();
+		$$->name="unary_expression";
+		$$->children=new node* [4];
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+		$$->children[3] = $4.ntnode;
+	}
 	;
 
 unary_operator
-	: '&'
-	| '*'
-	| '+'
-	| '-'
-	| '~'
-	| '!'
+	: '&'{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="unary_operator";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
+	| '*'{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="unary_operator";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
+	| '+'{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="unary_operator";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
+	| '-'{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="unary_operator";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
+	| '~'{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="unary_operator";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
+	| '!'{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="unary_operator";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+	}
 	;
 
 cast_expression
-	: unary_expression
-	| '(' type_name ')' cast_expression
+	: unary_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="cast_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| '(' type_name ')' cast_expression{
+		$$ -> length = 4;
+		$$ = new node();
+		$$->name="cast_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2;
+		$$->children[2] = $3.ntnode;
+		$$->children[3] = $4;
+	}
 	;
 
 multiplicative_expression
-	: cast_expression
-	| multiplicative_expression '*' cast_expression
-	| multiplicative_expression '/' cast_expression
-	| multiplicative_expression '%' cast_expression
+	: cast_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="multiplicative_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| multiplicative_expression '*' cast_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="multiplicative_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| multiplicative_expression '/' cast_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="multiplicative_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| multiplicative_expression '%' cast_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="multiplicative_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 additive_expression
-	: multiplicative_expression
-	| additive_expression '+' multiplicative_expression
-	| additive_expression '-' multiplicative_expression
+	: multiplicative_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="additive_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| additive_expression '+' multiplicative_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="additive_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| additive_expression '-' multiplicative_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="additive_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 shift_expression
-	: additive_expression
-	| shift_expression LEFT_OP additive_expression
-	| shift_expression RIGHT_OP additive_expression
+	: additive_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="shift_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| shift_expression LEFT_OP additive_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="shift_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| shift_expression RIGHT_OP additive_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="shift_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 relational_expression
-	: shift_expression
-	| relational_expression '<' shift_expression
-	| relational_expression '>' shift_expression
-	| relational_expression LE_OP shift_expression
-	| relational_expression GE_OP shift_expression
+	: shift_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="relational_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| relational_expression '<' shift_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="relational_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| relational_expression '>' shift_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="relational_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| relational_expression LE_OP shift_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="relational_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| relational_expression GE_OP shift_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="relational_expression";
+		$$->children=new node* [3];s
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 equality_expression
-	: relational_expression
-	| equality_expression EQ_OP relational_expression
-	| equality_expression NE_OP relational_expression
+	: relational_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="equality_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| equality_expression EQ_OP relational_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="equality_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
+	| equality_expression NE_OP relational_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="equality_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 and_expression
-	: equality_expression
-	| and_expression '&' equality_expression
+	: equality_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="and_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| and_expression '&' equality_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="and_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 exclusive_or_expression
-	: and_expression
-	| exclusive_or_expression '^' and_expression
+	: and_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="exclusive_or_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| exclusive_or_expression '^' and_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="exclusive_or_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 inclusive_or_expression
-	: exclusive_or_expression
-	| inclusive_or_expression '|' exclusive_or_expression
+	: exclusive_or_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="inclusive_or_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| inclusive_or_expression '|' exclusive_or_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="inclusive_or_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 logical_and_expression
-	: inclusive_or_expression
-	| logical_and_expression AND_OP inclusive_or_expression
+	: inclusive_or_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="logical_and_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| logical_and_expression AND_OP inclusive_or_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="logical_and_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 logical_or_expression
-	: logical_and_expression
-	| logical_or_expression OR_OP logical_and_expression
+	: logical_and_expression{
+		$$ -> length = 1;
+		$$ = new node();
+		$$->name="logical_or_expression";
+		$$->children=new node* [1];
+		$$->children[0] = $1;
+	}
+	| logical_or_expression OR_OP logical_and_expression{
+		$$ -> length = 3;
+		$$ = new node();
+		$$->name="logical_or_expression";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+	}
 	;
 
 conditional_expression
