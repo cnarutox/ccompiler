@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 43 of your 30 day trial period.
+* You are on day 50 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.cpp
 * C++ source file generated from myparser.y.
 * 
-* Date: 11/21/18
-* Time: 21:18:53
+* Date: 11/28/18
+* Time: 16:08:57
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -320,12 +320,12 @@ void YYPARSERNAME::yytables()
 	yytokenaction_size = 60;
 
 	static const yytokenaction_t YYNEARFAR YYBASED_CODE tokenaction[] = {
-		{ 2, YYAT_ACCEPT, 0 },
-		{ 3, YYAT_SHIFT, 6 },
-		{ 11, YYAT_SHIFT, 6 },
-		{ 9, YYAT_SHIFT, 6 },
+		{ 3, YYAT_ACCEPT, 0 },
+		{ 2, YYAT_SHIFT, 5 },
+		{ 11, YYAT_SHIFT, 5 },
+		{ 10, YYAT_SHIFT, 5 },
 		{ 7, YYAT_SHIFT, 1 },
-		{ 6, YYAT_SHIFT, 10 },
+		{ 5, YYAT_SHIFT, 9 },
 		{ 4, YYAT_SHIFT, 8 },
 		{ 1, YYAT_SHIFT, 4 },
 		{ -1, YYAT_ERROR, 0 },
@@ -337,7 +337,7 @@ void YYPARSERNAME::yytables()
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
-		{ 3, YYAT_SHIFT, 7 },
+		{ 2, YYAT_SHIFT, 6 },
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
@@ -379,33 +379,33 @@ void YYPARSERNAME::yytables()
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
 		{ -1, YYAT_ERROR, 0 },
-		{ 2, YYAT_SHIFT, 5 }
+		{ 3, YYAT_SHIFT, 7 }
 	};
 	yytokenaction = tokenaction;
 
 	static const yystateaction_t YYNEARFAR YYBASED_CODE stateaction[] = {
 		{ 0, 0, YYAT_DEFAULT, 7 },
 		{ -36, 1, YYAT_ERROR, 0 },
-		{ 0, 1, YYAT_ERROR, 0 },
 		{ -42, 1, YYAT_ERROR, 0 },
+		{ 0, 1, YYAT_ERROR, 0 },
 		{ -251, 1, YYAT_ERROR, 0 },
-		{ 0, 0, YYAT_DEFAULT, 7 },
 		{ -252, 1, YYAT_ERROR, 0 },
+		{ 0, 0, YYAT_DEFAULT, 7 },
 		{ -253, 1, YYAT_ERROR, 0 },
 		{ 0, 0, YYAT_REDUCE, 3 },
-		{ -40, 1, YYAT_REDUCE, 2 },
 		{ 0, 0, YYAT_REDUCE, 4 },
-		{ -41, 1, YYAT_REDUCE, 1 }
+		{ -40, 1, YYAT_REDUCE, 1 },
+		{ -41, 1, YYAT_REDUCE, 2 }
 	};
 	yystateaction = stateaction;
 
 	yynontermgoto_size = 4;
 
 	static const yynontermgoto_t YYNEARFAR YYBASED_CODE nontermgoto[] = {
-		{ 0, 2 },
 		{ 0, 3 },
+		{ 0, 2 },
 		{ 7, 11 },
-		{ 5, 9 }
+		{ 6, 10 }
 	};
 	yynontermgoto = nontermgoto;
 
@@ -415,8 +415,8 @@ void YYPARSERNAME::yytables()
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
-		{ 1, -1 },
 		{ 0, -1 },
+		{ 1, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },

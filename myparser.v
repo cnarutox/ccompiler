@@ -1,7 +1,7 @@
 #############################################################################
 #                     U N R E G I S T E R E D   C O P Y
 # 
-# You are on day 43 of your 30 day trial period.
+# You are on day 50 of your 30 day trial period.
 # 
 # This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 # for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 # myparser.v
 # YACC verbose file generated from myparser.y.
 # 
-# Date: 11/21/18
-# Time: 21:18:53
+# Date: 11/28/18
+# Time: 16:08:57
 # 
 # AYACC Version: 2.07
 #############################################################################
@@ -47,8 +47,8 @@ state 0
 
 	NUMBER  shift 1
 
-	stmt  goto 2
-	expr  goto 3
+	expr  goto 2
+	stmt  goto 3
 
 
 state 1
@@ -58,18 +58,18 @@ state 1
 
 
 state 2
+	stmt : expr . ';' expr
+	expr : expr . '+' NUMBER
+
+	'+'  shift 5
+	';'  shift 6
+
+
+state 3
 	$accept : stmt . $end  (0)
 	stmt : stmt . ';' expr
 
 	$end  accept
-	';'  shift 5
-
-
-state 3
-	stmt : expr . ';' expr
-	expr : expr . '+' NUMBER
-
-	'+'  shift 6
 	';'  shift 7
 
 
@@ -80,21 +80,21 @@ state 4
 
 
 state 5
-	stmt : stmt ';' . expr
+	expr : expr '+' . NUMBER
 
-	NUMBER  shift 1
-
-	expr  goto 9
+	NUMBER  shift 9
 
 
 state 6
-	expr : expr '+' . NUMBER
+	stmt : expr ';' . expr
 
-	NUMBER  shift 10
+	NUMBER  shift 1
+
+	expr  goto 10
 
 
 state 7
-	stmt : expr ';' . expr
+	stmt : stmt ';' . expr
 
 	NUMBER  shift 1
 
@@ -108,25 +108,25 @@ state 8
 
 
 state 9
-	stmt : stmt ';' expr .  (2)
-	expr : expr . '+' NUMBER
-
-	'+'  shift 6
-	.  reduce 2
-
-
-state 10
 	expr : expr '+' NUMBER .  (4)
 
 	.  reduce 4
 
 
-state 11
+state 10
 	stmt : expr ';' expr .  (1)
 	expr : expr . '+' NUMBER
 
-	'+'  shift 6
+	'+'  shift 5
 	.  reduce 1
+
+
+state 11
+	stmt : stmt ';' expr .  (2)
+	expr : expr . '+' NUMBER
+
+	'+'  shift 5
+	.  reduce 2
 
 
 ##############################################################################
