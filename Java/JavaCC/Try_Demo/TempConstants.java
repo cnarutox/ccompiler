@@ -17,105 +17,147 @@ public interface TempConstants {
   /** RegularExpression Id. */
   int SEMIC = 10;
   /** RegularExpression Id. */
-  int COLON = 11;
+  int COMMA = 11;
   /** RegularExpression Id. */
-  int ASSIGN = 12;
+  int COLON = 12;
   /** RegularExpression Id. */
-  int LBR = 13;
+  int ELLIPSIS = 13;
   /** RegularExpression Id. */
-  int RBR = 14;
+  int QUESTION = 14;
   /** RegularExpression Id. */
-  int COMMA = 15;
+  int ASSIGN = 15;
   /** RegularExpression Id. */
-  int PLUS_SIGN = 16;
+  int MACRO = 16;
   /** RegularExpression Id. */
-  int MINUS_SIGN = 17;
+  int LBR = 17;
   /** RegularExpression Id. */
-  int MULT_SIGN = 18;
+  int RBR = 18;
   /** RegularExpression Id. */
-  int DIV_SIGN = 19;
+  int RCBR = 19;
   /** RegularExpression Id. */
-  int RCBR = 20;
+  int LCBR = 20;
   /** RegularExpression Id. */
-  int LCBR = 21;
+  int PLUS = 21;
   /** RegularExpression Id. */
-  int EXLM = 22;
+  int MINUS = 22;
   /** RegularExpression Id. */
-  int QUESTION = 23;
+  int MULT = 23;
   /** RegularExpression Id. */
-  int PERCENT = 24;
+  int DIV = 24;
   /** RegularExpression Id. */
-  int EQUALS = 25;
+  int MOD = 25;
   /** RegularExpression Id. */
-  int NOT_EQUAL = 26;
+  int INC = 26;
   /** RegularExpression Id. */
-  int LEFT_BRACE = 27;
+  int DEC = 27;
   /** RegularExpression Id. */
-  int RIGHT_BRACE = 28;
+  int EXLM = 28;
   /** RegularExpression Id. */
-  int LEFT_BRACE_EQUAL = 29;
+  int NOT = 29;
   /** RegularExpression Id. */
-  int RIGHT_BRACE_EQUAL = 30;
+  int AND = 30;
   /** RegularExpression Id. */
-  int DOT = 31;
+  int OR = 31;
   /** RegularExpression Id. */
-  int AND = 32;
+  int XOR = 32;
   /** RegularExpression Id. */
-  int BOOL = 33;
+  int LOGIC_EQUAL = 33;
   /** RegularExpression Id. */
-  int CONST = 34;
+  int LOGIC_NOT = 34;
   /** RegularExpression Id. */
-  int DO = 35;
+  int LOGIC_AND = 35;
   /** RegularExpression Id. */
-  int ELSE = 36;
+  int LOGIC_OR = 36;
   /** RegularExpression Id. */
-  int FALSE = 37;
+  int LEFT = 37;
   /** RegularExpression Id. */
-  int IF = 38;
+  int RIGHT = 38;
   /** RegularExpression Id. */
-  int INT = 39;
+  int LEFT_EQUAL = 39;
   /** RegularExpression Id. */
-  int MAIN = 40;
+  int RIGHT_EQUAL = 40;
   /** RegularExpression Id. */
-  int NOT = 41;
+  int LEFT_MOVE = 41;
   /** RegularExpression Id. */
-  int OR = 42;
+  int RIGHT_MOVE = 42;
   /** RegularExpression Id. */
-  int REAL = 43;
+  int ADD_EQUAL = 43;
   /** RegularExpression Id. */
-  int RETURN = 44;
+  int MINUS_EQUAL = 44;
   /** RegularExpression Id. */
-  int STR = 45;
+  int MULT_EQUAL = 45;
   /** RegularExpression Id. */
-  int THEN = 46;
+  int DIV_EQUAL = 46;
   /** RegularExpression Id. */
-  int TRUE = 47;
+  int MOD_EQUAL = 47;
   /** RegularExpression Id. */
-  int VAR = 48;
+  int AND_EQUAL = 48;
   /** RegularExpression Id. */
-  int VOID = 49;
+  int OR_EQUAL = 49;
   /** RegularExpression Id. */
-  int CHAR = 50;
+  int XOR_EQUAL = 50;
   /** RegularExpression Id. */
-  int SHORT = 51;
+  int LEFT_MOVE_EQUAL = 51;
   /** RegularExpression Id. */
-  int LONG = 52;
+  int RIGHT_MOVE_EQUAL = 52;
   /** RegularExpression Id. */
-  int WHILE = 53;
+  int BOOL = 53;
   /** RegularExpression Id. */
-  int INCLUDE = 54;
+  int CONST = 54;
   /** RegularExpression Id. */
-  int MACRO = 55;
+  int DO = 55;
   /** RegularExpression Id. */
-  int DEFINE = 56;
+  int ELSE = 56;
   /** RegularExpression Id. */
-  int IDENTIFIER = 57;
+  int FALSE = 57;
   /** RegularExpression Id. */
-  int INTEGER = 58;
+  int IF = 58;
   /** RegularExpression Id. */
-  int STRING = 63;
+  int INT = 59;
   /** RegularExpression Id. */
-  int OTHER = 64;
+  int RETURN = 60;
+  /** RegularExpression Id. */
+  int STR = 61;
+  /** RegularExpression Id. */
+  int TRUE = 62;
+  /** RegularExpression Id. */
+  int VOID = 63;
+  /** RegularExpression Id. */
+  int CHAR = 64;
+  /** RegularExpression Id. */
+  int SHORT = 65;
+  /** RegularExpression Id. */
+  int LONG = 66;
+  /** RegularExpression Id. */
+  int WHILE = 67;
+  /** RegularExpression Id. */
+  int INCLUDE = 68;
+  /** RegularExpression Id. */
+  int DEFINE = 69;
+  /** RegularExpression Id. */
+  int GOTO = 70;
+  /** RegularExpression Id. */
+  int FOR = 71;
+  /** RegularExpression Id. */
+  int SWITCH = 72;
+  /** RegularExpression Id. */
+  int CASE = 73;
+  /** RegularExpression Id. */
+  int CASE_DEFAULT = 74;
+  /** RegularExpression Id. */
+  int BREAK = 75;
+  /** RegularExpression Id. */
+  int CONTINUE = 76;
+  /** RegularExpression Id. */
+  int IDENTIFIER = 77;
+  /** RegularExpression Id. */
+  int INTEGER = 78;
+  /** RegularExpression Id. */
+  int STRING = 83;
+  /** RegularExpression Id. */
+  int CHARACTER = 88;
+  /** RegularExpression Id. */
+  int OTHER = 89;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -123,6 +165,10 @@ public interface TempConstants {
   int IN_BLOCK_COMMIT = 1;
   /** Lexical state. */
   int IN_STRING = 2;
+  /** Lexical state. */
+  int IN_CHARACTER = 3;
+  /** Lexical state. */
+  int CHARACTER_TERM = 4;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -137,61 +183,85 @@ public interface TempConstants {
     "<token of kind 8>",
     "\"*/\"",
     "\";\"",
+    "\",\"",
     "\":\"",
-    "\":=\"",
+    "\"...\"",
+    "\"?\"",
+    "\"=\"",
+    "\"#\"",
     "\"(\"",
     "\")\"",
-    "\",\"",
+    "\"}\"",
+    "\"{\"",
     "\"+\"",
     "\"-\"",
     "\"*\"",
     "\"/\"",
-    "\"}\"",
-    "\"{\"",
-    "\"!\"",
-    "\"?\"",
     "\"%\"",
-    "\"=\"",
+    "\"++\"",
+    "\"--\"",
+    "\"!\"",
+    "\"~\"",
+    "\"&\"",
+    "\"|\"",
+    "\"^\"",
+    "\"==\"",
     "\"!=\"",
+    "\"&&\"",
+    "\"||\"",
     "\"<\"",
     "\">\"",
     "\"<=\"",
     "\">=\"",
-    "\".\"",
-    "\"and\"",
-    "\"boolean\"",
-    "\"constant\"",
+    "\"<<\"",
+    "\">>\"",
+    "\"+=\"",
+    "\"-=\"",
+    "\"*=\"",
+    "\"/=\"",
+    "\"%=\"",
+    "\"&=\"",
+    "\"|=\"",
+    "\"^=\"",
+    "\"<<=\"",
+    "\">>=\"",
+    "\"bool\"",
+    "\"const\"",
     "\"do\"",
     "\"else\"",
     "\"false\"",
     "\"if\"",
     "\"int\"",
-    "\"main\"",
-    "\"not\"",
-    "\"or\"",
-    "\"real\"",
     "\"return\"",
     "\"string\"",
-    "\"then\"",
     "\"true\"",
-    "\"var\"",
     "\"void\"",
     "\"char\"",
     "\"short\"",
     "\"long\"",
     "\"while\"",
     "\"include\"",
-    "\"#\"",
     "\"define\"",
+    "\"goto\"",
+    "\"for\"",
+    "\"switch\"",
+    "\"case\"",
+    "\"default\"",
+    "\"break\"",
+    "\"continue\"",
     "<IDENTIFIER>",
     "<INTEGER>",
     "\"\\\"\"",
-    "<token of kind 60>",
-    "<token of kind 61>",
-    "<token of kind 62>",
+    "<token of kind 80>",
+    "<token of kind 81>",
+    "<token of kind 82>",
     "\"\\\"\"",
+    "\"\\\'\"",
+    "<token of kind 85>",
+    "<token of kind 86>",
+    "<token of kind 87>",
+    "\"\\\'\"",
     "<OTHER>",
-    "\"...\"",
   };
 
 }

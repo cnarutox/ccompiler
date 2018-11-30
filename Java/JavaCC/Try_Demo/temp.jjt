@@ -1,0 +1,1127 @@
+options {
+    STATIC = true; // function should not be static
+    //UNICODE = true; // string should be transform to unicode
+}
+
+PARSER_BEGIN(Temp)
+package Try_Demo;
+import java.io.*;
+import Try_Demo.tree.Node;
+
+class Temp {
+    public static void main(String[] args) {
+        try {
+            BufferedReader br = new BufferedReader(
+                new FileReader(new File("src/main/java/Try_Demo/stmt.c")));
+            StringBuilder buf = new StringBuilder();
+            String s;
+            while ((s = br.readLine()) != null) {
+                buf.append("\n");
+                buf.append(s);
+            }
+            Node root=evaluate(buf.toString());
+            root.dump();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    public static Node evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        return new Temp(reader).compilation_unit();
+    }
+}
+PARSER_END(Temp)
+
+/*****************************************************************/
+/*****************************************************************/
+/*****************************************************************/
+SKIP : // Ignoring spaces/tabs/newlines
+{
+        " "
+    |   "\t"
+    |   "\n"
+    |   "\r"
+    |   "\f"
+}
+SPECIAL_TOKEN : // Ignoring line commit
+{
+    < LINE_COMMIT : "//"(~["\n","\r"])* ("\n"|"\r\n"|"\r")? >
+}
+MORE : // Ignoring block commit
+{
+    < "/*" > : IN_BLOCK_COMMIT
+}
+< IN_BLOCK_COMMIT > MORE :
+{
+    < ~[] >
+}
+< IN_BLOCK_COMMIT > SPECIAL_TOKEN :
+{
+    < BLOCK_COMMIT : "*/" > : DEFAULT
+}
+TOKEN : // Keywords and punctuation
+{
+        < SEMIC : ";" >
+    |   < COMMA : "," >
+    |   < COLON : ":" >
+    |   < ELLIPSIS : "..." >
+    |   < QUESTION : "?" >
+    |   < ASSIGN : "=" >
+    |   < MACRO : "#" >
+
+
+    |   < LBR : "(" >
+    |   < RBR : ")" >
+    |   < RCBR : "}" >
+    |   < LCBR : "{" >
+
+    |   < PLUS : "+" >
+    |   < MINUS : "-" >
+    |   < MULT : "*" >
+    |   < DIV : "/" >
+    |   < MOD : "%" >
+    |   < INC : "++" >
+    |   < DEC : "--" >
+
+    |   < EXLM : "!" >
+    |   < NOT : "~" >
+    |   < AND : "&" >
+    |   < OR : "|" >
+    |   < XOR : "^" >
+    |   < LOGIC_EQUAL : "==" >
+    |   < LOGIC_NOT : "!=" >
+    |   < LOGIC_AND : "&&" >
+    |   < LOGIC_OR : "||" >
+    |   < LEFT : "<" >
+    |   < RIGHT : ">" >
+    |   < LEFT_EQUAL : "<=" >
+    |   < RIGHT_EQUAL : ">=" >
+    |   < LEFT_MOVE : "<<">
+    |   < RIGHT_MOVE : ">>">
+
+    |   < ADD_EQUAL : "+=" >
+    |   < MINUS_EQUAL : "-=" >
+    |   < MULT_EQUAL : "*=" >
+    |   < DIV_EQUAL : "/=" >
+    |   < MOD_EQUAL : "%=" >
+    |   < AND_EQUAL : "&=" >
+    |   < OR_EQUAL : "|=" >
+    |   < XOR_EQUAL : "^=" >
+    |   < LEFT_MOVE_EQUAL : "<<=" >
+    |   < RIGHT_MOVE_EQUAL : ">>=" >
+
+    |   < BOOL : "bool" >
+    |   < CONST : "const" >
+    |   < DO : "do" >
+    |   < ELSE : "else" >
+    |   < FALSE : "false" >
+    |   < IF : "if" >
+    |   < INT : "int" >
+    |   < RETURN : "return" >
+    |   < STR : "string" >
+    |   < TRUE : "true" >
+    |   < VOID : "void" >
+    |   < CHAR : "char" >
+    |   < SHORT : "short" >
+    |   < LONG : "long" >
+    |   < WHILE : "while" >
+    |   < INCLUDE : "include" >
+    |   < DEFINE : "define" >
+    |   < GOTO : "goto" >
+    |   < FOR : "for" >
+    |   < SWITCH : "switch" >
+    |   < CASE : "case" >
+    |   < CASE_DEFAULT : "default" >
+    |   < BREAK : "break" >
+    |   < CONTINUE : "continue" >
+}
+TOKEN :
+{
+    < IDENTIFIER : ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", "0"-"9"])* >
+}
+TOKEN :
+{
+    < INTEGER : ["1"-"9"] (["0"-"9"])* ("U")? ("L")?
+            |   "0" ["x", "X"] (["0"-"9", "a"-"f", "A"-"F"])+ ("U")? ("L")?
+            |   "0" (["0"-"7"])* ("U")? ("L")?
+            >
+}
+MORE : // Strings
+{
+    < "\"" > : IN_STRING
+}
+< IN_STRING > MORE :
+{
+        < (~["\"", "\\", "\n", "\r"])+ >
+    |   < "\\"(["0"-"7"]){3} >
+    |   < "\\"~[] >
+}
+< IN_STRING > TOKEN :
+{
+    < STRING : "\"" > : DEFAULT
+}
+MORE : // CHARACTER
+{
+    < "'" > : IN_CHARACTER
+}
+< IN_CHARACTER > MORE :
+{
+        < ~["'", "\\", "\n", "\r"] >    : CHARACTER_TERM
+    |   < "\\"(["0"-"7"]){3} >          : CHARACTER_TERM
+    |   < "\\"~[] >                     : CHARACTER_TERM
+}
+< CHARACTER_TERM > TOKEN :
+{
+    < CHARACTER : "'" > : DEFAULT
+}
+TOKEN : // Anything not recognised so far
+{
+    < OTHER : ~[] >
+}
+
+/*****************************************************************/
+/*****************************************************************/
+/*****************************************************************/
+Node compilation_unit() :
+{
+    Node root;
+    Node node;
+}
+{
+    node=stmts() < EOF >
+    {
+        root=new Node("root",null,node);
+        return root;
+    }
+}
+Node stmts() :
+{
+    Node node=new Node("stmts");
+    Node tmp;
+}
+{
+    (
+    tmp=stmt()
+    {
+        node.addChildren(tmp);
+    }
+    )*
+    {
+        return node.simplify();
+    }
+}
+Node stmt() :
+{
+    Node node=null;
+}
+{
+    (   < SEMIC >
+    |   LOOKAHEAD(2) node=expr() < SEMIC >
+    |   node=block()
+    |   LOOKAHEAD(2) node=labeled_stmt()
+    |   node=macro_stmt()
+    |   node=def_stmt()
+    |   node=goto_stmt()
+    |   LOOKAHEAD(2) node=assigns_stmt()
+    |   node=if_stmt()
+    |   node=while_stmt()
+    |   node=dowhile_stmt()
+    |   node=for_stmt()
+    |   node=switch_stmt()
+    |   node=break_stmt()
+    |   node=continue_stmt()
+    |   node=return_stmt()
+    )
+    {
+        if(node!=null){
+            return node;
+        }else{
+            return new Node("ndef stmt");
+        }
+    }
+}
+Node macro_stmt() :
+{
+    Node node;
+}
+{
+    < MACRO >(node=include_stmt()|node=define_stmt())
+    {
+        return node;
+    }
+}
+Node include_stmt() :
+{
+    Token x;
+}
+{
+    < INCLUDE > ((< LEFT > x=< IDENTIFIER > < RIGHT >)|x=< STRING >)
+    {
+        return new Node("include",x.image);
+    }
+}
+Node define_stmt() :
+{
+    Token key;
+    Token value;
+}
+{
+    < DEFINE > key=< IDENTIFIER > value=< INTEGER >
+    {
+        return new Node("define",null,
+        new Node("id",key.image),
+        new Node("constant",value.image));
+    }
+}
+Node def_stmt() :
+{
+    Node node;
+}
+{
+    (    LOOKAHEAD (type() name() "(")
+        node=def_fun()
+    |   node=def_vars()
+    )
+    {
+        return node;
+    }
+}
+Node type() :
+{
+    Node node;
+}
+{
+    node=typedef_base()
+    {
+        return node;
+    }
+}
+Node typedef_base() :
+{
+    Token x;
+}
+{
+    (   x=< VOID >
+    |   x=< CHAR >
+    |   x=< SHORT >
+    |   x=< INT >
+    |   x=< LONG >
+    |   x=< BOOL >
+    |   x=< STRING >
+    )
+    {
+        return new Node("type",x.image);
+    }
+}
+Node name() :
+{
+    Token x;
+}
+{
+    x=< IDENTIFIER >
+    {
+        return new Node("id",x.image);
+    }
+}
+Node def_fun() :
+{
+    Node node;
+    Node t,id,p,b;
+}
+{
+    t=type() id=name() < LBR > p=params() < RBR >
+    {
+        node=new Node("defFun").addChildren(t,id,p);
+    }
+    (
+            < SEMIC >
+        |   b=block()
+            {
+               node.addChildren(b);
+            }
+    )
+    {
+        return node;
+    }
+}
+Node params() :
+{
+    Node node=null;
+    Token x;
+}
+{
+    (   LOOKAHEAD(< RBR >){return null;}
+    |   LOOKAHEAD(< VOID > < RBR >) < VOID >
+    |   node=fixedparams()
+        [
+            < COMMA > x=< ELLIPSIS >
+            {
+                node.addChildren(new Node(x.image));
+            }
+        ]
+    )
+    {
+        return node;
+    }
+}
+Node fixedparams() :
+{
+    Node node=new Node("params");
+    Node temp;
+}
+{
+    temp=param()
+    {
+        node.addChildren(temp);
+    }
+    (
+        LOOKAHEAD(2) < COMMA > temp=param()
+        {
+            node.addChildren(temp);
+        }
+    )*
+    {
+        return node.simplify();
+    }
+}
+Node param() :
+{
+    Node t,id;
+}
+{
+    t=type() id=name()
+    {
+        return new Node("param",null,t,id);
+    }
+}
+Node block() :
+{
+    Node node;
+}
+{
+    < LCBR > node=stmts() < RCBR >
+    {
+        return node;
+    }
+}
+Node def_vars() :
+{
+    Node node=new Node("defVars");
+    Node t,id,val;
+    Node temp;
+}
+{
+    t=type() id=name()
+    {
+        temp=new Node("defVar").addChildren(t,id);
+        node.addChildren(temp);
+    }
+    [
+        < ASSIGN > val=expr()
+        {
+            temp.addChildren(val);
+        }
+    ]
+    (
+        < COMMA > id=name()
+        {
+            temp=new Node("defVar").addChildren(t,id);
+            node.addChildren(temp);
+        }
+        [
+             < ASSIGN > val=expr()
+             {
+                 temp.addChildren(val);
+             }
+        ]
+    )* < SEMIC >
+    {
+        return node.simplify();
+    }
+}
+Node labeled_stmt() :
+{
+    Token label;
+}
+{
+    label=< IDENTIFIER > < COLON >
+    {
+        return new Node("label",label.image);
+    }
+}
+Node goto_stmt() :
+{
+    Token label;
+}
+{
+    < GOTO > label=< IDENTIFIER > < COLON >
+    {
+        return new Node("goto",label.image);
+    }
+}
+Node assigns_stmt() : // 赋值语句
+{
+    Node node=new Node("assigns");
+    Node id;
+    Node val;
+}
+{
+    id=name() < ASSIGN > val=expr()
+    {
+        node.addChildren(new Node("assign",null,id,val));
+    }
+    (
+        < COMMA > id=name() < ASSIGN > val=expr()
+        {
+            node.addChildren(new Node("assign",null,id,val));
+        }
+
+    )* < SEMIC >
+    {
+        return node.simplify();
+    }
+}
+Node if_stmt() :
+{
+    Node cond;
+    Node if_node;
+    Node else_node=null;
+}
+{
+    < IF > "(" cond=expr() ")" if_node=block() [LOOKAHEAD(1) < ELSE > else_node=block()]
+    {
+        return new Node("if").addChildren(cond,if_node,else_node);
+    }
+}
+Node while_stmt() :
+{
+    Node cond;
+    Node stmts_node;
+}
+{
+    < WHILE > < LBR > cond=expr() < RBR > stmts_node=block()
+    {
+        return new Node("while").addChildren(cond,stmts_node);
+    }
+}
+Node dowhile_stmt() :
+{
+    Node cond;
+    Node stmts_node;
+}
+{
+    < DO > stmts_node=block() < WHILE > < LBR > cond=expr() < RBR> < SEMIC >
+    {
+         return new Node("dowhile").addChildren(stmts_node,cond);
+    }
+}
+Node for_stmt() :
+{
+    Node for_0=null;
+    Node for_1=null;
+    Node for_2=null;
+    Node stmts_node;
+}
+{
+    < FOR > < LBR > (for_0=def_vars()|for_0=assigns_stmt()|< SEMIC >)
+    [for_1=expr()] < SEMIC > [for_2=expr()] < RBR > stmts_node=block()
+    {
+        return new Node("for").addChildren_s(for_0,for_1,for_2,stmts_node);
+    }
+}
+Node switch_stmt() :
+{
+    Node node=new Node("switch");
+    Node temp;
+}
+{
+    < SWITCH > < LBR > temp=name() < RBR > < LCBR >
+    {
+        node.addChildren(temp);
+    }
+    (
+        temp=switch_case()
+        {
+            node.addChildren(temp);
+        }
+    )*
+    [
+        temp=default_case()
+        {
+            node.addChildren(temp);
+        }
+    ]
+    < RCBR >
+    {
+        return node;
+    }
+}
+Node switch_case() :
+{
+    Node cond;
+    Node stmts_node;
+}
+{
+    < CASE > cond=constant() < COLON > stmts_node=stmts()
+    {
+        return new Node("case").addChildren(cond,stmts_node);
+    }
+}
+Node default_case() :
+{
+    Node node;
+}
+{
+    < CASE_DEFAULT > < COLON > node=stmts()
+    {
+        return new Node("default").addChildren(node);
+    }
+}
+Node constant() :
+{
+    Node node;
+    Token x;
+}
+{
+            node=number()
+            {
+                return node;
+            }
+        |   x=< CHARACTER >
+            {
+                return new Node("character",x.image);
+            }
+        |   x=< STRING >
+            {
+                return new Node("string",x.image);
+            }
+        |   node=truth()
+            {
+                return node;
+            }
+}
+Node break_stmt() :
+{}
+{
+    < BREAK > < SEMIC >
+    {
+        return new Node("break");
+    }
+}
+Node continue_stmt() :
+{}
+{
+    < CONTINUE > < SEMIC >
+    {
+        return new Node("continue");
+    }
+}
+Node return_stmt() :
+{
+    Node node=new Node("return");
+    Node val;
+}
+{
+    < RETURN >
+    [
+        val=expr()
+        {
+            node.addChildren(val);
+        }
+    ]
+    < SEMIC >
+    {
+        return node;
+    }
+}
+Node expr() :
+{
+    Node node;
+    Node lop=null;
+    Node op=null;
+    Node rop=null;
+}
+{
+    (   LOOKAHEAD(term() assign_op())
+        lop=term() op=assign_op() rop=expr()
+    |   node=expr10()
+        {
+            return node;
+        }
+    )
+    {
+        return new Node("expr").addChildren(lop,op,rop);
+    }
+}
+Node assign_op() :
+{
+    Token op;
+}
+{
+    (
+        op=< ADD_EQUAL >
+    |   op=< MINUS_EQUAL >
+    |   op=< MULT_EQUAL >
+    |   op=< DIV_EQUAL >
+    |   op=< MOD_EQUAL >
+    |   op=< AND_EQUAL >
+    |   op=< OR_EQUAL >
+    |   op=< XOR_EQUAL >
+    |   op=< LEFT_MOVE_EQUAL >
+    |   op=< RIGHT_MOVE_EQUAL >
+    )
+    {
+        return new Node(op.image);
+    }
+}
+Node expr10() : // ? ：数字越小优先级越高
+{
+    Node node;
+    Node l=null;
+    Node r=null;
+    Token op=null;
+}
+{
+    node=expr9() [op=< QUESTION > l=expr() < COLON > r=expr()]
+    {
+        if(op==null){
+            return node;
+        }else{
+            return new Node(op.image,null,node,l,r);
+        }
+    }
+}
+Node expr9() : // ||
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr8()
+    (
+        op=< LOGIC_OR >
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr8()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr8() : // &&
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr7()
+    (
+        op=< LOGIC_AND >
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr7()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr7() : // >, <, >=, <=, ==, !=
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr6()
+    (
+        (
+            op=< RIGHT >
+        |   op=< LEFT >
+        |   op=< RIGHT_EQUAL >
+        |   op=< LEFT_EQUAL >
+        |   op=< LOGIC_EQUAL >
+        |   op=< LOGIC_NOT >
+        )
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr6()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr6() : // |
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr5()
+    (
+        op=< OR >
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr5()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr5() : // ^
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr4()
+    (
+        op=< XOR >
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr4()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr4() : // &
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr3()
+    (
+        op=< AND >
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr3()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr3() : // >>, <<
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr2()
+    (
+        (
+            op=< RIGHT_MOVE >
+        |   op=< LEFT_MOVE >
+        )
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr2()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr2() : // +, -
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=expr1()
+    (
+        (
+            op=< PLUS >
+        |   op=< MINUS >
+        )
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=expr1()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr1() : // *, /, %
+{
+    Node node;
+    Node op_node=null;
+    Token op;
+}
+{
+    node=term()
+    (
+        (
+            op=< MULT >
+        |   op=< DIV >
+        |   op=< MOD >
+        )
+        {
+            if(op_node==null){
+                op_node=new Node(op.image,null,node);
+            }else{
+                op_node=new Node(op.image,null,op_node);
+            }
+        }
+        node=term()
+        {
+            op_node.addChildren(node);
+        }
+    )*
+    {
+        if(op_node==null){
+            return node;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node number() :
+{
+    Token x;
+}
+{
+    x=< INTEGER >
+    {
+        return new Node("number",x.image);
+    }
+}
+Node truth() :
+{
+    Token x;
+}
+{
+    (x=< TRUE >|x=< FALSE >)
+    {
+        return new Node("truth",x.image);
+    }
+}
+Node primary() :
+{
+    Node node;
+    Token x;
+}
+{
+        node=number()
+        {
+            return node;
+        }
+    |   x=< CHARACTER >
+        {
+            return new Node("character",x.image);
+        }
+    |   x=< STRING >
+        {
+            return new Node("string",x.image);
+        }
+    |   node=truth()
+        {
+            return node;
+        }
+    |   node=name()
+        {
+            return node;
+        }
+    |   < LBR > node=expr() < RBR >
+        {
+            return node;
+        }
+}
+Node term() :
+{
+    Node node;
+    Node temp;
+}
+{
+        LOOKAHEAD(< LBR > type()) // 强制类型转换
+        < LBR > temp=type()
+        {
+            node=new Node("cast");
+            node.addChildren(temp);
+        }
+        < RBR > temp=term()
+        {
+            node.addChildren(temp);
+            return node;
+        }
+    |   node=pre_op()
+        {
+            return node;
+        }
+}
+Node pre_op() : // 前置运算符
+{
+    Node node;
+    Token op=null;
+}
+{
+    (   op=< INC > node=pre_op()
+    |   op=< DEC > node=pre_op()
+    |   op=< PLUS > node=term()
+    |   op=< MINUS > node=term()
+    |   op=< EXLM > node=term()
+    |   op=< NOT > node=term()
+    |   op=< MULT > node=term()
+    |   op=< AND > node=term()
+    |   node=post_op()
+        {
+            return node;
+        }
+    )
+    {
+        return new Node("preOp").addChildren(new Node(op.image),node);
+    }
+}
+Node post_op() : // 后置运算符
+{
+    Node node=new Node("postOp");
+    Token op=null;
+    Node temp=null;
+}
+{
+    temp=primary()
+    {
+        node.addChildren(temp);
+        temp=null;
+    }
+    (   op=< INC >
+    |   op=< DEC >
+    |   < LBR > temp=args() < RBR > // 函数调用
+    )*
+    {
+        if(temp!=null){
+            return node.addChildren(temp);
+        }else if(op!=null){
+            return node.addChildren(new Node(op.image));
+        }else{
+            return node.simplify();
+        }
+    }
+}
+Node args() :
+{
+    Node node=new Node("args");
+    Node temp;
+}
+{
+    [ temp=expr()
+    {
+        node.addChildren(temp);
+    }
+    (< COMMA > temp=expr()
+    {
+        node.addChildren(temp);
+    }
+    )* ]
+    {
+        return node.simplify();
+    }
+}
+
