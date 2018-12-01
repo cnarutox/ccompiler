@@ -13,9 +13,10 @@ struct node {
 	int value;
 	int length;
 	node** children;
-	node(int v = 0)
+	node(int v = 0, string n = "")
 	{
 		value = v;
+		name = n;
 	}
 	};
 %}
@@ -42,6 +43,7 @@ struct node {
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
+%token MAIN
 %start translation_unit
 %name myparser
 

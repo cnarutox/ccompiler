@@ -74,28 +74,28 @@ struct Symbol
     int line;
 };
 vector<Symbol> symbols;
-void reserve(int word, string element, int line = Line)
-{
-    for (int i = 0; i < symbols.size(); i++)
-        if (symbols[i].element == element)
-        {
+// void reserve(int word, string element, int line = Line)
+// {
+//     for (int i = 0; i < symbols.size(); i++)
+//         if (symbols[i].element == element)
+//         {
             
-            return;
-        }
-    switch (word)
-    {
-    case ID:
-        symbols.push_back(Symbol(word, element, line));
-        symbols.back().value = &symbols.back().value;
-        return;
-    case NUMBER:
-    case LITERAL:
-        symbols.push_back(Symbol(word, element, line, &element));
-        return;
-    default:
-        return;
-    }
-}
+//             return;
+//         }
+//     switch (word)
+//     {
+//     case ID:
+//         symbols.push_back(Symbol(word, element, line));
+//         symbols.back().value = &symbols.back().value;
+//         return;
+//     case NUMBER:
+//     case LITERAL:
+//         symbols.push_back(Symbol(word, element, line, &element));
+//         return;
+//     default:
+//         return;
+//     }
+// }
 void comment(string val)
 {
     for (int i = 0; i < val.length(); i++)
