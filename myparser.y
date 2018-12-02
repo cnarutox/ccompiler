@@ -944,9 +944,9 @@ type_specifier
 	| DOUBLE{
 		$$ = new node();
 		$$ -> length = 1;
-		$$->name="type_specifier"
-		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;		
+		$$->name="type_specifier";
+		// $$->children=new node* [1];
+		// $$->children[0] = $1.ntnode;		
 	}
 	| SIGNED{
 		$$ = new node();
