@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 53 of your 30 day trial period.
+* You are on day 13 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -19,7 +19,7 @@
 * C++ header file generated from myparser.y.
 * 
 * Date: 12/01/18
-* Time: 18:06:54
+* Time: 21:58:15
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -134,7 +134,7 @@ protected:
 	virtual void yycopyattribute(void YYFAR* dest, const void YYFAR* src, int count);
 
 public:
-#line 51 ".\\myparser.y"
+#line 71 ".\\myparser.y"
 
 	// place any extra class members here
 
@@ -145,7 +145,7 @@ public:
 #define YYPARSERNAME myparser
 #endif
 
-#line 66 ".\\myparser.y"
+#line 86 ".\\myparser.y"
 
 #ifndef YYSTYPE
 #define YYSTYPE int

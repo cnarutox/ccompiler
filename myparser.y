@@ -25,7 +25,26 @@ struct node {
 	int value;
 }
 
-%type <ntnode> stmt, expr
+%type <ntnode> primary_expression, postfix_expression,argument_expression_list
+%type <ntnode> unary_expression,unary_operator,cast_expression,multiplicative_expression
+%type <ntnode> additive_expression,shift_expression,relational_expression,equality_expression
+%type <ntnode> and_expression,exclusive_or_expression,inclusive_or_expression
+%type <ntnode> logical_and_expression,logical_or_expression,conditional_expression
+%type <ntnode> assignment_expression,assignment_operator,expression
+%type <ntnode> constant_expression,declaration,declaration_specifiers
+%type <ntnode> init_declarator_list,init_declarator,storage_class_specifier
+%type <ntnode> type_specifier,struct_or_union_specifier,struct_or_union,struct_declaration_list
+%type <ntnode> struct_declaration,specifier_qualifier_list,struct_declarator_list,struct_declarator
+%type <ntnode> enum_specifier,enumerator_list,enumerator,type_qualifier,declarator,direct_declarator
+%type <ntnode> pointer,type_qualifier_list,parameter_type_list,parameter_list,parameter_declaration
+%type <ntnode> identifier_list,type_name,abstract_declarator,direct_abstract_declarator
+%type <ntnode> initializer,initializer_list,statement,labeled_statement,compound_statement
+%type <ntnode> declaration_list,statement_list,expression_statement,selection_statement
+%type <ntnode> iteration_statement,jump_statement,translation_unit,external_declaration
+%type <ntnode> function_definition
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 // declarations section
@@ -45,6 +64,7 @@ struct node {
 
 %token MAIN
 %start translation_unit
+
 %name myparser
 
 // class definition
@@ -80,66 +100,31 @@ struct node {
 // rules section
 
 // place your YACC rules here (there must be at least one)
-stmt	:   expr ';' expr	{
-			$$ = new node($1->value + $3->value);
-			printf("%d\n", $$->value) ;
-			$$->children=new node* [3];
-			$$->children[0] = $1;
-			$$->children[1] = $2.ntnode;
-			$$->children[2] = $3;
-		}
-		|   stmt ';' expr	{
-			$$ = new node($1->value + $3->value);
-			printf("%d\n", $$->value) ;
-			$$->children=new node* [3];
-			$$->children[0] = $1;
-			$$->children[1] = $2.ntnode;
-			$$->children[2] = $3;
-		}
-		;
-expr	:	NUMBER '+' NUMBER	{
-			$$ = new node($1.ntnode->value + $3.ntnode->value);
-			printf("%d\n", $$->value) ;
-			$$->children=new node* [3];
-			$$->children[0] = $1.ntnode;
-			$$->children[1] = $2.ntnode;
-			$$->children[2] = $3.ntnode;
-				
-			}
-		|   expr '+' NUMBER		{
-		        $$ = new node($1->value + $3.ntnode->value);
-				printf("%d\n", $$->value) ;
-				$$->children=new node* [3];
-				$$->children[0] = $1;
-				$$->children[1] = $2.ntnode;
-				$$->children[2] = $3.ntnode;
-		}
-		;
 primary_expression
 	: IDENTIFIER{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="primary_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
 	| CONSTANT{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="primary_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
 	| STRING_LITERAL{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="primary_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;	
 	}
 	| '(' expression ')'{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="primary_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1.ntnode;
@@ -150,15 +135,15 @@ primary_expression
 
 postfix_expression
 	: primary_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="postfix_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| postfix_expression '[' expression ']'{
-		$$ -> length = 4;
+	| postfix_expression '[' expression ']'{	
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="postfix_expression";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
@@ -167,8 +152,8 @@ postfix_expression
 		$$->children[3] = $4.ntnode;
 	}
 	| postfix_expression '(' ')'{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="postfix_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -176,8 +161,8 @@ postfix_expression
 		$$->children[2] = $3.ntnode;
 	}
 	| postfix_expression '(' argument_expression_list ')'{
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="postfix_expression";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
@@ -186,17 +171,17 @@ postfix_expression
 		$$->children[3] = $4.ntnode;
 	}
 	| postfix_expression '.' IDENTIFIER{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="postfix_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
-		$$->children[2] = $3;
+		$$->children[2] = $3.ntnode;
 	}
 	| postfix_expression PTR_OP IDENTIFIER{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="postfix_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -204,16 +189,16 @@ postfix_expression
 		$$->children[2] = $3.ntnode;
 	}
 	| postfix_expression INC_OP{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="postfix_expression";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 	}
 	| postfix_expression DEC_OP{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="postfix_expression";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
@@ -223,16 +208,15 @@ postfix_expression
 
 argument_expression_list
 	: assignment_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="argument_expression_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
-		$$->children[1] = $2;
 	}
 	| argument_expression_list ',' assignment_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="argument_expression_list";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -243,47 +227,47 @@ argument_expression_list
 
 unary_expression
 	: postfix_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="unary_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| INC_OP unary_expression{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="unary_expression";
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 	}
 	| DEC_OP unary_expression{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="unary_expression";
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 	}
 	| unary_operator cast_expression{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="unary_expression";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
 	}
 	| SIZEOF unary_expression{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="unary_expression";
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 	}
 	| SIZEOF '(' type_name ')'{
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="unary_expression";
 		$$->children=new node* [4];
 		$$->children[0] = $1.ntnode;
@@ -295,43 +279,43 @@ unary_expression
 
 unary_operator
 	: '&'{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="unary_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
 	| '*'{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="unary_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
 	| '+'{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="unary_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
 	| '-'{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="unary_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
 	| '~'{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="unary_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
 	| '!'{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="unary_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
@@ -340,15 +324,15 @@ unary_operator
 
 cast_expression
 	: unary_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="cast_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| '(' type_name ')' cast_expression{
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="cast_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
@@ -360,15 +344,15 @@ cast_expression
 
 multiplicative_expression
 	: cast_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="multiplicative_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| multiplicative_expression '*' cast_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="multiplicative_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -376,8 +360,8 @@ multiplicative_expression
 		$$->children[2] = $3;
 	}
 	| multiplicative_expression '/' cast_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="multiplicative_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -385,8 +369,8 @@ multiplicative_expression
 		$$->children[2] = $3;
 	}
 	| multiplicative_expression '%' cast_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="multiplicative_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -397,15 +381,15 @@ multiplicative_expression
 
 additive_expression
 	: multiplicative_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="additive_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| additive_expression '+' multiplicative_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="additive_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -413,8 +397,8 @@ additive_expression
 		$$->children[2] = $3;
 	}
 	| additive_expression '-' multiplicative_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="additive_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -425,15 +409,15 @@ additive_expression
 
 shift_expression
 	: additive_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="shift_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| shift_expression LEFT_OP additive_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="shift_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -441,8 +425,8 @@ shift_expression
 		$$->children[2] = $3;
 	}
 	| shift_expression RIGHT_OP additive_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="shift_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -453,15 +437,15 @@ shift_expression
 
 relational_expression
 	: shift_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="relational_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| relational_expression '<' shift_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="relational_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -469,8 +453,8 @@ relational_expression
 		$$->children[2] = $3;
 	}
 	| relational_expression '>' shift_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="relational_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -478,8 +462,8 @@ relational_expression
 		$$->children[2] = $3;
 	}
 	| relational_expression LE_OP shift_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="relational_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -487,10 +471,10 @@ relational_expression
 		$$->children[2] = $3;
 	}
 	| relational_expression GE_OP shift_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="relational_expression";
-		$$->children=new node* [3];s
+		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
@@ -499,15 +483,15 @@ relational_expression
 
 equality_expression
 	: relational_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="equality_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| equality_expression EQ_OP relational_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="equality_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -515,8 +499,8 @@ equality_expression
 		$$->children[2] = $3;
 	}
 	| equality_expression NE_OP relational_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="equality_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -527,15 +511,15 @@ equality_expression
 
 and_expression
 	: equality_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="and_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| and_expression '&' equality_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="and_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -546,15 +530,15 @@ and_expression
 
 exclusive_or_expression
 	: and_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="exclusive_or_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| exclusive_or_expression '^' and_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="exclusive_or_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -565,15 +549,15 @@ exclusive_or_expression
 
 inclusive_or_expression
 	: exclusive_or_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="inclusive_or_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| inclusive_or_expression '|' exclusive_or_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="inclusive_or_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -584,15 +568,15 @@ inclusive_or_expression
 
 logical_and_expression
 	: inclusive_or_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="logical_and_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| logical_and_expression AND_OP inclusive_or_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="logical_and_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -603,15 +587,15 @@ logical_and_expression
 
 logical_or_expression
 	: logical_and_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="logical_or_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| logical_or_expression OR_OP logical_and_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="logical_or_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -622,15 +606,15 @@ logical_or_expression
 
 conditional_expression
 	: logical_or_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="conditional_expression";		
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
 	| logical_or_expression '?' expression ':' conditional_expression{
-		$$ -> length = 5;
 		$$ = new node();
+		$$ -> length = 5;
 		$$->name="conditional_expression";
 		$$->children=new node* [5];
 		$$->children[0] = $1;
@@ -643,15 +627,15 @@ conditional_expression
 
 assignment_expression
 	: conditional_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
 	| unary_expression assignment_operator assignment_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="conditional_expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -662,95 +646,95 @@ assignment_expression
 
 assignment_operator
 	: '='{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
 	| MUL_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| DIV_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| MOD_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| ADD_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| SUB_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| LEFT_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| RIGHT_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| AND_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| XOR_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| OR_ASSIGN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="assignment_expression";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	;
 
 expression
 	: assignment_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
 	| expression ',' assignment_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="expression";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -761,8 +745,8 @@ expression
 
 constant_expression
 	: conditional_expression{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="constant_expression";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
@@ -771,16 +755,16 @@ constant_expression
 
 declaration
 	: declaration_specifiers ';'{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="declaration";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
-		$$->children[1] = $2;		
+		$$->children[1] = $2.ntnode;		
 	}
 	| declaration_specifiers init_declarator_list ';'{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="declaration";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -791,46 +775,46 @@ declaration
 
 declaration_specifiers
 	: storage_class_specifier{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="declaration_specifiers";
 		$$->children=new node* [1];
 		$$->children[0] = $1;	
 	}
 	| storage_class_specifier declaration_specifiers
 	{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="declaration_specifiers";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2;		
 	}
 	| type_specifier{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="declaration_specifiers";
 		$$->children=new node* [1];
 		$$->children[0] = $1;	
 	}
 	| type_specifier declaration_specifiers{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="declaration_specifiers";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2;		
 	}
 	| type_qualifier{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="declaration_specifiers";
 		$$->children=new node* [1];
 		$$->children[0] = $1;	
 	}
 	| type_qualifier declaration_specifiers{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="declaration_specifiers";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
@@ -840,15 +824,15 @@ declaration_specifiers
 
 init_declarator_list
 	: init_declarator{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="init_declarator_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
 	| init_declarator_list ',' init_declarator{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="init_declarator_list";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -859,15 +843,15 @@ init_declarator_list
 
 init_declarator
 	: declarator{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="init_declarator";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
 	| declarator '=' initializer{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="init_declarator";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -878,145 +862,144 @@ init_declarator
 
 storage_class_specifier
 	: TYPEDEF{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="storage_class_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| EXTERN{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="storage_class_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| STATIC{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="storage_class_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| AUTO{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="storage_class_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| REGISTER{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="storage_class_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	;
 
 type_specifier
 	: VOID{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| CHAR{
-		$$ -> length = 1;
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| SHORT{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| INT{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| LONG{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| FLOAT{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| DOUBLE{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier"
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| SIGNED{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| UNSIGNED{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	| struct_or_union_specifier{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
 	| enum_specifier{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
 	| TYPE_NAME{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1.ntnode;		
 	}
 	;
 
 struct_or_union_specifier
 	: struct_or_union IDENTIFIER '{' struct_declaration_list '}' {
-		$$ -> length = 5;
 		$$ = new node();
+		$$ -> length = 5;
 		$$->name="struct_or_union_specifier";
 		$$->children=new node* [5];
 		$$->children[0] = $1;
-		$$->children[1] = $2;
+		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
 		$$->children[3] = $4;
 		$$->children[4] = $5.ntnode;		
 	}
 	| struct_or_union '{' struct_declaration_list '}' {
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="struct_or_union_specifier";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
@@ -1025,43 +1008,43 @@ struct_or_union_specifier
 		$$->children[3] = $4.ntnode;		
 	}
 	| struct_or_union IDENTIFIER {
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="struct_or_union_specifier";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
-		$$->children[1] = $2;		
+		$$->children[1] = $2.ntnode;		
 	}
 	;
 
 struct_or_union
 	: STRUCT{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="struct_or_union";
 		$$->children=new node* [1];
-		$$->children[0] = $1;	
+		$$->children[0] = $1.ntnode;	
 	}
 	| UNION{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="struct_or_union";
 		$$->children=new node* [1];
-		$$->children[0] = $1;	
+		$$->children[0] = $1.ntnode;	
 	}
 	;
 
 struct_declaration_list
 	: struct_declaration{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="struct_declaration_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;	
 	}
 	| struct_declaration_list struct_declaration{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="struct_declaration_list";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
@@ -1071,8 +1054,8 @@ struct_declaration_list
 
 struct_declaration
 	: specifier_qualifier_list struct_declarator_list ';' {
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="struct_declaration_list";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -1083,31 +1066,31 @@ struct_declaration
 
 specifier_qualifier_list
 	: type_specifier specifier_qualifier_list{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="specifier_qualifier_list";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
 	}
 	| type_specifier{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="specifier_qualifier_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| type_qualifier specifier_qualifier_list{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="specifier_qualifier_list";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
 	}
 	| type_qualifier{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="specifier_qualifier_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
@@ -1116,15 +1099,15 @@ specifier_qualifier_list
 
 struct_declarator_list
 	: struct_declarator{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="struct_declarator_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| struct_declarator_list ',' struct_declarator{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="struct_declarator_list";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -1135,96 +1118,96 @@ struct_declarator_list
 
 struct_declarator
 	: declarator{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="struct_declarator";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| ':' constant_expression{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="struct_declarator";
 		$$->children=new node* [2];
-		$$->children[0] = $1.ntcode;
+		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 	}
 	| declarator ':' constant_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="struct_declarator";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
-		$$->children[1] = $2.ntcode;
+		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
 	;
 
 enum_specifier
 	: ENUM '{' enumerator_list '}' {
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="enum_specifier";
 		$$->children=new node* [4];
-		$$->children[0] = $1;
-		$$->children[1] = $2.ntcode;
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
 	}
 	| ENUM IDENTIFIER '{' enumerator_list '}' {
-		$$ -> length = 5;
 		$$ = new node();
+		$$ -> length = 5;
 		$$->name="enum_specifier";
 		$$->children=new node* [5];
-		$$->children[0] = $1;
-		$$->children[1] = $2;
-		$$->children[2] = $3.ntcode;
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3.ntnode;
 		$$->children[3] = $4;
-		$$->children[4] = $5.ntcode;
+		$$->children[4] = $5.ntnode;
 	}
 	| ENUM IDENTIFIER {
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="enum_specifier";
 		$$->children=new node* [2];
-		$$->children[0] = $1;
-		$$->children[1] = $2;
+		$$->children[0] = $1.ntnode;
+		$$->children[1] = $2.ntnode;
 	}
 	;
 
 enumerator_list
 	: enumerator{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="enumerator_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
 	| enumerator_list ',' enumerator{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="enumerator_list";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
-		$$->children[1] = $2;
+		$$->children[2] = $3;
 	}
 	;
 
 enumerator
 	: IDENTIFIER{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="enumerator";
 		$$->children=new node* [1];
-		$$->children[0] = $1;
+		$$->children[0] = $1.ntnode;
 	}
 	| IDENTIFIER '=' constant_expression{
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="enumerator";
 		$$->children=new node* [3];
-		$$->children[0] = $1;
+		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
@@ -1232,33 +1215,33 @@ enumerator
 
 type_qualifier
 	: CONST{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_qualifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;
+		$$->children[0] = $1.ntnode;
 	}
 	| VOLATILE{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="type_qualifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;
+		$$->children[0] = $1.ntnode;
 	}
 	;
 
 declarator
 	: pointer direct_declarator{
-		$$ -> length = 2;
 		$$ = new node();
+		$$ -> length = 2;
 		$$->name="declarator";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
 	}
 	| direct_declarator{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="declarator";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
@@ -1267,15 +1250,15 @@ declarator
 
 direct_declarator
 	: IDENTIFIER{
-		$$ -> length = 1;
 		$$ = new node();
+		$$ -> length = 1;
 		$$->name="direct_declarator";
 		$$->children=new node* [1];
-		$$->children[0] = $1;
+		$$->children[0] = $1.ntnode;
 	}
 	| '(' declarator ')' {
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="direct_declarator";
 		$$->children=new node* [3];
 		$$->children[0] = $1.ntnode;
@@ -1283,8 +1266,8 @@ direct_declarator
 		$$->children[2] = $3.ntnode;
 	}
 	| direct_declarator '[' constant_expression ']' {
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="direct_declarator";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
@@ -1293,8 +1276,8 @@ direct_declarator
 		$$->children[3] = $4.ntnode;
 	}
 	| direct_declarator '[' ']' {
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="direct_declarator";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -1302,8 +1285,8 @@ direct_declarator
 		$$->children[2] = $3.ntnode;
 	}
 	| direct_declarator '(' parameter_type_list ')' {
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="direct_declarator";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
@@ -1312,8 +1295,8 @@ direct_declarator
 		$$->children[3] = $4.ntnode;
 	}
 	| direct_declarator '(' identifier_list ')' {
-		$$ -> length = 4;
 		$$ = new node();
+		$$ -> length = 4;
 		$$->name="direct_declarator";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
@@ -1322,8 +1305,8 @@ direct_declarator
 		$$->children[3] = $4.ntnode;
 	}
 	| direct_declarator '(' ')' {
-		$$ -> length = 3;
 		$$ = new node();
+		$$ -> length = 3;
 		$$->name="direct_declarator";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
@@ -1454,7 +1437,7 @@ identifier_list
 		$$ -> name = "type_qualifier_list";
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
-		$$ -> children[0] = $1;
+		$$ -> children[0] = $1.ntnode;
 	}
 	| identifier_list ',' IDENTIFIER {
 		$$ = new node();
@@ -1514,7 +1497,7 @@ direct_abstract_declarator
 	: '(' abstract_declarator ')' {
 		$$ = new node();
 		$$ -> name = "direct_abstract_declarator";
-		
+		$$ -> length = 3;
 		$$ -> children = new node* [3];
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2;
@@ -1821,7 +1804,7 @@ selection_statement
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3;
 		$$ -> children[3] = $4.ntnode;
-		$$ -> children[4] = $4;
+		$$ -> children[4] = $5;
 	}
 	| IF '(' expression ')' statement ELSE statement {
 		$$ = new node();
@@ -1833,7 +1816,7 @@ selection_statement
 		$$ -> children[2] = $3;
 		$$ -> children[3] = $4.ntnode;
 		$$ -> children[4] = $5;
-		$$ -> children[5] = $6;
+		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7;
 	}
 	| SWITCH '(' expression ')' statement {

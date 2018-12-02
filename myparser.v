@@ -1,7 +1,7 @@
 #############################################################################
 #                     U N R E G I S T E R E D   C O P Y
 # 
-# You are on day 53 of your 30 day trial period.
+# You are on day 13 of your 30 day trial period.
 # 
 # This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 # for evaluation purposes only. If you continue to use Parser Generator 30
@@ -19,7 +19,7 @@
 # YACC verbose file generated from myparser.y.
 # 
 # Date: 12/01/18
-# Time: 18:06:54
+# Time: 21:58:15
 # 
 # AYACC Version: 2.07
 #############################################################################
@@ -31,285 +31,279 @@
 
     0  $accept : translation_unit $end
 
-    1  stmt : expr ';' expr
-    2       | stmt ';' expr
-
-    3  expr : NUMBER '+' NUMBER
-    4       | expr '+' NUMBER
-
-    5  primary_expression : IDENTIFIER
-    6                     | CONSTANT
-    7                     | STRING_LITERAL
-    8                     | '(' expression ')'
-
-    9  postfix_expression : primary_expression
-   10                     | postfix_expression '[' expression ']'
-   11                     | postfix_expression '(' ')'
-   12                     | postfix_expression '(' argument_expression_list ')'
-   13                     | postfix_expression '.' IDENTIFIER
-   14                     | postfix_expression PTR_OP IDENTIFIER
-   15                     | postfix_expression INC_OP
-   16                     | postfix_expression DEC_OP
-
-   17  argument_expression_list : assignment_expression
-   18                           | argument_expression_list ',' assignment_expression
-
-   19  unary_expression : postfix_expression
-   20                   | INC_OP unary_expression
-   21                   | DEC_OP unary_expression
-   22                   | unary_operator cast_expression
-   23                   | SIZEOF unary_expression
-   24                   | SIZEOF '(' type_name ')'
-
-   25  unary_operator : '&'
-   26                 | '*'
-   27                 | '+'
-   28                 | '-'
-   29                 | '~'
-   30                 | '!'
-
-   31  cast_expression : unary_expression
-   32                  | '(' type_name ')' cast_expression
-
-   33  multiplicative_expression : cast_expression
-   34                            | multiplicative_expression '*' cast_expression
-   35                            | multiplicative_expression '/' cast_expression
-   36                            | multiplicative_expression '%' cast_expression
-
-   37  additive_expression : multiplicative_expression
-   38                      | additive_expression '+' multiplicative_expression
-   39                      | additive_expression '-' multiplicative_expression
-
-   40  shift_expression : additive_expression
-   41                   | shift_expression LEFT_OP additive_expression
-   42                   | shift_expression RIGHT_OP additive_expression
-
-   43  relational_expression : shift_expression
-   44                        | relational_expression '<' shift_expression
-   45                        | relational_expression '>' shift_expression
-   46                        | relational_expression LE_OP shift_expression
-   47                        | relational_expression GE_OP shift_expression
-
-   48  equality_expression : relational_expression
-   49                      | equality_expression EQ_OP relational_expression
-   50                      | equality_expression NE_OP relational_expression
-
-   51  and_expression : equality_expression
-   52                 | and_expression '&' equality_expression
-
-   53  exclusive_or_expression : and_expression
-   54                          | exclusive_or_expression '^' and_expression
-
-   55  inclusive_or_expression : exclusive_or_expression
-   56                          | inclusive_or_expression '|' exclusive_or_expression
-
-   57  logical_and_expression : inclusive_or_expression
-   58                         | logical_and_expression AND_OP inclusive_or_expression
-
-   59  logical_or_expression : logical_and_expression
-   60                        | logical_or_expression OR_OP logical_and_expression
-
-   61  conditional_expression : logical_or_expression
-   62                         | logical_or_expression '?' expression ':' conditional_expression
-
-   63  assignment_expression : conditional_expression
-   64                        | unary_expression assignment_operator assignment_expression
-
-   65  assignment_operator : '='
-   66                      | MUL_ASSIGN
-   67                      | DIV_ASSIGN
-   68                      | MOD_ASSIGN
-   69                      | ADD_ASSIGN
-   70                      | SUB_ASSIGN
-   71                      | LEFT_ASSIGN
-   72                      | RIGHT_ASSIGN
-   73                      | AND_ASSIGN
-   74                      | XOR_ASSIGN
-   75                      | OR_ASSIGN
-
-   76  expression : assignment_expression
-   77             | expression ',' assignment_expression
-
-   78  constant_expression : conditional_expression
-
-   79  declaration : declaration_specifiers ';'
-   80              | declaration_specifiers init_declarator_list ';'
-
-   81  declaration_specifiers : storage_class_specifier
-   82                         | storage_class_specifier declaration_specifiers
-   83                         | type_specifier
-   84                         | type_specifier declaration_specifiers
-   85                         | type_qualifier
-   86                         | type_qualifier declaration_specifiers
-
-   87  init_declarator_list : init_declarator
-   88                       | init_declarator_list ',' init_declarator
-
-   89  init_declarator : declarator
-   90                  | declarator '=' initializer
-
-   91  storage_class_specifier : TYPEDEF
-   92                          | EXTERN
-   93                          | STATIC
-   94                          | AUTO
-   95                          | REGISTER
-
-   96  type_specifier : VOID
-   97                 | CHAR
-   98                 | SHORT
-   99                 | INT
-  100                 | LONG
-  101                 | FLOAT
-  102                 | DOUBLE
-  103                 | SIGNED
-  104                 | UNSIGNED
-  105                 | struct_or_union_specifier
-  106                 | enum_specifier
-  107                 | TYPE_NAME
-
-  108  struct_or_union_specifier : struct_or_union IDENTIFIER '{' struct_declaration_list '}'
-  109                            | struct_or_union '{' struct_declaration_list '}'
-  110                            | struct_or_union IDENTIFIER
-
-  111  struct_or_union : STRUCT
-  112                  | UNION
-
-  113  struct_declaration_list : struct_declaration
-  114                          | struct_declaration_list struct_declaration
-
-  115  struct_declaration : specifier_qualifier_list struct_declarator_list ';'
-
-  116  specifier_qualifier_list : type_specifier specifier_qualifier_list
-  117                           | type_specifier
-  118                           | type_qualifier specifier_qualifier_list
-  119                           | type_qualifier
-
-  120  struct_declarator_list : struct_declarator
-  121                         | struct_declarator_list ',' struct_declarator
-
-  122  struct_declarator : declarator
-  123                    | ':' constant_expression
-  124                    | declarator ':' constant_expression
-
-  125  enum_specifier : ENUM '{' enumerator_list '}'
-  126                 | ENUM IDENTIFIER '{' enumerator_list '}'
-  127                 | ENUM IDENTIFIER
-
-  128  enumerator_list : enumerator
-  129                  | enumerator_list ',' enumerator
-
-  130  enumerator : IDENTIFIER
-  131             | IDENTIFIER '=' constant_expression
-
-  132  type_qualifier : CONST
-  133                 | VOLATILE
-
-  134  declarator : pointer direct_declarator
-  135             | direct_declarator
-
-  136  direct_declarator : IDENTIFIER
-  137                    | '(' declarator ')'
-  138                    | direct_declarator '[' constant_expression ']'
-  139                    | direct_declarator '[' ']'
-  140                    | direct_declarator '(' parameter_type_list ')'
-  141                    | direct_declarator '(' identifier_list ')'
-  142                    | direct_declarator '(' ')'
-
-  143  pointer : '*'
-  144          | '*' type_qualifier_list
-  145          | '*' pointer
-  146          | '*' type_qualifier_list pointer
-
-  147  type_qualifier_list : type_qualifier
-  148                      | type_qualifier_list type_qualifier
-
-  149  parameter_type_list : parameter_list
-  150                      | parameter_list ',' ELLIPSIS
-
-  151  parameter_list : parameter_declaration
-  152                 | parameter_list ',' parameter_declaration
-
-  153  parameter_declaration : declaration_specifiers declarator
-  154                        | declaration_specifiers abstract_declarator
-  155                        | declaration_specifiers
-
-  156  identifier_list : IDENTIFIER
-  157                  | identifier_list ',' IDENTIFIER
-
-  158  type_name : specifier_qualifier_list
-  159            | specifier_qualifier_list abstract_declarator
-
-  160  abstract_declarator : pointer
-  161                      | direct_abstract_declarator
-  162                      | pointer direct_abstract_declarator
-
-  163  direct_abstract_declarator : '(' abstract_declarator ')'
-  164                             | '[' ']'
-  165                             | '[' constant_expression ']'
-  166                             | direct_abstract_declarator '[' ']'
-  167                             | direct_abstract_declarator '[' constant_expression ']'
-  168                             | '(' ')'
-  169                             | '(' parameter_type_list ')'
-  170                             | direct_abstract_declarator '(' ')'
-  171                             | direct_abstract_declarator '(' parameter_type_list ')'
-
-  172  initializer : assignment_expression
-  173              | '{' initializer_list '}'
-  174              | '{' initializer_list ',' '}'
-
-  175  initializer_list : initializer
-  176                   | initializer_list ',' initializer
-
-  177  statement : labeled_statement
-  178            | compound_statement
-  179            | expression_statement
-  180            | selection_statement
-  181            | iteration_statement
-  182            | jump_statement
-
-  183  labeled_statement : IDENTIFIER ':' statement
-  184                    | CASE constant_expression ':' statement
-  185                    | DEFAULT ':' statement
-
-  186  compound_statement : '{' '}'
-  187                     | '{' statement_list '}'
-  188                     | '{' declaration_list '}'
-  189                     | '{' declaration_list statement_list '}'
-
-  190  declaration_list : declaration
-  191                   | declaration_list declaration
-
-  192  statement_list : statement
-  193                 | statement_list statement
-
-  194  expression_statement : ';'
-  195                       | expression ';'
-
-  196  selection_statement : IF '(' expression ')' statement
-  197                      | IF '(' expression ')' statement ELSE statement
-  198                      | SWITCH '(' expression ')' statement
-
-  199  iteration_statement : WHILE '(' expression ')' statement
-  200                      | DO statement WHILE '(' expression ')' ';'
-  201                      | FOR '(' expression_statement expression_statement ')' statement
-  202                      | FOR '(' expression_statement expression_statement expression ')' statement
-
-  203  jump_statement : GOTO IDENTIFIER ';'
-  204                 | CONTINUE ';'
-  205                 | BREAK ';'
-  206                 | RETURN ';'
-  207                 | RETURN expression ';'
-
-  208  translation_unit : external_declaration
-  209                   | translation_unit external_declaration
-
-  210  external_declaration : function_definition
-  211                       | declaration
-
-  212  function_definition : declaration_specifiers declarator declaration_list compound_statement
-  213                      | declaration_specifiers declarator compound_statement
-  214                      | declarator declaration_list compound_statement
-  215                      | declarator compound_statement
+    1  primary_expression : IDENTIFIER
+    2                     | CONSTANT
+    3                     | STRING_LITERAL
+    4                     | '(' expression ')'
+
+    5  postfix_expression : primary_expression
+    6                     | postfix_expression '[' expression ']'
+    7                     | postfix_expression '(' ')'
+    8                     | postfix_expression '(' argument_expression_list ')'
+    9                     | postfix_expression '.' IDENTIFIER
+   10                     | postfix_expression PTR_OP IDENTIFIER
+   11                     | postfix_expression INC_OP
+   12                     | postfix_expression DEC_OP
+
+   13  argument_expression_list : assignment_expression
+   14                           | argument_expression_list ',' assignment_expression
+
+   15  unary_expression : postfix_expression
+   16                   | INC_OP unary_expression
+   17                   | DEC_OP unary_expression
+   18                   | unary_operator cast_expression
+   19                   | SIZEOF unary_expression
+   20                   | SIZEOF '(' type_name ')'
+
+   21  unary_operator : '&'
+   22                 | '*'
+   23                 | '+'
+   24                 | '-'
+   25                 | '~'
+   26                 | '!'
+
+   27  cast_expression : unary_expression
+   28                  | '(' type_name ')' cast_expression
+
+   29  multiplicative_expression : cast_expression
+   30                            | multiplicative_expression '*' cast_expression
+   31                            | multiplicative_expression '/' cast_expression
+   32                            | multiplicative_expression '%' cast_expression
+
+   33  additive_expression : multiplicative_expression
+   34                      | additive_expression '+' multiplicative_expression
+   35                      | additive_expression '-' multiplicative_expression
+
+   36  shift_expression : additive_expression
+   37                   | shift_expression LEFT_OP additive_expression
+   38                   | shift_expression RIGHT_OP additive_expression
+
+   39  relational_expression : shift_expression
+   40                        | relational_expression '<' shift_expression
+   41                        | relational_expression '>' shift_expression
+   42                        | relational_expression LE_OP shift_expression
+   43                        | relational_expression GE_OP shift_expression
+
+   44  equality_expression : relational_expression
+   45                      | equality_expression EQ_OP relational_expression
+   46                      | equality_expression NE_OP relational_expression
+
+   47  and_expression : equality_expression
+   48                 | and_expression '&' equality_expression
+
+   49  exclusive_or_expression : and_expression
+   50                          | exclusive_or_expression '^' and_expression
+
+   51  inclusive_or_expression : exclusive_or_expression
+   52                          | inclusive_or_expression '|' exclusive_or_expression
+
+   53  logical_and_expression : inclusive_or_expression
+   54                         | logical_and_expression AND_OP inclusive_or_expression
+
+   55  logical_or_expression : logical_and_expression
+   56                        | logical_or_expression OR_OP logical_and_expression
+
+   57  conditional_expression : logical_or_expression
+   58                         | logical_or_expression '?' expression ':' conditional_expression
+
+   59  assignment_expression : conditional_expression
+   60                        | unary_expression assignment_operator assignment_expression
+
+   61  assignment_operator : '='
+   62                      | MUL_ASSIGN
+   63                      | DIV_ASSIGN
+   64                      | MOD_ASSIGN
+   65                      | ADD_ASSIGN
+   66                      | SUB_ASSIGN
+   67                      | LEFT_ASSIGN
+   68                      | RIGHT_ASSIGN
+   69                      | AND_ASSIGN
+   70                      | XOR_ASSIGN
+   71                      | OR_ASSIGN
+
+   72  expression : assignment_expression
+   73             | expression ',' assignment_expression
+
+   74  constant_expression : conditional_expression
+
+   75  declaration : declaration_specifiers ';'
+   76              | declaration_specifiers init_declarator_list ';'
+
+   77  declaration_specifiers : storage_class_specifier
+   78                         | storage_class_specifier declaration_specifiers
+   79                         | type_specifier
+   80                         | type_specifier declaration_specifiers
+   81                         | type_qualifier
+   82                         | type_qualifier declaration_specifiers
+
+   83  init_declarator_list : init_declarator
+   84                       | init_declarator_list ',' init_declarator
+
+   85  init_declarator : declarator
+   86                  | declarator '=' initializer
+
+   87  storage_class_specifier : TYPEDEF
+   88                          | EXTERN
+   89                          | STATIC
+   90                          | AUTO
+   91                          | REGISTER
+
+   92  type_specifier : VOID
+   93                 | CHAR
+   94                 | SHORT
+   95                 | INT
+   96                 | LONG
+   97                 | FLOAT
+   98                 | DOUBLE
+   99                 | SIGNED
+  100                 | UNSIGNED
+  101                 | struct_or_union_specifier
+  102                 | enum_specifier
+  103                 | TYPE_NAME
+
+  104  struct_or_union_specifier : struct_or_union IDENTIFIER '{' struct_declaration_list '}'
+  105                            | struct_or_union '{' struct_declaration_list '}'
+  106                            | struct_or_union IDENTIFIER
+
+  107  struct_or_union : STRUCT
+  108                  | UNION
+
+  109  struct_declaration_list : struct_declaration
+  110                          | struct_declaration_list struct_declaration
+
+  111  struct_declaration : specifier_qualifier_list struct_declarator_list ';'
+
+  112  specifier_qualifier_list : type_specifier specifier_qualifier_list
+  113                           | type_specifier
+  114                           | type_qualifier specifier_qualifier_list
+  115                           | type_qualifier
+
+  116  struct_declarator_list : struct_declarator
+  117                         | struct_declarator_list ',' struct_declarator
+
+  118  struct_declarator : declarator
+  119                    | ':' constant_expression
+  120                    | declarator ':' constant_expression
+
+  121  enum_specifier : ENUM '{' enumerator_list '}'
+  122                 | ENUM IDENTIFIER '{' enumerator_list '}'
+  123                 | ENUM IDENTIFIER
+
+  124  enumerator_list : enumerator
+  125                  | enumerator_list ',' enumerator
+
+  126  enumerator : IDENTIFIER
+  127             | IDENTIFIER '=' constant_expression
+
+  128  type_qualifier : CONST
+  129                 | VOLATILE
+
+  130  declarator : pointer direct_declarator
+  131             | direct_declarator
+
+  132  direct_declarator : IDENTIFIER
+  133                    | '(' declarator ')'
+  134                    | direct_declarator '[' constant_expression ']'
+  135                    | direct_declarator '[' ']'
+  136                    | direct_declarator '(' parameter_type_list ')'
+  137                    | direct_declarator '(' identifier_list ')'
+  138                    | direct_declarator '(' ')'
+
+  139  pointer : '*'
+  140          | '*' type_qualifier_list
+  141          | '*' pointer
+  142          | '*' type_qualifier_list pointer
+
+  143  type_qualifier_list : type_qualifier
+  144                      | type_qualifier_list type_qualifier
+
+  145  parameter_type_list : parameter_list
+  146                      | parameter_list ',' ELLIPSIS
+
+  147  parameter_list : parameter_declaration
+  148                 | parameter_list ',' parameter_declaration
+
+  149  parameter_declaration : declaration_specifiers declarator
+  150                        | declaration_specifiers abstract_declarator
+  151                        | declaration_specifiers
+
+  152  identifier_list : IDENTIFIER
+  153                  | identifier_list ',' IDENTIFIER
+
+  154  type_name : specifier_qualifier_list
+  155            | specifier_qualifier_list abstract_declarator
+
+  156  abstract_declarator : pointer
+  157                      | direct_abstract_declarator
+  158                      | pointer direct_abstract_declarator
+
+  159  direct_abstract_declarator : '(' abstract_declarator ')'
+  160                             | '[' ']'
+  161                             | '[' constant_expression ']'
+  162                             | direct_abstract_declarator '[' ']'
+  163                             | direct_abstract_declarator '[' constant_expression ']'
+  164                             | '(' ')'
+  165                             | '(' parameter_type_list ')'
+  166                             | direct_abstract_declarator '(' ')'
+  167                             | direct_abstract_declarator '(' parameter_type_list ')'
+
+  168  initializer : assignment_expression
+  169              | '{' initializer_list '}'
+  170              | '{' initializer_list ',' '}'
+
+  171  initializer_list : initializer
+  172                   | initializer_list ',' initializer
+
+  173  statement : labeled_statement
+  174            | compound_statement
+  175            | expression_statement
+  176            | selection_statement
+  177            | iteration_statement
+  178            | jump_statement
+
+  179  labeled_statement : IDENTIFIER ':' statement
+  180                    | CASE constant_expression ':' statement
+  181                    | DEFAULT ':' statement
+
+  182  compound_statement : '{' '}'
+  183                     | '{' statement_list '}'
+  184                     | '{' declaration_list '}'
+  185                     | '{' declaration_list statement_list '}'
+
+  186  declaration_list : declaration
+  187                   | declaration_list declaration
+
+  188  statement_list : statement
+  189                 | statement_list statement
+
+  190  expression_statement : ';'
+  191                       | expression ';'
+
+  192  selection_statement : IF '(' expression ')' statement
+  193                      | IF '(' expression ')' statement ELSE statement
+  194                      | SWITCH '(' expression ')' statement
+
+  195  iteration_statement : WHILE '(' expression ')' statement
+  196                      | DO statement WHILE '(' expression ')' ';'
+  197                      | FOR '(' expression_statement expression_statement ')' statement
+  198                      | FOR '(' expression_statement expression_statement expression ')' statement
+
+  199  jump_statement : GOTO IDENTIFIER ';'
+  200                 | CONTINUE ';'
+  201                 | BREAK ';'
+  202                 | RETURN ';'
+  203                 | RETURN expression ';'
+
+  204  translation_unit : external_declaration
+  205                   | translation_unit external_declaration
+
+  206  external_declaration : function_definition
+  207                       | declaration
+
+  208  function_definition : declaration_specifiers declarator declaration_list compound_statement
+  209                      | declaration_specifiers declarator compound_statement
+  210                      | declarator declaration_list compound_statement
+  211                      | declarator compound_statement
 
 
 ##############################################################################
@@ -343,20 +337,20 @@ state 0
 	UNION  shift 22
 	ENUM  shift 23
 
-	translation_unit  goto 24
-	declarator  goto 25
-	declaration  goto 26
-	declaration_specifiers  goto 27
-	type_specifier  goto 28
+	struct_or_union_specifier  goto 24
+	pointer  goto 25
+	type_specifier  goto 26
+	direct_declarator  goto 27
+	struct_or_union  goto 28
 	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	pointer  goto 34
-	direct_declarator  goto 35
-	function_definition  goto 36
-	external_declaration  goto 37
+	declarator  goto 30
+	declaration  goto 31
+	declaration_specifiers  goto 32
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	translation_unit  goto 35
+	external_declaration  goto 36
+	function_definition  goto 37
 
 
 state 1
@@ -366,145 +360,145 @@ state 1
 	'*'  shift 2
 	IDENTIFIER  shift 3
 
+	pointer  goto 25
+	direct_declarator  goto 27
 	declarator  goto 38
-	pointer  goto 34
-	direct_declarator  goto 35
 
 
 state 2
-	pointer : '*' . type_qualifier_list
-	pointer : '*' .  (143)
-	pointer : '*' . type_qualifier_list pointer
 	pointer : '*' . pointer
+	pointer : '*' . type_qualifier_list pointer
+	pointer : '*' . type_qualifier_list
+	pointer : '*' .  (139)
 
 	'*'  shift 2
 	CONST  shift 18
 	VOLATILE  shift 19
-	.  reduce 143
+	.  reduce 139
 
-	type_qualifier  goto 39
-	pointer  goto 40
-	type_qualifier_list  goto 41
+	pointer  goto 39
+	type_qualifier_list  goto 40
+	type_qualifier  goto 41
 
 
 state 3
-	direct_declarator : IDENTIFIER .  (136)
-
-	.  reduce 136
-
-
-state 4
-	type_specifier : TYPE_NAME .  (107)
-
-	.  reduce 107
-
-
-state 5
-	storage_class_specifier : TYPEDEF .  (91)
-
-	.  reduce 91
-
-
-state 6
-	storage_class_specifier : EXTERN .  (92)
-
-	.  reduce 92
-
-
-state 7
-	storage_class_specifier : STATIC .  (93)
-
-	.  reduce 93
-
-
-state 8
-	storage_class_specifier : AUTO .  (94)
-
-	.  reduce 94
-
-
-state 9
-	storage_class_specifier : REGISTER .  (95)
-
-	.  reduce 95
-
-
-state 10
-	type_specifier : CHAR .  (97)
-
-	.  reduce 97
-
-
-state 11
-	type_specifier : SHORT .  (98)
-
-	.  reduce 98
-
-
-state 12
-	type_specifier : INT .  (99)
-
-	.  reduce 99
-
-
-state 13
-	type_specifier : LONG .  (100)
-
-	.  reduce 100
-
-
-state 14
-	type_specifier : SIGNED .  (103)
-
-	.  reduce 103
-
-
-state 15
-	type_specifier : UNSIGNED .  (104)
-
-	.  reduce 104
-
-
-state 16
-	type_specifier : FLOAT .  (101)
-
-	.  reduce 101
-
-
-state 17
-	type_specifier : DOUBLE .  (102)
-
-	.  reduce 102
-
-
-state 18
-	type_qualifier : CONST .  (132)
+	direct_declarator : IDENTIFIER .  (132)
 
 	.  reduce 132
 
 
-state 19
-	type_qualifier : VOLATILE .  (133)
+state 4
+	type_specifier : TYPE_NAME .  (103)
 
-	.  reduce 133
+	.  reduce 103
 
 
-state 20
-	type_specifier : VOID .  (96)
+state 5
+	storage_class_specifier : TYPEDEF .  (87)
+
+	.  reduce 87
+
+
+state 6
+	storage_class_specifier : EXTERN .  (88)
+
+	.  reduce 88
+
+
+state 7
+	storage_class_specifier : STATIC .  (89)
+
+	.  reduce 89
+
+
+state 8
+	storage_class_specifier : AUTO .  (90)
+
+	.  reduce 90
+
+
+state 9
+	storage_class_specifier : REGISTER .  (91)
+
+	.  reduce 91
+
+
+state 10
+	type_specifier : CHAR .  (93)
+
+	.  reduce 93
+
+
+state 11
+	type_specifier : SHORT .  (94)
+
+	.  reduce 94
+
+
+state 12
+	type_specifier : INT .  (95)
+
+	.  reduce 95
+
+
+state 13
+	type_specifier : LONG .  (96)
 
 	.  reduce 96
 
 
-state 21
-	struct_or_union : STRUCT .  (111)
+state 14
+	type_specifier : SIGNED .  (99)
 
-	.  reduce 111
+	.  reduce 99
+
+
+state 15
+	type_specifier : UNSIGNED .  (100)
+
+	.  reduce 100
+
+
+state 16
+	type_specifier : FLOAT .  (97)
+
+	.  reduce 97
+
+
+state 17
+	type_specifier : DOUBLE .  (98)
+
+	.  reduce 98
+
+
+state 18
+	type_qualifier : CONST .  (128)
+
+	.  reduce 128
+
+
+state 19
+	type_qualifier : VOLATILE .  (129)
+
+	.  reduce 129
+
+
+state 20
+	type_specifier : VOID .  (92)
+
+	.  reduce 92
+
+
+state 21
+	struct_or_union : STRUCT .  (107)
+
+	.  reduce 107
 
 
 state 22
-	struct_or_union : UNION .  (112)
+	struct_or_union : UNION .  (108)
 
-	.  reduce 112
+	.  reduce 108
 
 
 state 23
@@ -517,8 +511,218 @@ state 23
 
 
 state 24
-	translation_unit : translation_unit . external_declaration
+	type_specifier : struct_or_union_specifier .  (101)
+
+	.  reduce 101
+
+
+state 25
+	declarator : pointer . direct_declarator
+
+	'('  shift 1
+	IDENTIFIER  shift 3
+
+	direct_declarator  goto 44
+
+
+state 26
+	declaration_specifiers : type_specifier .  (79)
+	declaration_specifiers : type_specifier . declaration_specifiers
+
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+	.  reduce 79
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	declaration_specifiers  goto 45
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+
+
+state 27
+	declarator : direct_declarator .  (131)
+	direct_declarator : direct_declarator . '[' constant_expression ']'
+	direct_declarator : direct_declarator . '[' ']'
+	direct_declarator : direct_declarator . '(' ')'
+	direct_declarator : direct_declarator . '(' identifier_list ')'
+	direct_declarator : direct_declarator . '(' parameter_type_list ')'
+
+	'('  shift 46
+	'['  shift 47
+	.  reduce 131
+
+
+state 28
+	struct_or_union_specifier : struct_or_union . '{' struct_declaration_list '}'
+	struct_or_union_specifier : struct_or_union . IDENTIFIER
+	struct_or_union_specifier : struct_or_union . IDENTIFIER '{' struct_declaration_list '}'
+
+	'{'  shift 48
+	IDENTIFIER  shift 49
+
+
+state 29
+	declaration_specifiers : type_qualifier .  (81)
+	declaration_specifiers : type_qualifier . declaration_specifiers
+
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+	.  reduce 81
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	declaration_specifiers  goto 50
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+
+
+state 30
+	function_definition : declarator . compound_statement
+	function_definition : declarator . declaration_list compound_statement
+
+	'{'  shift 51
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	declaration  goto 52
+	declaration_specifiers  goto 53
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	compound_statement  goto 54
+	declaration_list  goto 55
+
+
+state 31
+	external_declaration : declaration .  (207)
+
+	.  reduce 207
+
+
+state 32
+	declaration : declaration_specifiers . ';'
+	declaration : declaration_specifiers . init_declarator_list ';'
+	function_definition : declaration_specifiers . declarator declaration_list compound_statement
+	function_definition : declaration_specifiers . declarator compound_statement
+
+	'('  shift 1
+	'*'  shift 2
+	';'  shift 56
+	IDENTIFIER  shift 3
+
+	pointer  goto 25
+	direct_declarator  goto 27
+	init_declarator  goto 57
+	init_declarator_list  goto 58
+	declarator  goto 59
+
+
+state 33
+	type_specifier : enum_specifier .  (102)
+
+	.  reduce 102
+
+
+state 34
+	declaration_specifiers : storage_class_specifier . declaration_specifiers
+	declaration_specifiers : storage_class_specifier .  (77)
+
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+	.  reduce 77
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	declaration_specifiers  goto 60
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+
+
+state 35
 	$accept : translation_unit . $end  (0)
+	translation_unit : translation_unit . external_declaration
 
 	$end  accept
 	'('  shift 1
@@ -545,26 +749,108 @@ state 24
 	UNION  shift 22
 	ENUM  shift 23
 
-	declarator  goto 25
-	declaration  goto 26
-	declaration_specifiers  goto 27
-	type_specifier  goto 28
+	struct_or_union_specifier  goto 24
+	pointer  goto 25
+	type_specifier  goto 26
+	direct_declarator  goto 27
+	struct_or_union  goto 28
 	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	pointer  goto 34
-	direct_declarator  goto 35
-	function_definition  goto 36
-	external_declaration  goto 44
+	declarator  goto 30
+	declaration  goto 31
+	declaration_specifiers  goto 32
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	external_declaration  goto 61
+	function_definition  goto 37
 
 
-state 25
-	function_definition : declarator . compound_statement
-	function_definition : declarator . declaration_list compound_statement
+state 36
+	translation_unit : external_declaration .  (204)
 
-	'{'  shift 45
+	.  reduce 204
+
+
+state 37
+	external_declaration : function_definition .  (206)
+
+	.  reduce 206
+
+
+state 38
+	direct_declarator : '(' declarator . ')'
+
+	')'  shift 62
+
+
+state 39
+	pointer : '*' pointer .  (141)
+
+	.  reduce 141
+
+
+state 40
+	type_qualifier_list : type_qualifier_list . type_qualifier
+	pointer : '*' type_qualifier_list . pointer
+	pointer : '*' type_qualifier_list .  (140)
+
+	'*'  shift 2
+	CONST  shift 18
+	VOLATILE  shift 19
+	.  reduce 140
+
+	pointer  goto 63
+	type_qualifier  goto 64
+
+
+state 41
+	type_qualifier_list : type_qualifier .  (143)
+
+	.  reduce 143
+
+
+state 42
+	enum_specifier : ENUM '{' . enumerator_list '}'
+
+	IDENTIFIER  shift 65
+
+	enumerator_list  goto 66
+	enumerator  goto 67
+
+
+state 43
+	enum_specifier : ENUM IDENTIFIER . '{' enumerator_list '}'
+	enum_specifier : ENUM IDENTIFIER .  (123)
+
+	'{'  shift 68
+	.  reduce 123
+
+
+state 44
+	direct_declarator : direct_declarator . '[' constant_expression ']'
+	direct_declarator : direct_declarator . '[' ']'
+	declarator : pointer direct_declarator .  (130)
+	direct_declarator : direct_declarator . '(' ')'
+	direct_declarator : direct_declarator . '(' identifier_list ')'
+	direct_declarator : direct_declarator . '(' parameter_type_list ')'
+
+	'('  shift 46
+	'['  shift 47
+	.  reduce 130
+
+
+state 45
+	declaration_specifiers : type_specifier declaration_specifiers .  (80)
+
+	.  reduce 80
+
+
+state 46
+	direct_declarator : direct_declarator '(' . ')'
+	direct_declarator : direct_declarator '(' . identifier_list ')'
+	direct_declarator : direct_declarator '(' . parameter_type_list ')'
+
+	')'  shift 69
+	IDENTIFIER  shift 70
 	TYPE_NAME  shift 4
 	TYPEDEF  shift 5
 	EXTERN  shift 6
@@ -586,46 +872,224 @@ state 25
 	UNION  shift 22
 	ENUM  shift 23
 
-	declaration  goto 46
-	declaration_specifiers  goto 47
-	type_specifier  goto 28
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
 	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	declaration_list  goto 48
-	compound_statement  goto 49
+	parameter_type_list  goto 71
+	parameter_list  goto 72
+	declaration_specifiers  goto 73
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	identifier_list  goto 74
+	parameter_declaration  goto 75
 
 
-state 26
-	external_declaration : declaration .  (211)
+state 47
+	direct_declarator : direct_declarator '[' . constant_expression ']'
+	direct_declarator : direct_declarator '[' . ']'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	']'  shift 82
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	constant_expression  goto 102
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 105
+	inclusive_or_expression  goto 106
+
+
+state 48
+	struct_or_union_specifier : struct_or_union '{' . struct_declaration_list '}'
+
+	TYPE_NAME  shift 4
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	struct_declaration_list  goto 107
+	type_specifier  goto 108
+	struct_declaration  goto 109
+	struct_or_union  goto 28
+	specifier_qualifier_list  goto 110
+	type_qualifier  goto 111
+	enum_specifier  goto 33
+
+
+state 49
+	struct_or_union_specifier : struct_or_union IDENTIFIER .  (106)
+	struct_or_union_specifier : struct_or_union IDENTIFIER . '{' struct_declaration_list '}'
+
+	'{'  shift 112
+	.  reduce 106
+
+
+state 50
+	declaration_specifiers : type_qualifier declaration_specifiers .  (82)
+
+	.  reduce 82
+
+
+state 51
+	compound_statement : '{' . statement_list '}'
+	compound_statement : '{' . declaration_list '}'
+	compound_statement : '{' . declaration_list statement_list '}'
+	compound_statement : '{' . '}'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'}'  shift 114
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	struct_or_union_specifier  goto 24
+	exclusive_or_expression  goto 101
+	type_specifier  goto 26
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	struct_or_union  goto 28
+	assignment_expression  goto 128
+	expression  goto 129
+	type_qualifier  goto 29
+	conditional_expression  goto 130
+	declaration  goto 52
+	inclusive_or_expression  goto 106
+	declaration_specifiers  goto 53
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	statement_list  goto 131
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 136
+	iteration_statement  goto 137
+	compound_statement  goto 138
+	declaration_list  goto 139
+
+
+state 52
+	declaration_list : declaration .  (186)
+
+	.  reduce 186
+
+
+state 53
+	declaration : declaration_specifiers . ';'
+	declaration : declaration_specifiers . init_declarator_list ';'
+
+	'('  shift 1
+	'*'  shift 2
+	';'  shift 56
+	IDENTIFIER  shift 3
+
+	pointer  goto 25
+	direct_declarator  goto 27
+	init_declarator  goto 57
+	init_declarator_list  goto 58
+	declarator  goto 140
+
+
+state 54
+	function_definition : declarator compound_statement .  (211)
 
 	.  reduce 211
 
 
-state 27
-	declaration : declaration_specifiers . ';'
-	declaration : declaration_specifiers . init_declarator_list ';'
-	function_definition : declaration_specifiers . declarator declaration_list compound_statement
-	function_definition : declaration_specifiers . declarator compound_statement
+state 55
+	declaration_list : declaration_list . declaration
+	function_definition : declarator declaration_list . compound_statement
 
-	'('  shift 1
-	'*'  shift 2
-	';'  shift 50
-	IDENTIFIER  shift 3
-
-	declarator  goto 51
-	init_declarator_list  goto 52
-	init_declarator  goto 53
-	pointer  goto 34
-	direct_declarator  goto 35
-
-
-state 28
-	declaration_specifiers : type_specifier .  (83)
-	declaration_specifiers : type_specifier . declaration_specifiers
-
+	'{'  shift 51
 	TYPE_NAME  shift 4
 	TYPEDEF  shift 5
 	EXTERN  shift 6
@@ -646,21 +1110,46 @@ state 28
 	STRUCT  shift 21
 	UNION  shift 22
 	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	declaration  goto 141
+	declaration_specifiers  goto 53
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	compound_statement  goto 142
+
+
+state 56
+	declaration : declaration_specifiers ';' .  (75)
+
+	.  reduce 75
+
+
+state 57
+	init_declarator_list : init_declarator .  (83)
+
 	.  reduce 83
 
-	declaration_specifiers  goto 54
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
+
+state 58
+	init_declarator_list : init_declarator_list . ',' init_declarator
+	declaration : declaration_specifiers init_declarator_list . ';'
+
+	','  shift 143
+	';'  shift 144
 
 
-state 29
-	declaration_specifiers : type_qualifier .  (85)
-	declaration_specifiers : type_qualifier . declaration_specifiers
+state 59
+	init_declarator : declarator .  (85)
+	init_declarator : declarator . '=' initializer
+	function_definition : declaration_specifiers declarator . declaration_list compound_statement
+	function_definition : declaration_specifiers declarator . compound_statement
 
+	'='  shift 145
+	'{'  shift 51
 	TYPE_NAME  shift 4
 	TYPEDEF  shift 5
 	EXTERN  shift 6
@@ -683,558 +1172,57 @@ state 29
 	ENUM  shift 23
 	.  reduce 85
 
-	declaration_specifiers  goto 55
-	type_specifier  goto 28
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
 	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-
-
-state 30
-	declaration_specifiers : storage_class_specifier .  (81)
-	declaration_specifiers : storage_class_specifier . declaration_specifiers
-
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-	.  reduce 81
-
-	declaration_specifiers  goto 56
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-
-
-state 31
-	type_specifier : enum_specifier .  (106)
-
-	.  reduce 106
-
-
-state 32
-	type_specifier : struct_or_union_specifier .  (105)
-
-	.  reduce 105
-
-
-state 33
-	struct_or_union_specifier : struct_or_union . IDENTIFIER '{' struct_declaration_list '}'
-	struct_or_union_specifier : struct_or_union . '{' struct_declaration_list '}'
-	struct_or_union_specifier : struct_or_union . IDENTIFIER
-
-	'{'  shift 57
-	IDENTIFIER  shift 58
-
-
-state 34
-	declarator : pointer . direct_declarator
-
-	'('  shift 1
-	IDENTIFIER  shift 3
-
-	direct_declarator  goto 59
-
-
-state 35
-	declarator : direct_declarator .  (135)
-	direct_declarator : direct_declarator . '[' constant_expression ']'
-	direct_declarator : direct_declarator . '(' parameter_type_list ')'
-	direct_declarator : direct_declarator . '(' ')'
-	direct_declarator : direct_declarator . '[' ']'
-	direct_declarator : direct_declarator . '(' identifier_list ')'
-
-	'('  shift 60
-	'['  shift 61
-	.  reduce 135
-
-
-state 36
-	external_declaration : function_definition .  (210)
-
-	.  reduce 210
-
-
-state 37
-	translation_unit : external_declaration .  (208)
-
-	.  reduce 208
-
-
-state 38
-	direct_declarator : '(' declarator . ')'
-
-	')'  shift 62
-
-
-state 39
-	type_qualifier_list : type_qualifier .  (147)
-
-	.  reduce 147
-
-
-state 40
-	pointer : '*' pointer .  (145)
-
-	.  reduce 145
-
-
-state 41
-	type_qualifier_list : type_qualifier_list . type_qualifier
-	pointer : '*' type_qualifier_list .  (144)
-	pointer : '*' type_qualifier_list . pointer
-
-	'*'  shift 2
-	CONST  shift 18
-	VOLATILE  shift 19
-	.  reduce 144
-
-	type_qualifier  goto 63
-	pointer  goto 64
-
-
-state 42
-	enum_specifier : ENUM '{' . enumerator_list '}'
-
-	IDENTIFIER  shift 65
-
-	enumerator  goto 66
-	enumerator_list  goto 67
-
-
-state 43
-	enum_specifier : ENUM IDENTIFIER . '{' enumerator_list '}'
-	enum_specifier : ENUM IDENTIFIER .  (127)
-
-	'{'  shift 68
-	.  reduce 127
-
-
-state 44
-	translation_unit : translation_unit external_declaration .  (209)
-
-	.  reduce 209
-
-
-state 45
-	compound_statement : '{' . '}'
-	compound_statement : '{' . declaration_list statement_list '}'
-	compound_statement : '{' . statement_list '}'
-	compound_statement : '{' . declaration_list '}'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'}'  shift 76
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	declaration  goto 46
-	declaration_specifiers  goto 47
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	statement_list  goto 116
-	declaration_list  goto 117
-	selection_statement  goto 118
-	statement  goto 119
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 46
-	declaration_list : declaration .  (190)
-
-	.  reduce 190
-
-
-state 47
-	declaration : declaration_specifiers . ';'
-	declaration : declaration_specifiers . init_declarator_list ';'
-
-	'('  shift 1
-	'*'  shift 2
-	';'  shift 50
-	IDENTIFIER  shift 3
-
-	declarator  goto 122
-	init_declarator_list  goto 52
-	init_declarator  goto 53
-	pointer  goto 34
-	direct_declarator  goto 35
-
-
-state 48
-	declaration_list : declaration_list . declaration
-	function_definition : declarator declaration_list . compound_statement
-
-	'{'  shift 45
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	declaration  goto 123
-	declaration_specifiers  goto 47
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	compound_statement  goto 124
-
-
-state 49
-	function_definition : declarator compound_statement .  (215)
-
-	.  reduce 215
-
-
-state 50
-	declaration : declaration_specifiers ';' .  (79)
-
-	.  reduce 79
-
-
-state 51
-	init_declarator : declarator .  (89)
-	init_declarator : declarator . '=' initializer
-	function_definition : declaration_specifiers declarator . declaration_list compound_statement
-	function_definition : declaration_specifiers declarator . compound_statement
-
-	'='  shift 125
-	'{'  shift 45
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-	.  reduce 89
-
-	declaration  goto 46
-	declaration_specifiers  goto 47
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	declaration_list  goto 126
-	compound_statement  goto 127
-
-
-state 52
-	init_declarator_list : init_declarator_list . ',' init_declarator
-	declaration : declaration_specifiers init_declarator_list . ';'
-
-	','  shift 128
-	';'  shift 129
-
-
-state 53
-	init_declarator_list : init_declarator .  (87)
-
-	.  reduce 87
-
-
-state 54
-	declaration_specifiers : type_specifier declaration_specifiers .  (84)
-
-	.  reduce 84
-
-
-state 55
-	declaration_specifiers : type_qualifier declaration_specifiers .  (86)
-
-	.  reduce 86
-
-
-state 56
-	declaration_specifiers : storage_class_specifier declaration_specifiers .  (82)
-
-	.  reduce 82
-
-
-state 57
-	struct_or_union_specifier : struct_or_union '{' . struct_declaration_list '}'
-
-	TYPE_NAME  shift 4
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	struct_declaration  goto 132
-	specifier_qualifier_list  goto 133
-	struct_declaration_list  goto 134
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-
-
-state 58
-	struct_or_union_specifier : struct_or_union IDENTIFIER . '{' struct_declaration_list '}'
-	struct_or_union_specifier : struct_or_union IDENTIFIER .  (110)
-
-	'{'  shift 135
-	.  reduce 110
-
-
-state 59
-	declarator : pointer direct_declarator .  (134)
-	direct_declarator : direct_declarator . '[' constant_expression ']'
-	direct_declarator : direct_declarator . '(' parameter_type_list ')'
-	direct_declarator : direct_declarator . '(' ')'
-	direct_declarator : direct_declarator . '[' ']'
-	direct_declarator : direct_declarator . '(' identifier_list ')'
-
-	'('  shift 60
-	'['  shift 61
-	.  reduce 134
+	declaration  goto 52
+	declaration_specifiers  goto 53
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	compound_statement  goto 146
+	declaration_list  goto 147
 
 
 state 60
-	direct_declarator : direct_declarator '(' . parameter_type_list ')'
-	direct_declarator : direct_declarator '(' . ')'
-	direct_declarator : direct_declarator '(' . identifier_list ')'
+	declaration_specifiers : storage_class_specifier declaration_specifiers .  (78)
 
-	')'  shift 136
-	IDENTIFIER  shift 137
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	declaration_specifiers  goto 138
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	parameter_list  goto 139
-	parameter_declaration  goto 140
-	parameter_type_list  goto 141
-	identifier_list  goto 142
+	.  reduce 78
 
 
 state 61
-	direct_declarator : direct_declarator '[' . constant_expression ']'
-	direct_declarator : direct_declarator '[' . ']'
+	translation_unit : translation_unit external_declaration .  (205)
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	']'  shift 143
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 146
-	inclusive_or_expression  goto 112
-	constant_expression  goto 147
+	.  reduce 205
 
 
 state 62
-	direct_declarator : '(' declarator ')' .  (137)
+	direct_declarator : '(' declarator ')' .  (133)
 
-	.  reduce 137
+	.  reduce 133
 
 
 state 63
-	type_qualifier_list : type_qualifier_list type_qualifier .  (148)
+	pointer : '*' type_qualifier_list pointer .  (142)
 
-	.  reduce 148
+	.  reduce 142
 
 
 state 64
-	pointer : '*' type_qualifier_list pointer .  (146)
+	type_qualifier_list : type_qualifier_list type_qualifier .  (144)
 
-	.  reduce 146
+	.  reduce 144
 
 
 state 65
-	enumerator : IDENTIFIER .  (130)
+	enumerator : IDENTIFIER .  (126)
 	enumerator : IDENTIFIER . '=' constant_expression
 
 	'='  shift 148
-	.  reduce 130
+	.  reduce 126
 
 
 state 66
-	enumerator_list : enumerator .  (128)
-
-	.  reduce 128
-
-
-state 67
 	enumerator_list : enumerator_list . ',' enumerator
 	enum_specifier : ENUM '{' enumerator_list . '}'
 
@@ -1242,44 +1230,109 @@ state 67
 	'}'  shift 150
 
 
+state 67
+	enumerator_list : enumerator .  (124)
+
+	.  reduce 124
+
+
 state 68
 	enum_specifier : ENUM IDENTIFIER '{' . enumerator_list '}'
 
 	IDENTIFIER  shift 65
 
-	enumerator  goto 66
 	enumerator_list  goto 151
+	enumerator  goto 67
 
 
 state 69
-	unary_operator : '!' .  (30)
+	direct_declarator : direct_declarator '(' ')' .  (138)
 
-	.  reduce 30
+	.  reduce 138
 
 
 state 70
-	unary_operator : '&' .  (25)
+	identifier_list : IDENTIFIER .  (152)
 
-	.  reduce 25
+	.  reduce 152
 
 
 state 71
-	cast_expression : '(' . type_name ')' cast_expression
-	primary_expression : '(' . expression ')'
+	direct_declarator : direct_declarator '(' parameter_type_list . ')'
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
+	')'  shift 152
+
+
+state 72
+	parameter_list : parameter_list . ',' parameter_declaration
+	parameter_type_list : parameter_list .  (145)
+	parameter_type_list : parameter_list . ',' ELLIPSIS
+
+	','  shift 153
+	.  reduce 145
+
+
+state 73
+	parameter_declaration : declaration_specifiers .  (151)
+	parameter_declaration : declaration_specifiers . declarator
+	parameter_declaration : declaration_specifiers . abstract_declarator
+
+	'('  shift 154
+	'*'  shift 2
+	'['  shift 155
+	IDENTIFIER  shift 3
+	.  reduce 151
+
+	pointer  goto 156
+	direct_declarator  goto 27
+	declarator  goto 157
+	abstract_declarator  goto 158
+	direct_abstract_declarator  goto 159
+
+
+state 74
+	direct_declarator : direct_declarator '(' identifier_list . ')'
+	identifier_list : identifier_list . ',' IDENTIFIER
+
+	')'  shift 160
+	','  shift 161
+
+
+state 75
+	parameter_list : parameter_declaration .  (147)
+
+	.  reduce 147
+
+
+state 76
+	unary_operator : '!' .  (26)
+
+	.  reduce 26
+
+
+state 77
+	unary_operator : '&' .  (21)
+
+	.  reduce 21
+
+
+state 78
+	primary_expression : '(' . expression ')'
+	cast_expression : '(' . type_name ')' cast_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
 	TYPE_NAME  shift 4
 	CHAR  shift 10
 	SHORT  shift 11
@@ -1296,377 +1349,238 @@ state 71
 	UNION  shift 22
 	ENUM  shift 23
 
-	expression  goto 152
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	type_name  goto 153
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
 	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	specifier_qualifier_list  goto 154
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
+	unary_expression  goto 127
+	relational_expression  goto 100
+	struct_or_union_specifier  goto 24
+	exclusive_or_expression  goto 101
+	type_specifier  goto 108
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	struct_or_union  goto 28
+	assignment_expression  goto 128
+	specifier_qualifier_list  goto 162
+	expression  goto 163
+	type_qualifier  goto 111
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	enum_specifier  goto 33
+	type_name  goto 164
 
 
-state 72
-	unary_operator : '*' .  (26)
+state 79
+	unary_operator : '*' .  (22)
 
-	.  reduce 26
-
-
-state 73
-	unary_operator : '+' .  (27)
-
-	.  reduce 27
+	.  reduce 22
 
 
-state 74
-	unary_operator : '-' .  (28)
+state 80
+	unary_operator : '+' .  (23)
 
-	.  reduce 28
-
-
-state 75
-	expression_statement : ';' .  (194)
-
-	.  reduce 194
+	.  reduce 23
 
 
-state 76
-	compound_statement : '{' '}' .  (186)
+state 81
+	unary_operator : '-' .  (24)
 
-	.  reduce 186
+	.  reduce 24
 
 
-state 77
-	unary_operator : '~' .  (29)
+state 82
+	direct_declarator : direct_declarator '[' ']' .  (135)
+
+	.  reduce 135
+
+
+state 83
+	unary_operator : '~' .  (25)
+
+	.  reduce 25
+
+
+state 84
+	primary_expression : IDENTIFIER .  (1)
+
+	.  reduce 1
+
+
+state 85
+	primary_expression : CONSTANT .  (2)
+
+	.  reduce 2
+
+
+state 86
+	primary_expression : STRING_LITERAL .  (3)
+
+	.  reduce 3
+
+
+state 87
+	unary_expression : SIZEOF . '(' type_name ')'
+	unary_expression : SIZEOF . unary_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 165
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 166
+
+
+state 88
+	unary_expression : INC_OP . unary_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 167
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 168
+
+
+state 89
+	unary_expression : DEC_OP . unary_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 167
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 169
+
+
+state 90
+	shift_expression : shift_expression . RIGHT_OP additive_expression
+	shift_expression : shift_expression . LEFT_OP additive_expression
+	relational_expression : shift_expression .  (39)
+
+	LEFT_OP  shift 170
+	RIGHT_OP  shift 171
+	.  reduce 39
+
+
+state 91
+	multiplicative_expression : cast_expression .  (29)
 
 	.  reduce 29
 
 
-state 78
-	labeled_statement : IDENTIFIER . ':' statement
-	primary_expression : IDENTIFIER .  (5)
-
-	':'  shift 155
-	.  reduce 5
-
-
-state 79
-	primary_expression : CONSTANT .  (6)
-
-	.  reduce 6
-
-
-state 80
-	primary_expression : STRING_LITERAL .  (7)
-
-	.  reduce 7
-
-
-state 81
-	unary_expression : SIZEOF . '(' type_name ')'
-	unary_expression : SIZEOF . unary_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 156
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 157
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	primary_expression  goto 101
-
-
-state 82
-	unary_expression : INC_OP . unary_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 158
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 159
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	primary_expression  goto 101
-
-
-state 83
-	unary_expression : DEC_OP . unary_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 158
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 160
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	primary_expression  goto 101
-
-
-state 84
-	labeled_statement : CASE . constant_expression ':' statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 146
-	inclusive_or_expression  goto 112
-	constant_expression  goto 161
-
-
-state 85
-	labeled_statement : DEFAULT . ':' statement
-
-	':'  shift 162
-
-
-state 86
-	selection_statement : IF . '(' expression ')' statement
-	selection_statement : IF . '(' expression ')' statement ELSE statement
-
-	'('  shift 163
-
-
-state 87
-	selection_statement : SWITCH . '(' expression ')' statement
-
-	'('  shift 164
-
-
-state 88
-	iteration_statement : WHILE . '(' expression ')' statement
-
-	'('  shift 165
-
-
-state 89
-	iteration_statement : DO . statement WHILE '(' expression ')' ';'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 166
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 90
-	iteration_statement : FOR . '(' expression_statement expression_statement ')' statement
-	iteration_statement : FOR . '(' expression_statement expression_statement expression ')' statement
-
-	'('  shift 167
-
-
-state 91
-	jump_statement : GOTO . IDENTIFIER ';'
-
-	IDENTIFIER  shift 168
-
-
 state 92
-	jump_statement : CONTINUE . ';'
+	equality_expression : equality_expression . EQ_OP relational_expression
+	equality_expression : equality_expression . NE_OP relational_expression
+	and_expression : equality_expression .  (47)
 
-	';'  shift 169
+	EQ_OP  shift 172
+	NE_OP  shift 173
+	.  reduce 47
 
 
 state 93
-	jump_statement : BREAK . ';'
+	postfix_expression : primary_expression .  (5)
 
-	';'  shift 170
+	.  reduce 5
 
 
 state 94
-	jump_statement : RETURN . ';'
-	jump_statement : RETURN . expression ';'
+	exclusive_or_expression : and_expression .  (49)
+	and_expression : and_expression . '&' equality_expression
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 171
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 172
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
+	'&'  shift 174
+	.  reduce 49
 
 
 state 95
-	expression : expression . ',' assignment_expression
-	expression_statement : expression . ';'
+	additive_expression : additive_expression . '+' multiplicative_expression
+	additive_expression : additive_expression . '-' multiplicative_expression
+	shift_expression : additive_expression .  (36)
 
-	','  shift 173
-	';'  shift 174
+	'+'  shift 175
+	'-'  shift 176
+	.  reduce 36
 
 
 state 96
-	cast_expression : unary_expression .  (31)
-	assignment_expression : unary_expression . assignment_operator assignment_expression
+	multiplicative_expression : multiplicative_expression . '/' cast_expression
+	multiplicative_expression : multiplicative_expression . '%' cast_expression
+	additive_expression : multiplicative_expression .  (33)
+	multiplicative_expression : multiplicative_expression . '*' cast_expression
 
-	'='  shift 175
-	MUL_ASSIGN  shift 176
-	DIV_ASSIGN  shift 177
-	MOD_ASSIGN  shift 178
-	ADD_ASSIGN  shift 179
-	SUB_ASSIGN  shift 180
-	LEFT_ASSIGN  shift 181
-	RIGHT_ASSIGN  shift 182
-	AND_ASSIGN  shift 183
-	XOR_ASSIGN  shift 184
-	OR_ASSIGN  shift 185
-	.  reduce 31
-
-	assignment_operator  goto 186
+	'%'  shift 177
+	'*'  shift 178
+	'/'  shift 179
+	.  reduce 33
 
 
 state 97
-	expression : assignment_expression .  (76)
+	unary_expression : unary_operator . cast_expression
 
-	.  reduce 76
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 180
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
 
 
 state 98
-	unary_expression : postfix_expression .  (19)
 	postfix_expression : postfix_expression . '[' expression ']'
 	postfix_expression : postfix_expression . '(' ')'
 	postfix_expression : postfix_expression . '(' argument_expression_list ')'
@@ -1674,550 +1588,167 @@ state 98
 	postfix_expression : postfix_expression . PTR_OP IDENTIFIER
 	postfix_expression : postfix_expression . INC_OP
 	postfix_expression : postfix_expression . DEC_OP
+	unary_expression : postfix_expression .  (15)
 
-	'('  shift 187
-	'.'  shift 188
-	'['  shift 189
-	PTR_OP  shift 190
-	INC_OP  shift 191
-	DEC_OP  shift 192
-	.  reduce 19
+	'('  shift 181
+	'.'  shift 182
+	'['  shift 183
+	PTR_OP  shift 184
+	INC_OP  shift 185
+	DEC_OP  shift 186
+	.  reduce 15
 
 
 state 99
-	unary_expression : unary_operator . cast_expression
+	cast_expression : unary_expression .  (27)
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 193
-	primary_expression  goto 101
+	.  reduce 27
 
 
 state 100
-	multiplicative_expression : cast_expression .  (33)
+	relational_expression : relational_expression . LE_OP shift_expression
+	relational_expression : relational_expression . GE_OP shift_expression
+	equality_expression : relational_expression .  (44)
+	relational_expression : relational_expression . '>' shift_expression
+	relational_expression : relational_expression . '<' shift_expression
 
-	.  reduce 33
+	'<'  shift 187
+	'>'  shift 188
+	LE_OP  shift 189
+	GE_OP  shift 190
+	.  reduce 44
 
 
 state 101
-	postfix_expression : primary_expression .  (9)
+	inclusive_or_expression : exclusive_or_expression .  (51)
+	exclusive_or_expression : exclusive_or_expression . '^' and_expression
 
-	.  reduce 9
+	'^'  shift 191
+	.  reduce 51
 
 
 state 102
-	exclusive_or_expression : exclusive_or_expression . '^' and_expression
-	inclusive_or_expression : exclusive_or_expression .  (55)
+	direct_declarator : direct_declarator '[' constant_expression . ']'
 
-	'^'  shift 194
-	.  reduce 55
+	']'  shift 192
 
 
 state 103
-	additive_expression : additive_expression . '-' multiplicative_expression
-	shift_expression : additive_expression .  (40)
-	additive_expression : additive_expression . '+' multiplicative_expression
+	conditional_expression : logical_or_expression .  (57)
+	logical_or_expression : logical_or_expression . OR_OP logical_and_expression
+	conditional_expression : logical_or_expression . '?' expression ':' conditional_expression
 
-	'+'  shift 195
-	'-'  shift 196
-	.  reduce 40
+	'?'  shift 193
+	OR_OP  shift 194
+	.  reduce 57
 
 
 state 104
-	relational_expression : relational_expression . '>' shift_expression
-	relational_expression : relational_expression . GE_OP shift_expression
-	relational_expression : relational_expression . '<' shift_expression
-	relational_expression : relational_expression . LE_OP shift_expression
-	equality_expression : relational_expression .  (48)
+	logical_or_expression : logical_and_expression .  (55)
+	logical_and_expression : logical_and_expression . AND_OP inclusive_or_expression
 
-	'<'  shift 197
-	'>'  shift 198
-	LE_OP  shift 199
-	GE_OP  shift 200
-	.  reduce 48
+	AND_OP  shift 195
+	.  reduce 55
 
 
 state 105
-	additive_expression : multiplicative_expression .  (37)
-	multiplicative_expression : multiplicative_expression . '/' cast_expression
-	multiplicative_expression : multiplicative_expression . '*' cast_expression
-	multiplicative_expression : multiplicative_expression . '%' cast_expression
+	constant_expression : conditional_expression .  (74)
 
-	'%'  shift 201
-	'*'  shift 202
-	'/'  shift 203
-	.  reduce 37
+	.  reduce 74
 
 
 state 106
-	exclusive_or_expression : and_expression .  (53)
-	and_expression : and_expression . '&' equality_expression
+	logical_and_expression : inclusive_or_expression .  (53)
+	inclusive_or_expression : inclusive_or_expression . '|' exclusive_or_expression
 
-	'&'  shift 204
+	'|'  shift 196
 	.  reduce 53
 
 
 state 107
-	shift_expression : shift_expression . RIGHT_OP additive_expression
-	relational_expression : shift_expression .  (43)
-	shift_expression : shift_expression . LEFT_OP additive_expression
+	struct_declaration_list : struct_declaration_list . struct_declaration
+	struct_or_union_specifier : struct_or_union '{' struct_declaration_list . '}'
 
-	LEFT_OP  shift 205
-	RIGHT_OP  shift 206
-	.  reduce 43
+	'}'  shift 197
+	TYPE_NAME  shift 4
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 108
+	struct_declaration  goto 198
+	struct_or_union  goto 28
+	specifier_qualifier_list  goto 110
+	type_qualifier  goto 111
+	enum_specifier  goto 33
 
 
 state 108
-	equality_expression : equality_expression . EQ_OP relational_expression
-	and_expression : equality_expression .  (51)
-	equality_expression : equality_expression . NE_OP relational_expression
+	specifier_qualifier_list : type_specifier . specifier_qualifier_list
+	specifier_qualifier_list : type_specifier .  (113)
 
-	EQ_OP  shift 207
-	NE_OP  shift 208
-	.  reduce 51
+	TYPE_NAME  shift 4
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+	.  reduce 113
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 108
+	struct_or_union  goto 28
+	specifier_qualifier_list  goto 199
+	type_qualifier  goto 111
+	enum_specifier  goto 33
 
 
 state 109
-	logical_and_expression : logical_and_expression . AND_OP inclusive_or_expression
-	logical_or_expression : logical_and_expression .  (59)
+	struct_declaration_list : struct_declaration .  (109)
 
-	AND_OP  shift 209
-	.  reduce 59
+	.  reduce 109
 
 
 state 110
-	logical_or_expression : logical_or_expression . OR_OP logical_and_expression
-	conditional_expression : logical_or_expression .  (61)
-	conditional_expression : logical_or_expression . '?' expression ':' conditional_expression
-
-	'?'  shift 210
-	OR_OP  shift 211
-	.  reduce 61
-
-
-state 111
-	assignment_expression : conditional_expression .  (63)
-
-	.  reduce 63
-
-
-state 112
-	inclusive_or_expression : inclusive_or_expression . '|' exclusive_or_expression
-	logical_and_expression : inclusive_or_expression .  (57)
-
-	'|'  shift 212
-	.  reduce 57
-
-
-state 113
-	statement : expression_statement .  (179)
-
-	.  reduce 179
-
-
-state 114
-	statement : jump_statement .  (182)
-
-	.  reduce 182
-
-
-state 115
-	statement : labeled_statement .  (177)
-
-	.  reduce 177
-
-
-state 116
-	compound_statement : '{' statement_list . '}'
-	statement_list : statement_list . statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'}'  shift 213
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 214
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 117
-	declaration_list : declaration_list . declaration
-	compound_statement : '{' declaration_list . statement_list '}'
-	compound_statement : '{' declaration_list . '}'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'}'  shift 215
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	declaration  goto 123
-	declaration_specifiers  goto 47
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	statement_list  goto 216
-	selection_statement  goto 118
-	statement  goto 119
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 118
-	statement : selection_statement .  (180)
-
-	.  reduce 180
-
-
-state 119
-	statement_list : statement .  (192)
-
-	.  reduce 192
-
-
-state 120
-	statement : compound_statement .  (178)
-
-	.  reduce 178
-
-
-state 121
-	statement : iteration_statement .  (181)
-
-	.  reduce 181
-
-
-state 122
-	init_declarator : declarator .  (89)
-	init_declarator : declarator . '=' initializer
-
-	'='  shift 125
-	.  reduce 89
-
-
-state 123
-	declaration_list : declaration_list declaration .  (191)
-
-	.  reduce 191
-
-
-state 124
-	function_definition : declarator declaration_list compound_statement .  (214)
-
-	.  reduce 214
-
-
-state 125
-	init_declarator : declarator '=' . initializer
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'{'  shift 217
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 96
-	assignment_expression  goto 218
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	initializer  goto 219
-
-
-state 126
-	declaration_list : declaration_list . declaration
-	function_definition : declaration_specifiers declarator declaration_list . compound_statement
-
-	'{'  shift 45
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	declaration  goto 123
-	declaration_specifiers  goto 47
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	compound_statement  goto 220
-
-
-state 127
-	function_definition : declaration_specifiers declarator compound_statement .  (213)
-
-	.  reduce 213
-
-
-state 128
-	init_declarator_list : init_declarator_list ',' . init_declarator
-
-	'('  shift 1
-	'*'  shift 2
-	IDENTIFIER  shift 3
-
-	declarator  goto 122
-	init_declarator  goto 221
-	pointer  goto 34
-	direct_declarator  goto 35
-
-
-state 129
-	declaration : declaration_specifiers init_declarator_list ';' .  (80)
-
-	.  reduce 80
-
-
-state 130
-	specifier_qualifier_list : type_specifier . specifier_qualifier_list
-	specifier_qualifier_list : type_specifier .  (117)
-
-	TYPE_NAME  shift 4
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-	.  reduce 117
-
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	specifier_qualifier_list  goto 222
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-
-
-state 131
-	specifier_qualifier_list : type_qualifier .  (119)
-	specifier_qualifier_list : type_qualifier . specifier_qualifier_list
-
-	TYPE_NAME  shift 4
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-	.  reduce 119
-
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	specifier_qualifier_list  goto 223
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-
-
-state 132
-	struct_declaration_list : struct_declaration .  (113)
-
-	.  reduce 113
-
-
-state 133
 	struct_declaration : specifier_qualifier_list . struct_declarator_list ';'
 
 	'('  shift 1
 	'*'  shift 2
-	':'  shift 224
+	':'  shift 200
 	IDENTIFIER  shift 3
 
-	declarator  goto 225
-	struct_declarator_list  goto 226
-	pointer  goto 34
-	struct_declarator  goto 227
-	direct_declarator  goto 35
+	pointer  goto 25
+	direct_declarator  goto 27
+	struct_declarator_list  goto 201
+	declarator  goto 202
+	struct_declarator  goto 203
 
 
-state 134
-	struct_or_union_specifier : struct_or_union '{' struct_declaration_list . '}'
-	struct_declaration_list : struct_declaration_list . struct_declaration
+state 111
+	specifier_qualifier_list : type_qualifier . specifier_qualifier_list
+	specifier_qualifier_list : type_qualifier .  (115)
 
-	'}'  shift 228
 	TYPE_NAME  shift 4
 	CHAR  shift 10
 	SHORT  shift 11
@@ -2233,17 +1764,17 @@ state 134
 	STRUCT  shift 21
 	UNION  shift 22
 	ENUM  shift 23
+	.  reduce 115
 
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	struct_declaration  goto 229
-	specifier_qualifier_list  goto 133
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 108
+	struct_or_union  goto 28
+	specifier_qualifier_list  goto 204
+	type_qualifier  goto 111
+	enum_specifier  goto 33
 
 
-state 135
+state 112
 	struct_or_union_specifier : struct_or_union IDENTIFIER '{' . struct_declaration_list '}'
 
 	TYPE_NAME  shift 4
@@ -2262,139 +1793,602 @@ state 135
 	UNION  shift 22
 	ENUM  shift 23
 
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	struct_declaration  goto 132
-	specifier_qualifier_list  goto 133
-	struct_declaration_list  goto 230
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
+	struct_or_union_specifier  goto 24
+	struct_declaration_list  goto 205
+	type_specifier  goto 108
+	struct_declaration  goto 109
+	struct_or_union  goto 28
+	specifier_qualifier_list  goto 110
+	type_qualifier  goto 111
+	enum_specifier  goto 33
+
+
+state 113
+	expression_statement : ';' .  (190)
+
+	.  reduce 190
+
+
+state 114
+	compound_statement : '{' '}' .  (182)
+
+	.  reduce 182
+
+
+state 115
+	primary_expression : IDENTIFIER .  (1)
+	labeled_statement : IDENTIFIER . ':' statement
+
+	':'  shift 206
+	.  reduce 1
+
+
+state 116
+	labeled_statement : CASE . constant_expression ':' statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	constant_expression  goto 207
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 105
+	inclusive_or_expression  goto 106
+
+
+state 117
+	labeled_statement : DEFAULT . ':' statement
+
+	':'  shift 208
+
+
+state 118
+	selection_statement : IF . '(' expression ')' statement ELSE statement
+	selection_statement : IF . '(' expression ')' statement
+
+	'('  shift 209
+
+
+state 119
+	selection_statement : SWITCH . '(' expression ')' statement
+
+	'('  shift 210
+
+
+state 120
+	iteration_statement : WHILE . '(' expression ')' statement
+
+	'('  shift 211
+
+
+state 121
+	iteration_statement : DO . statement WHILE '(' expression ')' ';'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 212
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 122
+	iteration_statement : FOR . '(' expression_statement expression_statement ')' statement
+	iteration_statement : FOR . '(' expression_statement expression_statement expression ')' statement
+
+	'('  shift 213
+
+
+state 123
+	jump_statement : GOTO . IDENTIFIER ';'
+
+	IDENTIFIER  shift 214
+
+
+state 124
+	jump_statement : CONTINUE . ';'
+
+	';'  shift 215
+
+
+state 125
+	jump_statement : BREAK . ';'
+
+	';'  shift 216
+
+
+state 126
+	jump_statement : RETURN . ';'
+	jump_statement : RETURN . expression ';'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 217
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 218
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 127
+	cast_expression : unary_expression .  (27)
+	assignment_expression : unary_expression . assignment_operator assignment_expression
+
+	'='  shift 219
+	MUL_ASSIGN  shift 220
+	DIV_ASSIGN  shift 221
+	MOD_ASSIGN  shift 222
+	ADD_ASSIGN  shift 223
+	SUB_ASSIGN  shift 224
+	LEFT_ASSIGN  shift 225
+	RIGHT_ASSIGN  shift 226
+	AND_ASSIGN  shift 227
+	XOR_ASSIGN  shift 228
+	OR_ASSIGN  shift 229
+	.  reduce 27
+
+	assignment_operator  goto 230
+
+
+state 128
+	expression : assignment_expression .  (72)
+
+	.  reduce 72
+
+
+state 129
+	expression : expression . ',' assignment_expression
+	expression_statement : expression . ';'
+
+	','  shift 231
+	';'  shift 232
+
+
+state 130
+	assignment_expression : conditional_expression .  (59)
+
+	.  reduce 59
+
+
+state 131
+	compound_statement : '{' statement_list . '}'
+	statement_list : statement_list . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'}'  shift 233
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 234
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 132
+	statement : selection_statement .  (176)
+
+	.  reduce 176
+
+
+state 133
+	statement : labeled_statement .  (173)
+
+	.  reduce 173
+
+
+state 134
+	statement : jump_statement .  (178)
+
+	.  reduce 178
+
+
+state 135
+	statement : expression_statement .  (175)
+
+	.  reduce 175
 
 
 state 136
-	direct_declarator : direct_declarator '(' ')' .  (142)
+	statement_list : statement .  (188)
 
-	.  reduce 142
+	.  reduce 188
 
 
 state 137
-	identifier_list : IDENTIFIER .  (156)
+	statement : iteration_statement .  (177)
 
-	.  reduce 156
+	.  reduce 177
 
 
 state 138
-	parameter_declaration : declaration_specifiers . declarator
-	parameter_declaration : declaration_specifiers . abstract_declarator
-	parameter_declaration : declaration_specifiers .  (155)
+	statement : compound_statement .  (174)
 
-	'('  shift 231
-	'*'  shift 2
-	'['  shift 232
-	IDENTIFIER  shift 3
-	.  reduce 155
-
-	declarator  goto 233
-	direct_abstract_declarator  goto 234
-	abstract_declarator  goto 235
-	pointer  goto 236
-	direct_declarator  goto 35
+	.  reduce 174
 
 
 state 139
-	parameter_type_list : parameter_list .  (149)
-	parameter_type_list : parameter_list . ',' ELLIPSIS
-	parameter_list : parameter_list . ',' parameter_declaration
+	compound_statement : '{' declaration_list . '}'
+	compound_statement : '{' declaration_list . statement_list '}'
+	declaration_list : declaration_list . declaration
 
-	','  shift 237
-	.  reduce 149
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'}'  shift 235
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	struct_or_union_specifier  goto 24
+	exclusive_or_expression  goto 101
+	type_specifier  goto 26
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	struct_or_union  goto 28
+	assignment_expression  goto 128
+	expression  goto 129
+	type_qualifier  goto 29
+	conditional_expression  goto 130
+	declaration  goto 141
+	inclusive_or_expression  goto 106
+	declaration_specifiers  goto 53
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	statement_list  goto 236
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 136
+	iteration_statement  goto 137
+	compound_statement  goto 138
 
 
 state 140
-	parameter_list : parameter_declaration .  (151)
+	init_declarator : declarator .  (85)
+	init_declarator : declarator . '=' initializer
 
-	.  reduce 151
+	'='  shift 145
+	.  reduce 85
 
 
 state 141
-	direct_declarator : direct_declarator '(' parameter_type_list . ')'
+	declaration_list : declaration_list declaration .  (187)
 
-	')'  shift 238
+	.  reduce 187
 
 
 state 142
-	identifier_list : identifier_list . ',' IDENTIFIER
-	direct_declarator : direct_declarator '(' identifier_list . ')'
+	function_definition : declarator declaration_list compound_statement .  (210)
 
-	')'  shift 239
-	','  shift 240
+	.  reduce 210
 
 
 state 143
-	direct_declarator : direct_declarator '[' ']' .  (139)
+	init_declarator_list : init_declarator_list ',' . init_declarator
 
-	.  reduce 139
+	'('  shift 1
+	'*'  shift 2
+	IDENTIFIER  shift 3
+
+	pointer  goto 25
+	direct_declarator  goto 27
+	init_declarator  goto 237
+	declarator  goto 140
 
 
 state 144
-	primary_expression : IDENTIFIER .  (5)
+	declaration : declaration_specifiers init_declarator_list ';' .  (76)
 
-	.  reduce 5
+	.  reduce 76
 
 
 state 145
-	cast_expression : unary_expression .  (31)
+	init_declarator : declarator '=' . initializer
 
-	.  reduce 31
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'{'  shift 238
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 239
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	initializer  goto 240
 
 
 state 146
-	constant_expression : conditional_expression .  (78)
+	function_definition : declaration_specifiers declarator compound_statement .  (209)
 
-	.  reduce 78
+	.  reduce 209
 
 
 state 147
-	direct_declarator : direct_declarator '[' constant_expression . ']'
+	declaration_list : declaration_list . declaration
+	function_definition : declaration_specifiers declarator declaration_list . compound_statement
 
-	']'  shift 241
+	'{'  shift 51
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	declaration  goto 141
+	declaration_specifiers  goto 53
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	compound_statement  goto 241
 
 
 state 148
 	enumerator : IDENTIFIER '=' . constant_expression
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
 
-	unary_expression  goto 145
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
 	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 146
-	inclusive_or_expression  goto 112
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
 	constant_expression  goto 242
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 105
+	inclusive_or_expression  goto 106
 
 
 state 149
@@ -2406,9 +2400,9 @@ state 149
 
 
 state 150
-	enum_specifier : ENUM '{' enumerator_list '}' .  (125)
+	enum_specifier : ENUM '{' enumerator_list '}' .  (121)
 
-	.  reduce 125
+	.  reduce 121
 
 
 state 151
@@ -2420,3035 +2414,3035 @@ state 151
 
 
 state 152
-	expression : expression . ',' assignment_expression
-	primary_expression : '(' expression . ')'
+	direct_declarator : direct_declarator '(' parameter_type_list ')' .  (136)
 
-	')'  shift 245
-	','  shift 173
+	.  reduce 136
 
 
 state 153
-	cast_expression : '(' type_name . ')' cast_expression
+	parameter_list : parameter_list ',' . parameter_declaration
+	parameter_type_list : parameter_list ',' . ELLIPSIS
 
-	')'  shift 246
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+	ELLIPSIS  shift 245
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	declaration_specifiers  goto 73
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	parameter_declaration  goto 246
 
 
 state 154
-	type_name : specifier_qualifier_list . abstract_declarator
-	type_name : specifier_qualifier_list .  (158)
+	direct_declarator : '(' . declarator ')'
+	direct_abstract_declarator : '(' . ')'
+	direct_abstract_declarator : '(' . abstract_declarator ')'
+	direct_abstract_declarator : '(' . parameter_type_list ')'
 
-	'('  shift 247
+	'('  shift 154
+	')'  shift 247
 	'*'  shift 2
-	'['  shift 232
-	.  reduce 158
+	'['  shift 155
+	IDENTIFIER  shift 3
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
 
-	direct_abstract_declarator  goto 234
-	abstract_declarator  goto 248
-	pointer  goto 249
+	struct_or_union_specifier  goto 24
+	pointer  goto 156
+	type_specifier  goto 26
+	direct_declarator  goto 27
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	parameter_type_list  goto 248
+	parameter_list  goto 72
+	declarator  goto 38
+	declaration_specifiers  goto 73
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	abstract_declarator  goto 249
+	direct_abstract_declarator  goto 159
+	parameter_declaration  goto 75
 
 
 state 155
-	labeled_statement : IDENTIFIER ':' . statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 250
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 156
-	unary_expression : SIZEOF '(' . type_name ')'
-	primary_expression : '(' . expression ')'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	TYPE_NAME  shift 4
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	expression  goto 152
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	type_name  goto 251
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	specifier_qualifier_list  goto 154
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-
-
-state 157
-	unary_expression : SIZEOF unary_expression .  (23)
-
-	.  reduce 23
-
-
-state 158
-	primary_expression : '(' . expression ')'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 152
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 159
-	unary_expression : INC_OP unary_expression .  (20)
-
-	.  reduce 20
-
-
-state 160
-	unary_expression : DEC_OP unary_expression .  (21)
-
-	.  reduce 21
-
-
-state 161
-	labeled_statement : CASE constant_expression . ':' statement
-
-	':'  shift 252
-
-
-state 162
-	labeled_statement : DEFAULT ':' . statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 253
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 163
-	selection_statement : IF '(' . expression ')' statement
-	selection_statement : IF '(' . expression ')' statement ELSE statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 254
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 164
-	selection_statement : SWITCH '(' . expression ')' statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 255
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 165
-	iteration_statement : WHILE '(' . expression ')' statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 256
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 166
-	iteration_statement : DO statement . WHILE '(' expression ')' ';'
-
-	WHILE  shift 257
-
-
-state 167
-	iteration_statement : FOR '(' . expression_statement expression_statement ')' statement
-	iteration_statement : FOR '(' . expression_statement expression_statement expression ')' statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 258
-
-
-state 168
-	jump_statement : GOTO IDENTIFIER . ';'
-
-	';'  shift 259
-
-
-state 169
-	jump_statement : CONTINUE ';' .  (204)
-
-	.  reduce 204
-
-
-state 170
-	jump_statement : BREAK ';' .  (205)
-
-	.  reduce 205
-
-
-state 171
-	jump_statement : RETURN ';' .  (206)
-
-	.  reduce 206
-
-
-state 172
-	expression : expression . ',' assignment_expression
-	jump_statement : RETURN expression . ';'
-
-	','  shift 173
-	';'  shift 260
-
-
-state 173
-	expression : expression ',' . assignment_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 96
-	assignment_expression  goto 261
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 174
-	expression_statement : expression ';' .  (195)
-
-	.  reduce 195
-
-
-state 175
-	assignment_operator : '=' .  (65)
-
-	.  reduce 65
-
-
-state 176
-	assignment_operator : MUL_ASSIGN .  (66)
-
-	.  reduce 66
-
-
-state 177
-	assignment_operator : DIV_ASSIGN .  (67)
-
-	.  reduce 67
-
-
-state 178
-	assignment_operator : MOD_ASSIGN .  (68)
-
-	.  reduce 68
-
-
-state 179
-	assignment_operator : ADD_ASSIGN .  (69)
-
-	.  reduce 69
-
-
-state 180
-	assignment_operator : SUB_ASSIGN .  (70)
-
-	.  reduce 70
-
-
-state 181
-	assignment_operator : LEFT_ASSIGN .  (71)
-
-	.  reduce 71
-
-
-state 182
-	assignment_operator : RIGHT_ASSIGN .  (72)
-
-	.  reduce 72
-
-
-state 183
-	assignment_operator : AND_ASSIGN .  (73)
-
-	.  reduce 73
-
-
-state 184
-	assignment_operator : XOR_ASSIGN .  (74)
-
-	.  reduce 74
-
-
-state 185
-	assignment_operator : OR_ASSIGN .  (75)
-
-	.  reduce 75
-
-
-state 186
-	assignment_expression : unary_expression assignment_operator . assignment_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 96
-	assignment_expression  goto 262
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 187
-	postfix_expression : postfix_expression '(' . ')'
-	postfix_expression : postfix_expression '(' . argument_expression_list ')'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	')'  shift 263
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 96
-	argument_expression_list  goto 264
-	assignment_expression  goto 265
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 188
-	postfix_expression : postfix_expression '.' . IDENTIFIER
-
-	IDENTIFIER  shift 266
-
-
-state 189
-	postfix_expression : postfix_expression '[' . expression ']'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 267
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 190
-	postfix_expression : postfix_expression PTR_OP . IDENTIFIER
-
-	IDENTIFIER  shift 268
-
-
-state 191
-	postfix_expression : postfix_expression INC_OP .  (15)
-
-	.  reduce 15
-
-
-state 192
-	postfix_expression : postfix_expression DEC_OP .  (16)
-
-	.  reduce 16
-
-
-state 193
-	unary_expression : unary_operator cast_expression .  (22)
-
-	.  reduce 22
-
-
-state 194
-	exclusive_or_expression : exclusive_or_expression '^' . and_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 269
-	shift_expression  goto 107
-	equality_expression  goto 108
-
-
-state 195
-	additive_expression : additive_expression '+' . multiplicative_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	multiplicative_expression  goto 270
-
-
-state 196
-	additive_expression : additive_expression '-' . multiplicative_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	multiplicative_expression  goto 271
-
-
-state 197
-	relational_expression : relational_expression '<' . shift_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	multiplicative_expression  goto 105
-	shift_expression  goto 272
-
-
-state 198
-	relational_expression : relational_expression '>' . shift_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	multiplicative_expression  goto 105
-	shift_expression  goto 273
-
-
-state 199
-	relational_expression : relational_expression LE_OP . shift_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	multiplicative_expression  goto 105
-	shift_expression  goto 274
-
-
-state 200
-	relational_expression : relational_expression GE_OP . shift_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	multiplicative_expression  goto 105
-	shift_expression  goto 275
-
-
-state 201
-	multiplicative_expression : multiplicative_expression '%' . cast_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 276
-	primary_expression  goto 101
-
-
-state 202
-	multiplicative_expression : multiplicative_expression '*' . cast_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 277
-	primary_expression  goto 101
-
-
-state 203
-	multiplicative_expression : multiplicative_expression '/' . cast_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 278
-	primary_expression  goto 101
-
-
-state 204
-	and_expression : and_expression '&' . equality_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	shift_expression  goto 107
-	equality_expression  goto 279
-
-
-state 205
-	shift_expression : shift_expression LEFT_OP . additive_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 280
-	multiplicative_expression  goto 105
-
-
-state 206
-	shift_expression : shift_expression RIGHT_OP . additive_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 281
-	multiplicative_expression  goto 105
-
-
-state 207
-	equality_expression : equality_expression EQ_OP . relational_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	relational_expression  goto 282
-	multiplicative_expression  goto 105
-	shift_expression  goto 107
-
-
-state 208
-	equality_expression : equality_expression NE_OP . relational_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	additive_expression  goto 103
-	relational_expression  goto 283
-	multiplicative_expression  goto 105
-	shift_expression  goto 107
-
-
-state 209
-	logical_and_expression : logical_and_expression AND_OP . inclusive_or_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	inclusive_or_expression  goto 284
-
-
-state 210
-	conditional_expression : logical_or_expression '?' . expression ':' conditional_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 285
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 211
-	logical_or_expression : logical_or_expression OR_OP . logical_and_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 286
-	inclusive_or_expression  goto 112
-
-
-state 212
-	inclusive_or_expression : inclusive_or_expression '|' . exclusive_or_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 287
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-
-
-state 213
-	compound_statement : '{' statement_list '}' .  (187)
-
-	.  reduce 187
-
-
-state 214
-	statement_list : statement_list statement .  (193)
-
-	.  reduce 193
-
-
-state 215
-	compound_statement : '{' declaration_list '}' .  (188)
-
-	.  reduce 188
-
-
-state 216
-	compound_statement : '{' declaration_list statement_list . '}'
-	statement_list : statement_list . statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'}'  shift 288
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 214
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 217
-	initializer : '{' . initializer_list '}'
-	initializer : '{' . initializer_list ',' '}'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'{'  shift 217
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 96
-	assignment_expression  goto 218
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	initializer  goto 289
-	initializer_list  goto 290
-
-
-state 218
-	initializer : assignment_expression .  (172)
-
-	.  reduce 172
-
-
-state 219
-	init_declarator : declarator '=' initializer .  (90)
-
-	.  reduce 90
-
-
-state 220
-	function_definition : declaration_specifiers declarator declaration_list compound_statement .  (212)
-
-	.  reduce 212
-
-
-state 221
-	init_declarator_list : init_declarator_list ',' init_declarator .  (88)
-
-	.  reduce 88
-
-
-state 222
-	specifier_qualifier_list : type_specifier specifier_qualifier_list .  (116)
-
-	.  reduce 116
-
-
-state 223
-	specifier_qualifier_list : type_qualifier specifier_qualifier_list .  (118)
-
-	.  reduce 118
-
-
-state 224
-	struct_declarator : ':' . constant_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 146
-	inclusive_or_expression  goto 112
-	constant_expression  goto 291
-
-
-state 225
-	struct_declarator : declarator .  (122)
-	struct_declarator : declarator . ':' constant_expression
-
-	':'  shift 292
-	.  reduce 122
-
-
-state 226
-	struct_declarator_list : struct_declarator_list . ',' struct_declarator
-	struct_declaration : specifier_qualifier_list struct_declarator_list . ';'
-
-	','  shift 293
-	';'  shift 294
-
-
-state 227
-	struct_declarator_list : struct_declarator .  (120)
-
-	.  reduce 120
-
-
-state 228
-	struct_or_union_specifier : struct_or_union '{' struct_declaration_list '}' .  (109)
-
-	.  reduce 109
-
-
-state 229
-	struct_declaration_list : struct_declaration_list struct_declaration .  (114)
-
-	.  reduce 114
-
-
-state 230
-	struct_or_union_specifier : struct_or_union IDENTIFIER '{' struct_declaration_list . '}'
-	struct_declaration_list : struct_declaration_list . struct_declaration
-
-	'}'  shift 295
-	TYPE_NAME  shift 4
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	type_specifier  goto 130
-	type_qualifier  goto 131
-	struct_declaration  goto 229
-	specifier_qualifier_list  goto 133
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-
-
-state 231
-	direct_declarator : '(' . declarator ')'
-	direct_abstract_declarator : '(' . abstract_declarator ')'
-	direct_abstract_declarator : '(' . ')'
-	direct_abstract_declarator : '(' . parameter_type_list ')'
-
-	'('  shift 231
-	')'  shift 296
-	'*'  shift 2
-	'['  shift 232
-	IDENTIFIER  shift 3
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	declarator  goto 38
-	declaration_specifiers  goto 138
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	direct_abstract_declarator  goto 234
-	parameter_list  goto 139
-	parameter_declaration  goto 140
-	abstract_declarator  goto 297
-	pointer  goto 236
-	parameter_type_list  goto 298
-	direct_declarator  goto 35
-
-
-state 232
 	direct_abstract_declarator : '[' . ']'
 	direct_abstract_declarator : '[' . constant_expression ']'
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	']'  shift 299
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	']'  shift 250
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
 
-	unary_expression  goto 145
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
 	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 146
-	inclusive_or_expression  goto 112
-	constant_expression  goto 300
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	constant_expression  goto 251
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 105
+	inclusive_or_expression  goto 106
 
 
-state 233
-	parameter_declaration : declaration_specifiers declarator .  (153)
-
-	.  reduce 153
-
-
-state 234
-	abstract_declarator : direct_abstract_declarator .  (161)
-	direct_abstract_declarator : direct_abstract_declarator . '[' constant_expression ']'
-	direct_abstract_declarator : direct_abstract_declarator . '[' ']'
-	direct_abstract_declarator : direct_abstract_declarator . '(' ')'
-	direct_abstract_declarator : direct_abstract_declarator . '(' parameter_type_list ')'
-
-	'('  shift 301
-	'['  shift 302
-	.  reduce 161
-
-
-state 235
-	parameter_declaration : declaration_specifiers abstract_declarator .  (154)
-
-	.  reduce 154
-
-
-state 236
+state 156
 	declarator : pointer . direct_declarator
-	abstract_declarator : pointer .  (160)
 	abstract_declarator : pointer . direct_abstract_declarator
+	abstract_declarator : pointer .  (156)
 
-	'('  shift 231
-	'['  shift 232
+	'('  shift 154
+	'['  shift 155
 	IDENTIFIER  shift 3
-	.  reduce 160
+	.  reduce 156
 
-	direct_abstract_declarator  goto 303
-	direct_declarator  goto 59
+	direct_declarator  goto 44
+	direct_abstract_declarator  goto 252
 
 
-state 237
-	parameter_type_list : parameter_list ',' . ELLIPSIS
-	parameter_list : parameter_list ',' . parameter_declaration
+state 157
+	parameter_declaration : declaration_specifiers declarator .  (149)
 
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-	ELLIPSIS  shift 304
+	.  reduce 149
 
-	declaration_specifiers  goto 138
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	parameter_declaration  goto 305
 
-
-state 238
-	direct_declarator : direct_declarator '(' parameter_type_list ')' .  (140)
-
-	.  reduce 140
-
-
-state 239
-	direct_declarator : direct_declarator '(' identifier_list ')' .  (141)
-
-	.  reduce 141
-
-
-state 240
-	identifier_list : identifier_list ',' . IDENTIFIER
-
-	IDENTIFIER  shift 306
-
-
-state 241
-	direct_declarator : direct_declarator '[' constant_expression ']' .  (138)
-
-	.  reduce 138
-
-
-state 242
-	enumerator : IDENTIFIER '=' constant_expression .  (131)
-
-	.  reduce 131
-
-
-state 243
-	enumerator_list : enumerator_list ',' enumerator .  (129)
-
-	.  reduce 129
-
-
-state 244
-	enum_specifier : ENUM IDENTIFIER '{' enumerator_list '}' .  (126)
-
-	.  reduce 126
-
-
-state 245
-	primary_expression : '(' expression ')' .  (8)
-
-	.  reduce 8
-
-
-state 246
-	cast_expression : '(' type_name ')' . cast_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 307
-	primary_expression  goto 101
-
-
-state 247
-	direct_abstract_declarator : '(' . abstract_declarator ')'
-	direct_abstract_declarator : '(' . ')'
-	direct_abstract_declarator : '(' . parameter_type_list ')'
-
-	'('  shift 247
-	')'  shift 296
-	'*'  shift 2
-	'['  shift 232
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	declaration_specifiers  goto 138
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	direct_abstract_declarator  goto 234
-	parameter_list  goto 139
-	parameter_declaration  goto 140
-	abstract_declarator  goto 297
-	pointer  goto 249
-	parameter_type_list  goto 298
-
-
-state 248
-	type_name : specifier_qualifier_list abstract_declarator .  (159)
-
-	.  reduce 159
-
-
-state 249
-	abstract_declarator : pointer .  (160)
-	abstract_declarator : pointer . direct_abstract_declarator
-
-	'('  shift 247
-	'['  shift 232
-	.  reduce 160
-
-	direct_abstract_declarator  goto 303
-
-
-state 250
-	labeled_statement : IDENTIFIER ':' statement .  (183)
-
-	.  reduce 183
-
-
-state 251
-	unary_expression : SIZEOF '(' type_name . ')'
-
-	')'  shift 308
-
-
-state 252
-	labeled_statement : CASE constant_expression ':' . statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 309
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 253
-	labeled_statement : DEFAULT ':' statement .  (185)
-
-	.  reduce 185
-
-
-state 254
-	expression : expression . ',' assignment_expression
-	selection_statement : IF '(' expression . ')' statement
-	selection_statement : IF '(' expression . ')' statement ELSE statement
-
-	')'  shift 310
-	','  shift 173
-
-
-state 255
-	expression : expression . ',' assignment_expression
-	selection_statement : SWITCH '(' expression . ')' statement
-
-	')'  shift 311
-	','  shift 173
-
-
-state 256
-	expression : expression . ',' assignment_expression
-	iteration_statement : WHILE '(' expression . ')' statement
-
-	')'  shift 312
-	','  shift 173
-
-
-state 257
-	iteration_statement : DO statement WHILE . '(' expression ')' ';'
-
-	'('  shift 313
-
-
-state 258
-	iteration_statement : FOR '(' expression_statement . expression_statement ')' statement
-	iteration_statement : FOR '(' expression_statement . expression_statement expression ')' statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 314
-
-
-state 259
-	jump_statement : GOTO IDENTIFIER ';' .  (203)
-
-	.  reduce 203
-
-
-state 260
-	jump_statement : RETURN expression ';' .  (207)
-
-	.  reduce 207
-
-
-state 261
-	expression : expression ',' assignment_expression .  (77)
-
-	.  reduce 77
-
-
-state 262
-	assignment_expression : unary_expression assignment_operator assignment_expression .  (64)
-
-	.  reduce 64
-
-
-state 263
-	postfix_expression : postfix_expression '(' ')' .  (11)
-
-	.  reduce 11
-
-
-state 264
-	argument_expression_list : argument_expression_list . ',' assignment_expression
-	postfix_expression : postfix_expression '(' argument_expression_list . ')'
-
-	')'  shift 315
-	','  shift 316
-
-
-state 265
-	argument_expression_list : assignment_expression .  (17)
-
-	.  reduce 17
-
-
-state 266
-	postfix_expression : postfix_expression '.' IDENTIFIER .  (13)
-
-	.  reduce 13
-
-
-state 267
-	expression : expression . ',' assignment_expression
-	postfix_expression : postfix_expression '[' expression . ']'
-
-	','  shift 173
-	']'  shift 317
-
-
-state 268
-	postfix_expression : postfix_expression PTR_OP IDENTIFIER .  (14)
-
-	.  reduce 14
-
-
-state 269
-	exclusive_or_expression : exclusive_or_expression '^' and_expression .  (54)
-	and_expression : and_expression . '&' equality_expression
-
-	'&'  shift 204
-	.  reduce 54
-
-
-state 270
-	multiplicative_expression : multiplicative_expression . '/' cast_expression
-	multiplicative_expression : multiplicative_expression . '*' cast_expression
-	multiplicative_expression : multiplicative_expression . '%' cast_expression
-	additive_expression : additive_expression '+' multiplicative_expression .  (38)
-
-	'%'  shift 201
-	'*'  shift 202
-	'/'  shift 203
-	.  reduce 38
-
-
-state 271
-	additive_expression : additive_expression '-' multiplicative_expression .  (39)
-	multiplicative_expression : multiplicative_expression . '/' cast_expression
-	multiplicative_expression : multiplicative_expression . '*' cast_expression
-	multiplicative_expression : multiplicative_expression . '%' cast_expression
-
-	'%'  shift 201
-	'*'  shift 202
-	'/'  shift 203
-	.  reduce 39
-
-
-state 272
-	shift_expression : shift_expression . RIGHT_OP additive_expression
-	shift_expression : shift_expression . LEFT_OP additive_expression
-	relational_expression : relational_expression '<' shift_expression .  (44)
-
-	LEFT_OP  shift 205
-	RIGHT_OP  shift 206
-	.  reduce 44
-
-
-state 273
-	shift_expression : shift_expression . RIGHT_OP additive_expression
-	relational_expression : relational_expression '>' shift_expression .  (45)
-	shift_expression : shift_expression . LEFT_OP additive_expression
-
-	LEFT_OP  shift 205
-	RIGHT_OP  shift 206
-	.  reduce 45
-
-
-state 274
-	shift_expression : shift_expression . RIGHT_OP additive_expression
-	shift_expression : shift_expression . LEFT_OP additive_expression
-	relational_expression : relational_expression LE_OP shift_expression .  (46)
-
-	LEFT_OP  shift 205
-	RIGHT_OP  shift 206
-	.  reduce 46
-
-
-state 275
-	shift_expression : shift_expression . RIGHT_OP additive_expression
-	relational_expression : relational_expression GE_OP shift_expression .  (47)
-	shift_expression : shift_expression . LEFT_OP additive_expression
-
-	LEFT_OP  shift 205
-	RIGHT_OP  shift 206
-	.  reduce 47
-
-
-state 276
-	multiplicative_expression : multiplicative_expression '%' cast_expression .  (36)
-
-	.  reduce 36
-
-
-state 277
-	multiplicative_expression : multiplicative_expression '*' cast_expression .  (34)
-
-	.  reduce 34
-
-
-state 278
-	multiplicative_expression : multiplicative_expression '/' cast_expression .  (35)
-
-	.  reduce 35
-
-
-state 279
-	equality_expression : equality_expression . EQ_OP relational_expression
-	equality_expression : equality_expression . NE_OP relational_expression
-	and_expression : and_expression '&' equality_expression .  (52)
-
-	EQ_OP  shift 207
-	NE_OP  shift 208
-	.  reduce 52
-
-
-state 280
-	additive_expression : additive_expression . '-' multiplicative_expression
-	shift_expression : shift_expression LEFT_OP additive_expression .  (41)
-	additive_expression : additive_expression . '+' multiplicative_expression
-
-	'+'  shift 195
-	'-'  shift 196
-	.  reduce 41
-
-
-state 281
-	additive_expression : additive_expression . '-' multiplicative_expression
-	shift_expression : shift_expression RIGHT_OP additive_expression .  (42)
-	additive_expression : additive_expression . '+' multiplicative_expression
-
-	'+'  shift 195
-	'-'  shift 196
-	.  reduce 42
-
-
-state 282
-	relational_expression : relational_expression . '>' shift_expression
-	relational_expression : relational_expression . GE_OP shift_expression
-	equality_expression : equality_expression EQ_OP relational_expression .  (49)
-	relational_expression : relational_expression . '<' shift_expression
-	relational_expression : relational_expression . LE_OP shift_expression
-
-	'<'  shift 197
-	'>'  shift 198
-	LE_OP  shift 199
-	GE_OP  shift 200
-	.  reduce 49
-
-
-state 283
-	relational_expression : relational_expression . '>' shift_expression
-	relational_expression : relational_expression . GE_OP shift_expression
-	equality_expression : equality_expression NE_OP relational_expression .  (50)
-	relational_expression : relational_expression . '<' shift_expression
-	relational_expression : relational_expression . LE_OP shift_expression
-
-	'<'  shift 197
-	'>'  shift 198
-	LE_OP  shift 199
-	GE_OP  shift 200
-	.  reduce 50
-
-
-state 284
-	inclusive_or_expression : inclusive_or_expression . '|' exclusive_or_expression
-	logical_and_expression : logical_and_expression AND_OP inclusive_or_expression .  (58)
-
-	'|'  shift 212
-	.  reduce 58
-
-
-state 285
-	conditional_expression : logical_or_expression '?' expression . ':' conditional_expression
-	expression : expression . ',' assignment_expression
-
-	','  shift 173
-	':'  shift 318
-
-
-state 286
-	logical_or_expression : logical_or_expression OR_OP logical_and_expression .  (60)
-	logical_and_expression : logical_and_expression . AND_OP inclusive_or_expression
-
-	AND_OP  shift 209
-	.  reduce 60
-
-
-state 287
-	exclusive_or_expression : exclusive_or_expression . '^' and_expression
-	inclusive_or_expression : inclusive_or_expression '|' exclusive_or_expression .  (56)
-
-	'^'  shift 194
-	.  reduce 56
-
-
-state 288
-	compound_statement : '{' declaration_list statement_list '}' .  (189)
-
-	.  reduce 189
-
-
-state 289
-	initializer_list : initializer .  (175)
-
-	.  reduce 175
-
-
-state 290
-	initializer : '{' initializer_list . '}'
-	initializer : '{' initializer_list . ',' '}'
-	initializer_list : initializer_list . ',' initializer
-
-	','  shift 319
-	'}'  shift 320
-
-
-state 291
-	struct_declarator : ':' constant_expression .  (123)
-
-	.  reduce 123
-
-
-state 292
-	struct_declarator : declarator ':' . constant_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 146
-	inclusive_or_expression  goto 112
-	constant_expression  goto 321
-
-
-state 293
-	struct_declarator_list : struct_declarator_list ',' . struct_declarator
-
-	'('  shift 1
-	'*'  shift 2
-	':'  shift 224
-	IDENTIFIER  shift 3
-
-	declarator  goto 225
-	pointer  goto 34
-	struct_declarator  goto 322
-	direct_declarator  goto 35
-
-
-state 294
-	struct_declaration : specifier_qualifier_list struct_declarator_list ';' .  (115)
-
-	.  reduce 115
-
-
-state 295
-	struct_or_union_specifier : struct_or_union IDENTIFIER '{' struct_declaration_list '}' .  (108)
-
-	.  reduce 108
-
-
-state 296
-	direct_abstract_declarator : '(' ')' .  (168)
-
-	.  reduce 168
-
-
-state 297
-	direct_abstract_declarator : '(' abstract_declarator . ')'
-
-	')'  shift 323
-
-
-state 298
-	direct_abstract_declarator : '(' parameter_type_list . ')'
-
-	')'  shift 324
-
-
-state 299
-	direct_abstract_declarator : '[' ']' .  (164)
-
-	.  reduce 164
-
-
-state 300
-	direct_abstract_declarator : '[' constant_expression . ']'
-
-	']'  shift 325
-
-
-state 301
-	direct_abstract_declarator : direct_abstract_declarator '(' . ')'
-	direct_abstract_declarator : direct_abstract_declarator '(' . parameter_type_list ')'
-
-	')'  shift 326
-	TYPE_NAME  shift 4
-	TYPEDEF  shift 5
-	EXTERN  shift 6
-	STATIC  shift 7
-	AUTO  shift 8
-	REGISTER  shift 9
-	CHAR  shift 10
-	SHORT  shift 11
-	INT  shift 12
-	LONG  shift 13
-	SIGNED  shift 14
-	UNSIGNED  shift 15
-	FLOAT  shift 16
-	DOUBLE  shift 17
-	CONST  shift 18
-	VOLATILE  shift 19
-	VOID  shift 20
-	STRUCT  shift 21
-	UNION  shift 22
-	ENUM  shift 23
-
-	declaration_specifiers  goto 138
-	type_specifier  goto 28
-	type_qualifier  goto 29
-	storage_class_specifier  goto 30
-	enum_specifier  goto 31
-	struct_or_union_specifier  goto 32
-	struct_or_union  goto 33
-	parameter_list  goto 139
-	parameter_declaration  goto 140
-	parameter_type_list  goto 327
-
-
-state 302
-	direct_abstract_declarator : direct_abstract_declarator '[' . constant_expression ']'
-	direct_abstract_declarator : direct_abstract_declarator '[' . ']'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	']'  shift 328
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 146
-	inclusive_or_expression  goto 112
-	constant_expression  goto 329
-
-
-state 303
-	abstract_declarator : pointer direct_abstract_declarator .  (162)
-	direct_abstract_declarator : direct_abstract_declarator . '[' constant_expression ']'
-	direct_abstract_declarator : direct_abstract_declarator . '[' ']'
-	direct_abstract_declarator : direct_abstract_declarator . '(' ')'
-	direct_abstract_declarator : direct_abstract_declarator . '(' parameter_type_list ')'
-
-	'('  shift 301
-	'['  shift 302
-	.  reduce 162
-
-
-state 304
-	parameter_type_list : parameter_list ',' ELLIPSIS .  (150)
+state 158
+	parameter_declaration : declaration_specifiers abstract_declarator .  (150)
 
 	.  reduce 150
 
 
-state 305
-	parameter_list : parameter_list ',' parameter_declaration .  (152)
+state 159
+	abstract_declarator : direct_abstract_declarator .  (157)
+	direct_abstract_declarator : direct_abstract_declarator . '[' ']'
+	direct_abstract_declarator : direct_abstract_declarator . '[' constant_expression ']'
+	direct_abstract_declarator : direct_abstract_declarator . '(' parameter_type_list ')'
+	direct_abstract_declarator : direct_abstract_declarator . '(' ')'
 
-	.  reduce 152
-
-
-state 306
-	identifier_list : identifier_list ',' IDENTIFIER .  (157)
-
+	'('  shift 253
+	'['  shift 254
 	.  reduce 157
 
 
-state 307
-	cast_expression : '(' type_name ')' cast_expression .  (32)
+state 160
+	direct_declarator : direct_declarator '(' identifier_list ')' .  (137)
 
-	.  reduce 32
+	.  reduce 137
 
 
-state 308
-	unary_expression : SIZEOF '(' type_name ')' .  (24)
+state 161
+	identifier_list : identifier_list ',' . IDENTIFIER
 
-	.  reduce 24
+	IDENTIFIER  shift 255
 
 
-state 309
-	labeled_statement : CASE constant_expression ':' statement .  (184)
+state 162
+	type_name : specifier_qualifier_list . abstract_declarator
+	type_name : specifier_qualifier_list .  (154)
 
-	.  reduce 184
+	'('  shift 256
+	'*'  shift 2
+	'['  shift 155
+	.  reduce 154
 
+	pointer  goto 257
+	abstract_declarator  goto 258
+	direct_abstract_declarator  goto 159
 
-state 310
-	selection_statement : IF '(' expression ')' . statement
-	selection_statement : IF '(' expression ')' . statement ELSE statement
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 330
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 311
-	selection_statement : SWITCH '(' expression ')' . statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 331
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 312
-	iteration_statement : WHILE '(' expression ')' . statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
-
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 332
-	compound_statement  goto 120
-	iteration_statement  goto 121
-
-
-state 313
-	iteration_statement : DO statement WHILE '(' . expression ')' ';'
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 333
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 314
-	iteration_statement : FOR '(' expression_statement expression_statement . ')' statement
-	iteration_statement : FOR '(' expression_statement expression_statement . expression ')' statement
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	')'  shift 334
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	expression  goto 335
-	unary_expression  goto 96
-	assignment_expression  goto 97
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 315
-	postfix_expression : postfix_expression '(' argument_expression_list ')' .  (12)
-
-	.  reduce 12
-
-
-state 316
-	argument_expression_list : argument_expression_list ',' . assignment_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 96
-	assignment_expression  goto 336
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-
-
-state 317
-	postfix_expression : postfix_expression '[' expression ']' .  (10)
-
-	.  reduce 10
-
-
-state 318
-	conditional_expression : logical_or_expression '?' expression ':' . conditional_expression
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 145
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 337
-	inclusive_or_expression  goto 112
-
-
-state 319
-	initializer : '{' initializer_list ',' . '}'
-	initializer_list : initializer_list ',' . initializer
-
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	'{'  shift 217
-	'}'  shift 338
-	'~'  shift 77
-	IDENTIFIER  shift 144
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-
-	unary_expression  goto 96
-	assignment_expression  goto 218
-	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	initializer  goto 339
-
-
-state 320
-	initializer : '{' initializer_list '}' .  (173)
-
-	.  reduce 173
-
-
-state 321
-	struct_declarator : declarator ':' constant_expression .  (124)
-
-	.  reduce 124
-
-
-state 322
-	struct_declarator_list : struct_declarator_list ',' struct_declarator .  (121)
-
-	.  reduce 121
-
-
-state 323
-	direct_abstract_declarator : '(' abstract_declarator ')' .  (163)
-
-	.  reduce 163
-
-
-state 324
-	direct_abstract_declarator : '(' parameter_type_list ')' .  (169)
-
-	.  reduce 169
-
-
-state 325
-	direct_abstract_declarator : '[' constant_expression ']' .  (165)
-
-	.  reduce 165
-
-
-state 326
-	direct_abstract_declarator : direct_abstract_declarator '(' ')' .  (170)
-
-	.  reduce 170
-
-
-state 327
-	direct_abstract_declarator : direct_abstract_declarator '(' parameter_type_list . ')'
-
-	')'  shift 340
-
-
-state 328
-	direct_abstract_declarator : direct_abstract_declarator '[' ']' .  (166)
-
-	.  reduce 166
-
-
-state 329
-	direct_abstract_declarator : direct_abstract_declarator '[' constant_expression . ']'
-
-	']'  shift 341
-
-
-330: shift-reduce conflict (shift 342, reduce 196) on ELSE
-state 330
-	selection_statement : IF '(' expression ')' statement .  (196)
-	selection_statement : IF '(' expression ')' statement . ELSE statement
-
-	ELSE  shift 342
-	.  reduce 196
-
-
-state 331
-	selection_statement : SWITCH '(' expression ')' statement .  (198)
-
-	.  reduce 198
-
-
-state 332
-	iteration_statement : WHILE '(' expression ')' statement .  (199)
-
-	.  reduce 199
-
-
-state 333
+state 163
+	primary_expression : '(' expression . ')'
 	expression : expression . ',' assignment_expression
-	iteration_statement : DO statement WHILE '(' expression . ')' ';'
 
-	')'  shift 343
-	','  shift 173
+	')'  shift 259
+	','  shift 231
 
 
-state 334
-	iteration_statement : FOR '(' expression_statement expression_statement ')' . statement
+state 164
+	cast_expression : '(' type_name . ')' cast_expression
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
+	')'  shift 260
 
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
+
+state 165
+	primary_expression : '(' . expression ')'
+	unary_expression : SIZEOF '(' . type_name ')'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	TYPE_NAME  shift 4
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
 	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
-	statement  goto 344
-	compound_statement  goto 120
-	iteration_statement  goto 121
+	unary_expression  goto 127
+	relational_expression  goto 100
+	struct_or_union_specifier  goto 24
+	exclusive_or_expression  goto 101
+	type_specifier  goto 108
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	struct_or_union  goto 28
+	assignment_expression  goto 128
+	specifier_qualifier_list  goto 162
+	expression  goto 163
+	type_qualifier  goto 111
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	enum_specifier  goto 33
+	type_name  goto 261
 
 
-state 335
-	expression : expression . ',' assignment_expression
-	iteration_statement : FOR '(' expression_statement expression_statement expression . ')' statement
+state 166
+	unary_expression : SIZEOF unary_expression .  (19)
 
-	')'  shift 345
-	','  shift 173
+	.  reduce 19
 
 
-state 336
-	argument_expression_list : argument_expression_list ',' assignment_expression .  (18)
+state 167
+	primary_expression : '(' . expression ')'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 163
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 168
+	unary_expression : INC_OP unary_expression .  (16)
+
+	.  reduce 16
+
+
+state 169
+	unary_expression : DEC_OP unary_expression .  (17)
+
+	.  reduce 17
+
+
+state 170
+	shift_expression : shift_expression LEFT_OP . additive_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 262
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 171
+	shift_expression : shift_expression RIGHT_OP . additive_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 263
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 172
+	equality_expression : equality_expression EQ_OP . relational_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 264
+
+
+state 173
+	equality_expression : equality_expression NE_OP . relational_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 265
+
+
+state 174
+	and_expression : and_expression '&' . equality_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 266
+	primary_expression  goto 93
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+
+
+state 175
+	additive_expression : additive_expression '+' . multiplicative_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 91
+	primary_expression  goto 93
+	multiplicative_expression  goto 267
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 176
+	additive_expression : additive_expression '-' . multiplicative_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 91
+	primary_expression  goto 93
+	multiplicative_expression  goto 268
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 177
+	multiplicative_expression : multiplicative_expression '%' . cast_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 269
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 178
+	multiplicative_expression : multiplicative_expression '*' . cast_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 270
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 179
+	multiplicative_expression : multiplicative_expression '/' . cast_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 271
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 180
+	unary_expression : unary_operator cast_expression .  (18)
 
 	.  reduce 18
 
 
-state 337
-	conditional_expression : logical_or_expression '?' expression ':' conditional_expression .  (62)
+state 181
+	postfix_expression : postfix_expression '(' . ')'
+	postfix_expression : postfix_expression '(' . argument_expression_list ')'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	')'  shift 272
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	argument_expression_list  goto 273
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 274
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 182
+	postfix_expression : postfix_expression '.' . IDENTIFIER
+
+	IDENTIFIER  shift 275
+
+
+state 183
+	postfix_expression : postfix_expression '[' . expression ']'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 276
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 184
+	postfix_expression : postfix_expression PTR_OP . IDENTIFIER
+
+	IDENTIFIER  shift 277
+
+
+state 185
+	postfix_expression : postfix_expression INC_OP .  (11)
+
+	.  reduce 11
+
+
+state 186
+	postfix_expression : postfix_expression DEC_OP .  (12)
+
+	.  reduce 12
+
+
+state 187
+	relational_expression : relational_expression '<' . shift_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 278
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 188
+	relational_expression : relational_expression '>' . shift_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 279
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 189
+	relational_expression : relational_expression LE_OP . shift_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 280
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 190
+	relational_expression : relational_expression GE_OP . shift_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 281
+	cast_expression  goto 91
+	primary_expression  goto 93
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 191
+	exclusive_or_expression : exclusive_or_expression '^' . and_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 282
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+
+
+state 192
+	direct_declarator : direct_declarator '[' constant_expression ']' .  (134)
+
+	.  reduce 134
+
+
+state 193
+	conditional_expression : logical_or_expression '?' . expression ':' conditional_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 283
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 194
+	logical_or_expression : logical_or_expression OR_OP . logical_and_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_and_expression  goto 284
+	inclusive_or_expression  goto 106
+
+
+state 195
+	logical_and_expression : logical_and_expression AND_OP . inclusive_or_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	inclusive_or_expression  goto 285
+
+
+state 196
+	inclusive_or_expression : inclusive_or_expression '|' . exclusive_or_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 286
+
+
+state 197
+	struct_or_union_specifier : struct_or_union '{' struct_declaration_list '}' .  (105)
+
+	.  reduce 105
+
+
+state 198
+	struct_declaration_list : struct_declaration_list struct_declaration .  (110)
+
+	.  reduce 110
+
+
+state 199
+	specifier_qualifier_list : type_specifier specifier_qualifier_list .  (112)
+
+	.  reduce 112
+
+
+state 200
+	struct_declarator : ':' . constant_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	constant_expression  goto 287
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 105
+	inclusive_or_expression  goto 106
+
+
+state 201
+	struct_declaration : specifier_qualifier_list struct_declarator_list . ';'
+	struct_declarator_list : struct_declarator_list . ',' struct_declarator
+
+	','  shift 288
+	';'  shift 289
+
+
+state 202
+	struct_declarator : declarator . ':' constant_expression
+	struct_declarator : declarator .  (118)
+
+	':'  shift 290
+	.  reduce 118
+
+
+state 203
+	struct_declarator_list : struct_declarator .  (116)
+
+	.  reduce 116
+
+
+state 204
+	specifier_qualifier_list : type_qualifier specifier_qualifier_list .  (114)
+
+	.  reduce 114
+
+
+state 205
+	struct_declaration_list : struct_declaration_list . struct_declaration
+	struct_or_union_specifier : struct_or_union IDENTIFIER '{' struct_declaration_list . '}'
+
+	'}'  shift 291
+	TYPE_NAME  shift 4
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 108
+	struct_declaration  goto 198
+	struct_or_union  goto 28
+	specifier_qualifier_list  goto 110
+	type_qualifier  goto 111
+	enum_specifier  goto 33
+
+
+state 206
+	labeled_statement : IDENTIFIER ':' . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 292
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 207
+	labeled_statement : CASE constant_expression . ':' statement
+
+	':'  shift 293
+
+
+state 208
+	labeled_statement : DEFAULT ':' . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 294
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 209
+	selection_statement : IF '(' . expression ')' statement ELSE statement
+	selection_statement : IF '(' . expression ')' statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 295
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 210
+	selection_statement : SWITCH '(' . expression ')' statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 296
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 211
+	iteration_statement : WHILE '(' . expression ')' statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 297
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 212
+	iteration_statement : DO statement . WHILE '(' expression ')' ';'
+
+	WHILE  shift 298
+
+
+state 213
+	iteration_statement : FOR '(' . expression_statement expression_statement ')' statement
+	iteration_statement : FOR '(' . expression_statement expression_statement expression ')' statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	expression_statement  goto 299
+
+
+state 214
+	jump_statement : GOTO IDENTIFIER . ';'
+
+	';'  shift 300
+
+
+state 215
+	jump_statement : CONTINUE ';' .  (200)
+
+	.  reduce 200
+
+
+state 216
+	jump_statement : BREAK ';' .  (201)
+
+	.  reduce 201
+
+
+state 217
+	jump_statement : RETURN ';' .  (202)
+
+	.  reduce 202
+
+
+state 218
+	expression : expression . ',' assignment_expression
+	jump_statement : RETURN expression . ';'
+
+	','  shift 231
+	';'  shift 301
+
+
+state 219
+	assignment_operator : '=' .  (61)
+
+	.  reduce 61
+
+
+state 220
+	assignment_operator : MUL_ASSIGN .  (62)
 
 	.  reduce 62
 
 
-state 338
-	initializer : '{' initializer_list ',' '}' .  (174)
+state 221
+	assignment_operator : DIV_ASSIGN .  (63)
 
-	.  reduce 174
-
-
-state 339
-	initializer_list : initializer_list ',' initializer .  (176)
-
-	.  reduce 176
+	.  reduce 63
 
 
-state 340
-	direct_abstract_declarator : direct_abstract_declarator '(' parameter_type_list ')' .  (171)
+state 222
+	assignment_operator : MOD_ASSIGN .  (64)
+
+	.  reduce 64
+
+
+state 223
+	assignment_operator : ADD_ASSIGN .  (65)
+
+	.  reduce 65
+
+
+state 224
+	assignment_operator : SUB_ASSIGN .  (66)
+
+	.  reduce 66
+
+
+state 225
+	assignment_operator : LEFT_ASSIGN .  (67)
+
+	.  reduce 67
+
+
+state 226
+	assignment_operator : RIGHT_ASSIGN .  (68)
+
+	.  reduce 68
+
+
+state 227
+	assignment_operator : AND_ASSIGN .  (69)
+
+	.  reduce 69
+
+
+state 228
+	assignment_operator : XOR_ASSIGN .  (70)
+
+	.  reduce 70
+
+
+state 229
+	assignment_operator : OR_ASSIGN .  (71)
+
+	.  reduce 71
+
+
+state 230
+	assignment_expression : unary_expression assignment_operator . assignment_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 302
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 231
+	expression : expression ',' . assignment_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 303
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 232
+	expression_statement : expression ';' .  (191)
+
+	.  reduce 191
+
+
+state 233
+	compound_statement : '{' statement_list '}' .  (183)
+
+	.  reduce 183
+
+
+state 234
+	statement_list : statement_list statement .  (189)
+
+	.  reduce 189
+
+
+state 235
+	compound_statement : '{' declaration_list '}' .  (184)
+
+	.  reduce 184
+
+
+state 236
+	compound_statement : '{' declaration_list statement_list . '}'
+	statement_list : statement_list . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'}'  shift 304
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 234
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 237
+	init_declarator_list : init_declarator_list ',' init_declarator .  (84)
+
+	.  reduce 84
+
+
+state 238
+	initializer : '{' . initializer_list ',' '}'
+	initializer : '{' . initializer_list '}'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'{'  shift 238
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 239
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	initializer_list  goto 305
+	initializer  goto 306
+
+
+state 239
+	initializer : assignment_expression .  (168)
+
+	.  reduce 168
+
+
+state 240
+	init_declarator : declarator '=' initializer .  (86)
+
+	.  reduce 86
+
+
+state 241
+	function_definition : declaration_specifiers declarator declaration_list compound_statement .  (208)
+
+	.  reduce 208
+
+
+state 242
+	enumerator : IDENTIFIER '=' constant_expression .  (127)
+
+	.  reduce 127
+
+
+state 243
+	enumerator_list : enumerator_list ',' enumerator .  (125)
+
+	.  reduce 125
+
+
+state 244
+	enum_specifier : ENUM IDENTIFIER '{' enumerator_list '}' .  (122)
+
+	.  reduce 122
+
+
+state 245
+	parameter_type_list : parameter_list ',' ELLIPSIS .  (146)
+
+	.  reduce 146
+
+
+state 246
+	parameter_list : parameter_list ',' parameter_declaration .  (148)
+
+	.  reduce 148
+
+
+state 247
+	direct_abstract_declarator : '(' ')' .  (164)
+
+	.  reduce 164
+
+
+state 248
+	direct_abstract_declarator : '(' parameter_type_list . ')'
+
+	')'  shift 307
+
+
+state 249
+	direct_abstract_declarator : '(' abstract_declarator . ')'
+
+	')'  shift 308
+
+
+state 250
+	direct_abstract_declarator : '[' ']' .  (160)
+
+	.  reduce 160
+
+
+state 251
+	direct_abstract_declarator : '[' constant_expression . ']'
+
+	']'  shift 309
+
+
+state 252
+	abstract_declarator : pointer direct_abstract_declarator .  (158)
+	direct_abstract_declarator : direct_abstract_declarator . '[' ']'
+	direct_abstract_declarator : direct_abstract_declarator . '[' constant_expression ']'
+	direct_abstract_declarator : direct_abstract_declarator . '(' parameter_type_list ')'
+	direct_abstract_declarator : direct_abstract_declarator . '(' ')'
+
+	'('  shift 253
+	'['  shift 254
+	.  reduce 158
+
+
+state 253
+	direct_abstract_declarator : direct_abstract_declarator '(' . parameter_type_list ')'
+	direct_abstract_declarator : direct_abstract_declarator '(' . ')'
+
+	')'  shift 310
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	parameter_type_list  goto 311
+	parameter_list  goto 72
+	declaration_specifiers  goto 73
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	parameter_declaration  goto 75
+
+
+state 254
+	direct_abstract_declarator : direct_abstract_declarator '[' . ']'
+	direct_abstract_declarator : direct_abstract_declarator '[' . constant_expression ']'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	']'  shift 312
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	constant_expression  goto 313
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 105
+	inclusive_or_expression  goto 106
+
+
+state 255
+	identifier_list : identifier_list ',' IDENTIFIER .  (153)
+
+	.  reduce 153
+
+
+state 256
+	direct_abstract_declarator : '(' . ')'
+	direct_abstract_declarator : '(' . abstract_declarator ')'
+	direct_abstract_declarator : '(' . parameter_type_list ')'
+
+	'('  shift 256
+	')'  shift 247
+	'*'  shift 2
+	'['  shift 155
+	TYPE_NAME  shift 4
+	TYPEDEF  shift 5
+	EXTERN  shift 6
+	STATIC  shift 7
+	AUTO  shift 8
+	REGISTER  shift 9
+	CHAR  shift 10
+	SHORT  shift 11
+	INT  shift 12
+	LONG  shift 13
+	SIGNED  shift 14
+	UNSIGNED  shift 15
+	FLOAT  shift 16
+	DOUBLE  shift 17
+	CONST  shift 18
+	VOLATILE  shift 19
+	VOID  shift 20
+	STRUCT  shift 21
+	UNION  shift 22
+	ENUM  shift 23
+
+	struct_or_union_specifier  goto 24
+	pointer  goto 257
+	type_specifier  goto 26
+	struct_or_union  goto 28
+	type_qualifier  goto 29
+	parameter_type_list  goto 248
+	parameter_list  goto 72
+	declaration_specifiers  goto 73
+	enum_specifier  goto 33
+	storage_class_specifier  goto 34
+	abstract_declarator  goto 249
+	direct_abstract_declarator  goto 159
+	parameter_declaration  goto 75
+
+
+state 257
+	abstract_declarator : pointer . direct_abstract_declarator
+	abstract_declarator : pointer .  (156)
+
+	'('  shift 256
+	'['  shift 155
+	.  reduce 156
+
+	direct_abstract_declarator  goto 252
+
+
+state 258
+	type_name : specifier_qualifier_list abstract_declarator .  (155)
+
+	.  reduce 155
+
+
+state 259
+	primary_expression : '(' expression ')' .  (4)
+
+	.  reduce 4
+
+
+state 260
+	cast_expression : '(' type_name ')' . cast_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	cast_expression  goto 314
+	primary_expression  goto 93
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+
+
+state 261
+	unary_expression : SIZEOF '(' type_name . ')'
+
+	')'  shift 315
+
+
+state 262
+	additive_expression : additive_expression . '+' multiplicative_expression
+	additive_expression : additive_expression . '-' multiplicative_expression
+	shift_expression : shift_expression LEFT_OP additive_expression .  (37)
+
+	'+'  shift 175
+	'-'  shift 176
+	.  reduce 37
+
+
+state 263
+	additive_expression : additive_expression . '+' multiplicative_expression
+	additive_expression : additive_expression . '-' multiplicative_expression
+	shift_expression : shift_expression RIGHT_OP additive_expression .  (38)
+
+	'+'  shift 175
+	'-'  shift 176
+	.  reduce 38
+
+
+state 264
+	equality_expression : equality_expression EQ_OP relational_expression .  (45)
+	relational_expression : relational_expression . LE_OP shift_expression
+	relational_expression : relational_expression . GE_OP shift_expression
+	relational_expression : relational_expression . '>' shift_expression
+	relational_expression : relational_expression . '<' shift_expression
+
+	'<'  shift 187
+	'>'  shift 188
+	LE_OP  shift 189
+	GE_OP  shift 190
+	.  reduce 45
+
+
+state 265
+	equality_expression : equality_expression NE_OP relational_expression .  (46)
+	relational_expression : relational_expression . LE_OP shift_expression
+	relational_expression : relational_expression . GE_OP shift_expression
+	relational_expression : relational_expression . '>' shift_expression
+	relational_expression : relational_expression . '<' shift_expression
+
+	'<'  shift 187
+	'>'  shift 188
+	LE_OP  shift 189
+	GE_OP  shift 190
+	.  reduce 46
+
+
+state 266
+	equality_expression : equality_expression . EQ_OP relational_expression
+	equality_expression : equality_expression . NE_OP relational_expression
+	and_expression : and_expression '&' equality_expression .  (48)
+
+	EQ_OP  shift 172
+	NE_OP  shift 173
+	.  reduce 48
+
+
+state 267
+	multiplicative_expression : multiplicative_expression . '/' cast_expression
+	multiplicative_expression : multiplicative_expression . '%' cast_expression
+	multiplicative_expression : multiplicative_expression . '*' cast_expression
+	additive_expression : additive_expression '+' multiplicative_expression .  (34)
+
+	'%'  shift 177
+	'*'  shift 178
+	'/'  shift 179
+	.  reduce 34
+
+
+state 268
+	multiplicative_expression : multiplicative_expression . '/' cast_expression
+	multiplicative_expression : multiplicative_expression . '%' cast_expression
+	multiplicative_expression : multiplicative_expression . '*' cast_expression
+	additive_expression : additive_expression '-' multiplicative_expression .  (35)
+
+	'%'  shift 177
+	'*'  shift 178
+	'/'  shift 179
+	.  reduce 35
+
+
+state 269
+	multiplicative_expression : multiplicative_expression '%' cast_expression .  (32)
+
+	.  reduce 32
+
+
+state 270
+	multiplicative_expression : multiplicative_expression '*' cast_expression .  (30)
+
+	.  reduce 30
+
+
+state 271
+	multiplicative_expression : multiplicative_expression '/' cast_expression .  (31)
+
+	.  reduce 31
+
+
+state 272
+	postfix_expression : postfix_expression '(' ')' .  (7)
+
+	.  reduce 7
+
+
+state 273
+	postfix_expression : postfix_expression '(' argument_expression_list . ')'
+	argument_expression_list : argument_expression_list . ',' assignment_expression
+
+	')'  shift 316
+	','  shift 317
+
+
+state 274
+	argument_expression_list : assignment_expression .  (13)
+
+	.  reduce 13
+
+
+state 275
+	postfix_expression : postfix_expression '.' IDENTIFIER .  (9)
+
+	.  reduce 9
+
+
+state 276
+	postfix_expression : postfix_expression '[' expression . ']'
+	expression : expression . ',' assignment_expression
+
+	','  shift 231
+	']'  shift 318
+
+
+state 277
+	postfix_expression : postfix_expression PTR_OP IDENTIFIER .  (10)
+
+	.  reduce 10
+
+
+state 278
+	shift_expression : shift_expression . RIGHT_OP additive_expression
+	shift_expression : shift_expression . LEFT_OP additive_expression
+	relational_expression : relational_expression '<' shift_expression .  (40)
+
+	LEFT_OP  shift 170
+	RIGHT_OP  shift 171
+	.  reduce 40
+
+
+state 279
+	shift_expression : shift_expression . RIGHT_OP additive_expression
+	shift_expression : shift_expression . LEFT_OP additive_expression
+	relational_expression : relational_expression '>' shift_expression .  (41)
+
+	LEFT_OP  shift 170
+	RIGHT_OP  shift 171
+	.  reduce 41
+
+
+state 280
+	relational_expression : relational_expression LE_OP shift_expression .  (42)
+	shift_expression : shift_expression . RIGHT_OP additive_expression
+	shift_expression : shift_expression . LEFT_OP additive_expression
+
+	LEFT_OP  shift 170
+	RIGHT_OP  shift 171
+	.  reduce 42
+
+
+state 281
+	shift_expression : shift_expression . RIGHT_OP additive_expression
+	relational_expression : relational_expression GE_OP shift_expression .  (43)
+	shift_expression : shift_expression . LEFT_OP additive_expression
+
+	LEFT_OP  shift 170
+	RIGHT_OP  shift 171
+	.  reduce 43
+
+
+state 282
+	exclusive_or_expression : exclusive_or_expression '^' and_expression .  (50)
+	and_expression : and_expression . '&' equality_expression
+
+	'&'  shift 174
+	.  reduce 50
+
+
+state 283
+	conditional_expression : logical_or_expression '?' expression . ':' conditional_expression
+	expression : expression . ',' assignment_expression
+
+	','  shift 231
+	':'  shift 319
+
+
+state 284
+	logical_or_expression : logical_or_expression OR_OP logical_and_expression .  (56)
+	logical_and_expression : logical_and_expression . AND_OP inclusive_or_expression
+
+	AND_OP  shift 195
+	.  reduce 56
+
+
+state 285
+	logical_and_expression : logical_and_expression AND_OP inclusive_or_expression .  (54)
+	inclusive_or_expression : inclusive_or_expression . '|' exclusive_or_expression
+
+	'|'  shift 196
+	.  reduce 54
+
+
+state 286
+	exclusive_or_expression : exclusive_or_expression . '^' and_expression
+	inclusive_or_expression : inclusive_or_expression '|' exclusive_or_expression .  (52)
+
+	'^'  shift 191
+	.  reduce 52
+
+
+state 287
+	struct_declarator : ':' constant_expression .  (119)
+
+	.  reduce 119
+
+
+state 288
+	struct_declarator_list : struct_declarator_list ',' . struct_declarator
+
+	'('  shift 1
+	'*'  shift 2
+	':'  shift 200
+	IDENTIFIER  shift 3
+
+	pointer  goto 25
+	direct_declarator  goto 27
+	declarator  goto 202
+	struct_declarator  goto 320
+
+
+state 289
+	struct_declaration : specifier_qualifier_list struct_declarator_list ';' .  (111)
+
+	.  reduce 111
+
+
+state 290
+	struct_declarator : declarator ':' . constant_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	constant_expression  goto 321
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 105
+	inclusive_or_expression  goto 106
+
+
+state 291
+	struct_or_union_specifier : struct_or_union IDENTIFIER '{' struct_declaration_list '}' .  (104)
+
+	.  reduce 104
+
+
+state 292
+	labeled_statement : IDENTIFIER ':' statement .  (179)
+
+	.  reduce 179
+
+
+state 293
+	labeled_statement : CASE constant_expression ':' . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 322
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 294
+	labeled_statement : DEFAULT ':' statement .  (181)
+
+	.  reduce 181
+
+
+state 295
+	expression : expression . ',' assignment_expression
+	selection_statement : IF '(' expression . ')' statement ELSE statement
+	selection_statement : IF '(' expression . ')' statement
+
+	')'  shift 323
+	','  shift 231
+
+
+state 296
+	expression : expression . ',' assignment_expression
+	selection_statement : SWITCH '(' expression . ')' statement
+
+	')'  shift 324
+	','  shift 231
+
+
+state 297
+	expression : expression . ',' assignment_expression
+	iteration_statement : WHILE '(' expression . ')' statement
+
+	')'  shift 325
+	','  shift 231
+
+
+state 298
+	iteration_statement : DO statement WHILE . '(' expression ')' ';'
+
+	'('  shift 326
+
+
+state 299
+	iteration_statement : FOR '(' expression_statement . expression_statement ')' statement
+	iteration_statement : FOR '(' expression_statement . expression_statement expression ')' statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	expression_statement  goto 327
+
+
+state 300
+	jump_statement : GOTO IDENTIFIER ';' .  (199)
+
+	.  reduce 199
+
+
+state 301
+	jump_statement : RETURN expression ';' .  (203)
+
+	.  reduce 203
+
+
+state 302
+	assignment_expression : unary_expression assignment_operator assignment_expression .  (60)
+
+	.  reduce 60
+
+
+state 303
+	expression : expression ',' assignment_expression .  (73)
+
+	.  reduce 73
+
+
+state 304
+	compound_statement : '{' declaration_list statement_list '}' .  (185)
+
+	.  reduce 185
+
+
+state 305
+	initializer : '{' initializer_list . ',' '}'
+	initializer : '{' initializer_list . '}'
+	initializer_list : initializer_list . ',' initializer
+
+	','  shift 328
+	'}'  shift 329
+
+
+state 306
+	initializer_list : initializer .  (171)
 
 	.  reduce 171
 
 
-state 341
-	direct_abstract_declarator : direct_abstract_declarator '[' constant_expression ']' .  (167)
+state 307
+	direct_abstract_declarator : '(' parameter_type_list ')' .  (165)
+
+	.  reduce 165
+
+
+state 308
+	direct_abstract_declarator : '(' abstract_declarator ')' .  (159)
+
+	.  reduce 159
+
+
+state 309
+	direct_abstract_declarator : '[' constant_expression ']' .  (161)
+
+	.  reduce 161
+
+
+state 310
+	direct_abstract_declarator : direct_abstract_declarator '(' ')' .  (166)
+
+	.  reduce 166
+
+
+state 311
+	direct_abstract_declarator : direct_abstract_declarator '(' parameter_type_list . ')'
+
+	')'  shift 330
+
+
+state 312
+	direct_abstract_declarator : direct_abstract_declarator '[' ']' .  (162)
+
+	.  reduce 162
+
+
+state 313
+	direct_abstract_declarator : direct_abstract_declarator '[' constant_expression . ']'
+
+	']'  shift 331
+
+
+state 314
+	cast_expression : '(' type_name ')' cast_expression .  (28)
+
+	.  reduce 28
+
+
+state 315
+	unary_expression : SIZEOF '(' type_name ')' .  (20)
+
+	.  reduce 20
+
+
+state 316
+	postfix_expression : postfix_expression '(' argument_expression_list ')' .  (8)
+
+	.  reduce 8
+
+
+state 317
+	argument_expression_list : argument_expression_list ',' . assignment_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 332
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 318
+	postfix_expression : postfix_expression '[' expression ']' .  (6)
+
+	.  reduce 6
+
+
+state 319
+	conditional_expression : logical_or_expression '?' expression ':' . conditional_expression
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 99
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	conditional_expression  goto 333
+	inclusive_or_expression  goto 106
+
+
+state 320
+	struct_declarator_list : struct_declarator_list ',' struct_declarator .  (117)
+
+	.  reduce 117
+
+
+state 321
+	struct_declarator : declarator ':' constant_expression .  (120)
+
+	.  reduce 120
+
+
+state 322
+	labeled_statement : CASE constant_expression ':' statement .  (180)
+
+	.  reduce 180
+
+
+state 323
+	selection_statement : IF '(' expression ')' . statement ELSE statement
+	selection_statement : IF '(' expression ')' . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 334
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 324
+	selection_statement : SWITCH '(' expression ')' . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 335
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 325
+	iteration_statement : WHILE '(' expression ')' . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 336
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 326
+	iteration_statement : DO statement WHILE '(' . expression ')' ';'
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 337
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 327
+	iteration_statement : FOR '(' expression_statement expression_statement . ')' statement
+	iteration_statement : FOR '(' expression_statement expression_statement . expression ')' statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	')'  shift 338
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 339
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+
+
+state 328
+	initializer : '{' initializer_list ',' . '}'
+	initializer_list : initializer_list ',' . initializer
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	'{'  shift 238
+	'}'  shift 340
+	'~'  shift 83
+	IDENTIFIER  shift 84
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 239
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	initializer  goto 341
+
+
+state 329
+	initializer : '{' initializer_list '}' .  (169)
+
+	.  reduce 169
+
+
+state 330
+	direct_abstract_declarator : direct_abstract_declarator '(' parameter_type_list ')' .  (167)
 
 	.  reduce 167
+
+
+state 331
+	direct_abstract_declarator : direct_abstract_declarator '[' constant_expression ']' .  (163)
+
+	.  reduce 163
+
+
+state 332
+	argument_expression_list : argument_expression_list ',' assignment_expression .  (14)
+
+	.  reduce 14
+
+
+state 333
+	conditional_expression : logical_or_expression '?' expression ':' conditional_expression .  (58)
+
+	.  reduce 58
+
+
+334: shift-reduce conflict (shift 342, reduce 192) on ELSE
+state 334
+	selection_statement : IF '(' expression ')' statement . ELSE statement
+	selection_statement : IF '(' expression ')' statement .  (192)
+
+	ELSE  shift 342
+	.  reduce 192
+
+
+state 335
+	selection_statement : SWITCH '(' expression ')' statement .  (194)
+
+	.  reduce 194
+
+
+state 336
+	iteration_statement : WHILE '(' expression ')' statement .  (195)
+
+	.  reduce 195
+
+
+state 337
+	expression : expression . ',' assignment_expression
+	iteration_statement : DO statement WHILE '(' expression . ')' ';'
+
+	')'  shift 343
+	','  shift 231
+
+
+state 338
+	iteration_statement : FOR '(' expression_statement expression_statement ')' . statement
+
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
+
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
+	postfix_expression  goto 98
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
+	statement  goto 344
+	iteration_statement  goto 137
+	compound_statement  goto 138
+
+
+state 339
+	expression : expression . ',' assignment_expression
+	iteration_statement : FOR '(' expression_statement expression_statement expression . ')' statement
+
+	')'  shift 345
+	','  shift 231
+
+
+state 340
+	initializer : '{' initializer_list ',' '}' .  (170)
+
+	.  reduce 170
+
+
+state 341
+	initializer_list : initializer_list ',' initializer .  (172)
+
+	.  reduce 172
 
 
 state 342
 	selection_statement : IF '(' expression ')' statement ELSE . statement
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
 
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
 	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
 	statement  goto 346
-	compound_statement  goto 120
-	iteration_statement  goto 121
+	iteration_statement  goto 137
+	compound_statement  goto 138
 
 
 state 343
@@ -5458,106 +5452,95 @@ state 343
 
 
 state 344
-	iteration_statement : FOR '(' expression_statement expression_statement ')' statement .  (201)
+	iteration_statement : FOR '(' expression_statement expression_statement ')' statement .  (197)
 
-	.  reduce 201
+	.  reduce 197
 
 
 state 345
 	iteration_statement : FOR '(' expression_statement expression_statement expression ')' . statement
 
-	'!'  shift 69
-	'&'  shift 70
-	'('  shift 71
-	'*'  shift 72
-	'+'  shift 73
-	'-'  shift 74
-	';'  shift 75
-	'{'  shift 45
-	'~'  shift 77
-	IDENTIFIER  shift 78
-	CONSTANT  shift 79
-	STRING_LITERAL  shift 80
-	SIZEOF  shift 81
-	INC_OP  shift 82
-	DEC_OP  shift 83
-	CASE  shift 84
-	DEFAULT  shift 85
-	IF  shift 86
-	SWITCH  shift 87
-	WHILE  shift 88
-	DO  shift 89
-	FOR  shift 90
-	GOTO  shift 91
-	CONTINUE  shift 92
-	BREAK  shift 93
-	RETURN  shift 94
+	'!'  shift 76
+	'&'  shift 77
+	'('  shift 78
+	'*'  shift 79
+	'+'  shift 80
+	'-'  shift 81
+	';'  shift 113
+	'{'  shift 51
+	'~'  shift 83
+	IDENTIFIER  shift 115
+	CONSTANT  shift 85
+	STRING_LITERAL  shift 86
+	SIZEOF  shift 87
+	INC_OP  shift 88
+	DEC_OP  shift 89
+	CASE  shift 116
+	DEFAULT  shift 117
+	IF  shift 118
+	SWITCH  shift 119
+	WHILE  shift 120
+	DO  shift 121
+	FOR  shift 122
+	GOTO  shift 123
+	CONTINUE  shift 124
+	BREAK  shift 125
+	RETURN  shift 126
 
-	expression  goto 95
-	unary_expression  goto 96
-	assignment_expression  goto 97
+	shift_expression  goto 90
+	cast_expression  goto 91
+	equality_expression  goto 92
+	primary_expression  goto 93
+	and_expression  goto 94
+	additive_expression  goto 95
+	multiplicative_expression  goto 96
+	unary_operator  goto 97
 	postfix_expression  goto 98
-	unary_operator  goto 99
-	cast_expression  goto 100
-	primary_expression  goto 101
-	exclusive_or_expression  goto 102
-	additive_expression  goto 103
-	relational_expression  goto 104
-	multiplicative_expression  goto 105
-	and_expression  goto 106
-	shift_expression  goto 107
-	equality_expression  goto 108
-	logical_and_expression  goto 109
-	logical_or_expression  goto 110
-	conditional_expression  goto 111
-	inclusive_or_expression  goto 112
-	expression_statement  goto 113
-	jump_statement  goto 114
-	labeled_statement  goto 115
-	selection_statement  goto 118
+	unary_expression  goto 127
+	relational_expression  goto 100
+	exclusive_or_expression  goto 101
+	logical_or_expression  goto 103
+	logical_and_expression  goto 104
+	assignment_expression  goto 128
+	expression  goto 129
+	conditional_expression  goto 130
+	inclusive_or_expression  goto 106
+	selection_statement  goto 132
+	labeled_statement  goto 133
+	jump_statement  goto 134
+	expression_statement  goto 135
 	statement  goto 348
-	compound_statement  goto 120
-	iteration_statement  goto 121
+	iteration_statement  goto 137
+	compound_statement  goto 138
 
 
 state 346
-	selection_statement : IF '(' expression ')' statement ELSE statement .  (197)
+	selection_statement : IF '(' expression ')' statement ELSE statement .  (193)
 
-	.  reduce 197
+	.  reduce 193
 
 
 state 347
-	iteration_statement : DO statement WHILE '(' expression ')' ';' .  (200)
+	iteration_statement : DO statement WHILE '(' expression ')' ';' .  (196)
 
-	.  reduce 200
+	.  reduce 196
 
 
 state 348
-	iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement .  (202)
+	iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement .  (198)
 
-	.  reduce 202
-
-
-Tokens never shifted
-	NUMBER  (257)
-
-
-Rules never reduced
-	stmt : expr ';' expr  (1)
-	stmt : stmt ';' expr  (2)
-	expr : NUMBER '+' NUMBER  (3)
-	expr : expr '+' NUMBER  (4)
+	.  reduce 198
 
 
 ##############################################################################
 # Summary
 ##############################################################################
 
-State 330 contains 1 shift-reduce conflict(s)
+State 334 contains 1 shift-reduce conflict(s)
 
 
-85 token(s), 66 nonterminal(s)
-216 grammar rule(s), 349 state(s)
+84 token(s), 64 nonterminal(s)
+212 grammar rule(s), 349 state(s)
 
 
 ##############################################################################
