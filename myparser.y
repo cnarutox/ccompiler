@@ -945,8 +945,8 @@ type_specifier
 		$$ = new node();
 		$$ -> length = 1;
 		$$->name="type_specifier";
-		// $$->children=new node* [1];
-		// $$->children[0] = $1.ntnode;		
+		$$->children=new node* [1];
+		$$->children[0] = $1.ntnode;		
 	}
 	| SIGNED{
 		$$ = new node();
