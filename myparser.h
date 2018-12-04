@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 53 of your 30 day trial period.
+* You are on day 56 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.h
 * C++ header file generated from myparser.y.
 * 
-* Date: 12/02/18
-* Time: 11:05:39
+* Date: 12/05/18
+* Time: 02:40:52
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -31,7 +31,7 @@
 
 #ifndef YYSTYPE
 union tagYYSTYPE {
-#line 23 ".\\myparser.y"
+#line 43 ".\\myparser.y"
 
 	struct node* ntnode;
 	int value;
@@ -42,66 +42,64 @@ union tagYYSTYPE {
 #define YYSTYPE union tagYYSTYPE
 #endif
 
-#define NUMBER 257
-#define IDENTIFIER 258
-#define CONSTANT 259
-#define STRING_LITERAL 260
-#define SIZEOF 261
-#define PTR_OP 262
-#define INC_OP 263
-#define DEC_OP 264
-#define LEFT_OP 265
-#define RIGHT_OP 266
-#define LE_OP 267
-#define GE_OP 268
-#define EQ_OP 269
-#define NE_OP 270
-#define AND_OP 271
-#define OR_OP 272
-#define MUL_ASSIGN 273
-#define DIV_ASSIGN 274
-#define MOD_ASSIGN 275
-#define ADD_ASSIGN 276
-#define SUB_ASSIGN 277
-#define LEFT_ASSIGN 278
-#define RIGHT_ASSIGN 279
-#define AND_ASSIGN 280
-#define XOR_ASSIGN 281
-#define OR_ASSIGN 282
-#define TYPE_NAME 283
-#define TYPEDEF 284
-#define EXTERN 285
-#define STATIC 286
-#define AUTO 287
-#define REGISTER 288
-#define CHAR 289
-#define SHORT 290
-#define INT 291
-#define LONG 292
-#define SIGNED 293
-#define UNSIGNED 294
-#define FLOAT 295
-#define DOUBLE 296
-#define CONST 297
-#define VOLATILE 298
-#define VOID 299
-#define STRUCT 300
-#define UNION 301
-#define ENUM 302
-#define ELLIPSIS 303
-#define CASE 304
-#define DEFAULT 305
-#define IF 306
-#define ELSE 307
-#define SWITCH 308
-#define WHILE 309
-#define DO 310
-#define FOR 311
-#define GOTO 312
-#define CONTINUE 313
-#define BREAK 314
-#define RETURN 315
-#define MAIN 316
+#define ID 257
+#define CONSTANT 258
+#define STRING_LITERAL 259
+#define SIZEOF 260
+#define PTR_OP 261
+#define INC_OP 262
+#define DEC_OP 263
+#define LEFT_OP 264
+#define RIGHT_OP 265
+#define LE_OP 266
+#define GE_OP 267
+#define EQ_OP 268
+#define NE_OP 269
+#define AND_OP 270
+#define OR_OP 271
+#define MUL_ASSIGN 272
+#define DIV_ASSIGN 273
+#define MOD_ASSIGN 274
+#define ADD_ASSIGN 275
+#define SUB_ASSIGN 276
+#define LEFT_ASSIGN 277
+#define RIGHT_ASSIGN 278
+#define AND_ASSIGN 279
+#define XOR_ASSIGN 280
+#define OR_ASSIGN 281
+#define TYPE_NAME 282
+#define TYPEDEF 283
+#define EXTERN 284
+#define STATIC 285
+#define AUTO 286
+#define REGISTER 287
+#define CHAR 288
+#define SHORT 289
+#define INT 290
+#define LONG 291
+#define SIGNED 292
+#define UNSIGNED 293
+#define FLOAT 294
+#define DOUBLE 295
+#define CONST 296
+#define VOLATILE 297
+#define VOID 298
+#define STRUCT 299
+#define UNION 300
+#define ENUM 301
+#define ELLIPSIS 302
+#define CASE 303
+#define DEFAULT 304
+#define IF 305
+#define ELSE 306
+#define SWITCH 307
+#define WHILE 308
+#define DO 309
+#define FOR 310
+#define GOTO 311
+#define CONTINUE 312
+#define BREAK 313
+#define RETURN 314
 /////////////////////////////////////////////////////////////////////////////
 // myparser
 
@@ -134,22 +132,22 @@ protected:
 	virtual void yycopyattribute(void YYFAR* dest, const void YYFAR* src, int count);
 
 public:
-#line 71 ".\\myparser.y"
+#line 90 ".\\myparser.y"
 
 	// place any extra class members here
 
-#line 142 "myparser.h"
+#line 140 "myparser.h"
 };
 
 #ifndef YYPARSERNAME
 #define YYPARSERNAME myparser
 #endif
 
-#line 86 ".\\myparser.y"
+#line 105 ".\\myparser.y"
 
 #ifndef YYSTYPE
 #define YYSTYPE int
 #endif
 
-#line 155 "myparser.h"
+#line 153 "myparser.h"
 #endif

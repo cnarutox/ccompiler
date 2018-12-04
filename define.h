@@ -4,7 +4,7 @@
 #include <typeinfo>
 using namespace std;
 // #define ERROR 0
-// #define VOID 1
+// #define VOID 13
 // #define MAIN 2
 // #define LP 3
 // #define RP 4
