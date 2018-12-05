@@ -60,7 +60,7 @@ void traverse(node* root) {
 %type <ntnode> declaration_list,statement_list,expression_statement
 %type <ntnode> iteration_statement,jump_statement,translation_unit,external_declaration
 %type <ntnode> function_definition, if_statement,selection_statement
-%type <ntnode> if_else_statement
+%type <ntnode> open_statement, matched_statement, stmt,other
 
 
 
@@ -1789,6 +1789,7 @@ initializer
 		$$ -> children[2] = $3.ntnode;
 		$$ -> children[3] = $4.ntnode;
 	}
+	|{}
 	;
 
 initializer_list
@@ -1811,7 +1812,48 @@ initializer_list
 		$$ -> children[2] = $3;
 	}
 	;
-
+other
+	:labeled_statement {
+		$$ = new node();
+		printf("1635 ");
+		$$ -> name = "statement";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	| compound_statement {
+		$$ = new node();
+		printf("1642 ");
+		$$ -> name = "statement";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	| expression_statement {
+		$$ = new node();
+		printf("1649 ");
+		$$ -> name = "statement";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	| iteration_statement {
+		$$ = new node();
+		printf("1663 ");
+		$$ -> name = "statement";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	| jump_statement {
+		$$ = new node();
+		printf("1670 ");
+		$$ -> name = "statement";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	;
 statement
 	: labeled_statement {
 		$$ = new node();
@@ -1999,11 +2041,53 @@ expression_statement
 		$$ -> children[1] = $2.ntnode;
 	}
 	;
-if_statement
-	: IF '(' expression ')' statement {
+stmt 
+	: matched_statement {
+		$$ = new node();
+		printf("1794 ");
+		$$ -> name = "stmt";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	| open_statement {
+		$$ = new node();
+		printf("1795 ");
+		$$ -> name = "stmt";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	;
+matched_statement
+	: IF '(' expression ')' matched_statement ELSE matched_statement{
 		$$ = new node();
 		printf("1803 ");
-		$$ -> name = "if_statement";
+		$$ -> name = "matched_statement";
+		$$ -> length = 7;
+		$$ -> children = new node* [7];
+		$$ -> children[0] = $1.ntnode;
+		$$ -> children[1] = $2.ntnode;
+		$$ -> children[2] = $3;
+		$$ -> children[3] = $4.ntnode;
+		$$ -> children[4] = $5;
+		$$ -> children[5] = $6.ntnode;
+		$$ -> children[6] = $7;
+	}
+	|other {
+		$$ = new node();
+		printf("1815 ");
+		$$ -> name = "matched_statement";
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
+		$$ -> children[0] = $1;
+	}
+	;
+open_statement
+	: IF '(' expression ')' stmt {
+		$$ = new node();
+		printf("1816@ ");
+		$$ -> name = "open_statement";
 		$$ -> length = 5;
 		$$ -> children = new node* [5];
 		$$ -> children[0] = $1.ntnode;
@@ -2012,31 +2096,29 @@ if_statement
 		$$ -> children[3] = $4.ntnode;
 		$$ -> children[4] = $5;
 	}
-	;
-if_else_statement
-	: {
-		// $$ = new node();
-		// $$ -> name = "if_else_statement";
-	}
-	| ELSE statement {
+	| IF '(' expression ')' matched_statement ELSE open_statement {
 		$$ = new node();
-		printf("1810 ");
-		$$ -> name = "if_else_statement";
-		$$ -> length = 2;
-		$$ -> children = new node* [2];
+		printf("1817@ ");
+		$$ -> name = "open_statement";
+		$$ -> length = 7;
+		$$ -> children = new node* [7];
 		$$ -> children[0] = $1.ntnode;
-		$$ -> children[1] = $2;
+		$$ -> children[1] = $2.ntnode;
+		$$ -> children[2] = $3;
+		$$ -> children[3] = $4.ntnode;
+		$$ -> children[4] = $5;
+		$$ -> children[5] = $6.ntnode;
+		$$ -> children[6] = $7;
 	}
 	;
 selection_statement
-	: if_statement if_else_statement {
+	: stmt {
 		$$ = new node();
 		printf("1816 ");
 		$$ -> name = "selection_statement";
-		$$ -> length = 2;
-		$$ -> children = new node* [2];
+		$$ -> length = 1;
+		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-		$$ -> children[1] = $2;
 	}
 	| SWITCH '(' expression ')' statement {
 		$$ = new node();
