@@ -67,9 +67,9 @@ single \/\/[^\n]*
 
 // place your Lex rules here
 {ws}		{}
-// {annotation}	{}
-// {single}	{}
-// {literal}   {yylval.ntnode = new(STRING_LITERAL); 	return STRING_LITERAL;}
+{annotation}	{}
+{single}	{}
+// {literal}   {yylval.ntnode = new node(STRING_LITERAL); 	return STRING_LITERAL;}
 \n			{Line++;}
 void		{yylval.ntnode = new node("VOID"); 			return VOID; }
 ":"         {yylval.ntnode = new node(":"); 		return ':'; }
@@ -114,7 +114,7 @@ for			{yylval.ntnode = new node("FOR"); 			return FOR; }
 "|"         {yylval.ntnode = new node("|");			return '|'; }
 "~"			{yylval.ntnode = new node("~");			return '~'; }
 "^"			{yylval.ntnode = new node("^");			return '^'; }
-"&&"			{yylval.ntnode = new node("AND_OP");	return AND_OP; }
+"&&"		{yylval.ntnode = new node("AND_OP");	return AND_OP; }
 "||"		{yylval.ntnode = new node("OR_OP");			return OR_OP; }
 // !			{yylval.ntnode = new node(BOOLOP);	printf("BOOLOP");	return BOOLOP; }
 if			{yylval.ntnode = new node("IF");			return IF; }
