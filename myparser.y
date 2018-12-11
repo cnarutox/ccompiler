@@ -43,13 +43,13 @@ void traverse(node* root) {
 	int value;
 }
 
-%type <ntnode> primary_expression, postfix_expression,argument_expression_list
-%type <ntnode> unary_expression,unary_operator,cast_expression,multiplicative_expression
-%type <ntnode> additive_expression,shift_expression,relational_expression,equality_expression
-%type <ntnode> and_expression,exclusive_or_expression,inclusive_or_expression
-%type <ntnode> logical_and_expression,logical_or_expression,conditional_expression
-%type <ntnode> assignment_expression,assignment_operator,expression
-%type <ntnode> constant_expression,declaration,declaration_specifiers
+%type <ntnode> primary_exp, postfix_exp,argument_exp_list
+%type <ntnode> unary_exp,unary_operator,cast_exp,multiplicative_exp
+%type <ntnode> additive_exp,shift_exp,relational_exp,equality_exp
+%type <ntnode> and_exp,exclusive_or_exp,inclusive_or_exp
+%type <ntnode> logical_and_exp,logical_or_exp,conditional_exp
+%type <ntnode> assignment_exp,assignment_operator,exp
+%type <ntnode> constant_exp,declaration,declaration_specifiers
 %type <ntnode> init_declarator_list,init_declarator,storage_class_specifier
 %type <ntnode> type_specifier,struct_or_union_specifier,struct_or_union,struct_declaration_list
 %type <ntnode> struct_declaration,specifier_qualifier_list,struct_declarator_list,struct_declarator
@@ -57,7 +57,7 @@ void traverse(node* root) {
 %type <ntnode> pointer,type_qualifier_list,parameter_type_list,parameter_list,parameter_declaration
 %type <ntnode> identifier_list,type_name,abstract_declarator,direct_abstract_declarator
 %type <ntnode> initializer,initializer_list,statement,labeled_statement,compound_statement
-%type <ntnode> declaration_list,statement_list,expression_statement
+%type <ntnode> declaration_list,statement_list,exp_statement
 %type <ntnode> iteration_statement,jump_statement,translation_unit,external_declaration
 %type <ntnode> function_definition, if_statement,selection_statement
 %type <ntnode> open_statement, matched_statement, stmt,other
@@ -117,12 +117,12 @@ void traverse(node* root) {
 // rules section
 
 // place your YACC rules here (there must be at least one)
-primary_expression
+primary_exp
 	: ID{
 		$$ = new node();
 		printf("108 ");
 		$$ -> length = 1;
-		$$->name="primary_expression";
+		$$->name="primary_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
@@ -130,7 +130,7 @@ primary_expression
 		$$ = new node();
 		printf("116 ");
 		$$ -> length = 1;
-		$$->name="primary_expression";
+		$$->name="primary_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
@@ -138,117 +138,118 @@ primary_expression
 		$$ = new node();
 		printf("123 ");
 		$$ -> length = 1;
-		$$->name="primary_expression";
+		$$->name="primary_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;	
 	}
-	| '(' expression ')'{
+	| '(' exp ')'{
 		$$ = new node();
 		printf("130 ");
 		$$ -> length = 3;
-		$$->name="primary_expression";
+		$$->name="primary_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;	
 	}
+
 	;
 
-postfix_expression
-	: primary_expression{
+postfix_exp
+	: primary_exp{
 		$$ = new node();
 		printf("142 ");
 		$$ -> length = 1;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| postfix_expression '[' expression ']'{	
+	| postfix_exp '[' exp ']'{	
 		$$ = new node();
 		printf("149 ");
 		$$ -> length = 4;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
 	}
-	| postfix_expression '(' ')'{
+	| postfix_exp '(' ')'{
 		$$ = new node();
 		printf("159 ");
 		$$ -> length = 3;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
 	}
-	| postfix_expression '(' argument_expression_list ')'{
+	| postfix_exp '(' argument_exp_list ')'{
 		$$ = new node();
 		printf("168 ");
 		$$ -> length = 4;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [4];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
 	}
-	| postfix_expression '.' ID{
+	| postfix_exp '.' ID{
 		$$ = new node();
 		printf("178 ");
 		$$ -> length = 3;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
 	}
-	| postfix_expression PTR_OP ID{
+	| postfix_exp PTR_OP ID{
 		$$ = new node();
 		printf("187 ");
 		$$ -> length = 3;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
 	}
-	| postfix_expression INC_OP{
+	| postfix_exp INC_OP{
 		$$ = new node();
 		printf("196 ");
 		$$ -> length = 2;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 	}
-	| postfix_expression DEC_OP{
+	| postfix_exp DEC_OP{
 		$$ = new node();
 		printf("204 ");
 		$$ -> length = 2;
-		$$->name="postfix_expression";
+		$$->name="postfix_exp";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 	}
 	;
 
-argument_expression_list
-	: assignment_expression{
+argument_exp_list
+	: assignment_exp{
 		$$ = new node();
 		printf("215 ");
 		$$ -> length = 1;
-		$$->name="argument_expression_list";
+		$$->name="argument_exp_list";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| argument_expression_list ',' assignment_expression{
+	| argument_exp_list ',' assignment_exp{
 		$$ = new node();
 		printf("222 ");
 		$$ -> length = 3;
-		$$->name="argument_expression_list";
+		$$->name="argument_exp_list";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -256,47 +257,47 @@ argument_expression_list
 	}
 	;
 
-unary_expression
-	: postfix_expression{
+unary_exp
+	: postfix_exp{
 		$$ = new node();
 		printf("234 ");
 		$$ -> length = 1;
-		$$->name="unary_expression";
+		$$->name="unary_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| INC_OP unary_expression{
+	| INC_OP unary_exp{
 		$$ = new node();
 		printf("241 ");
 		$$ -> length = 2;
-		$$->name="unary_expression";
+		$$->name="unary_exp";
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 	}
-	| DEC_OP unary_expression{
+	| DEC_OP unary_exp{
 		$$ = new node();
 		printf("249 ");
 		$$ -> length = 2;
-		$$->name="unary_expression";
+		$$->name="unary_exp";
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 	}
-	| unary_operator cast_expression{
+	| unary_operator cast_exp{
 		$$ = new node();
 		printf("257 ");
 		$$ -> length = 2;
-		$$->name="unary_expression";
+		$$->name="unary_exp";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
 	}
-	| SIZEOF unary_expression{
+	| SIZEOF unary_exp{
 		$$ = new node();
 		printf("265 ");
 		$$ -> length = 2;
-		$$->name="unary_expression";
+		$$->name="unary_exp";
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
@@ -305,7 +306,7 @@ unary_expression
 		$$ = new node();
 		printf("273 ");
 		$$ -> length = 4;
-		$$->name="unary_expression";
+		$$->name="unary_exp";
 		$$->children=new node* [4];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2.ntnode;
@@ -366,20 +367,20 @@ unary_operator
 	}
 	;
 
-cast_expression
-	: unary_expression{
+cast_exp
+	: unary_exp{
 		$$ = new node();
 		printf("332 ");
 		$$ -> length = 1;
-		$$->name="cast_expression";
+		$$->name="cast_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| '(' type_name ')' cast_expression{
+	| '(' type_name ')' cast_exp{
 		$$ = new node();
 		printf("339 ");
 		$$ -> length = 4;
-		$$->name="cast_expression";
+		$$->name="cast_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
@@ -388,40 +389,40 @@ cast_expression
 	}
 	;
 
-multiplicative_expression
-	: cast_expression{
+multiplicative_exp
+	: cast_exp{
 		$$ = new node();
 		printf("352 ");
 		$$ -> length = 1;
-		$$->name="multiplicative_expression";
+		$$->name="multiplicative_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| multiplicative_expression '*' cast_expression{
+	| multiplicative_exp '*' cast_exp{
 		$$ = new node();
 		printf("359 ");
 		$$ -> length = 3;
-		$$->name="multiplicative_expression";
+		$$->name="multiplicative_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| multiplicative_expression '/' cast_expression{
+	| multiplicative_exp '/' cast_exp{
 		$$ = new node();
 		printf("368 ");
 		$$ -> length = 3;
-		$$->name="multiplicative_expression";
+		$$->name="multiplicative_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| multiplicative_expression '%' cast_expression{
+	| multiplicative_exp '%' cast_exp{
 		$$ = new node();
 		printf("377 ");
 		$$ -> length = 3;
-		$$->name="multiplicative_expression";
+		$$->name="multiplicative_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -429,30 +430,30 @@ multiplicative_expression
 	}
 	;
 
-additive_expression
-	: multiplicative_expression{
+additive_exp
+	: multiplicative_exp{
 		$$ = new node();
 		printf("389 ");
 		$$ -> length = 1;
-		$$->name="additive_expression";
+		$$->name="additive_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| additive_expression '+' multiplicative_expression{
+	| additive_exp '+' multiplicative_exp{
 		$$ = new node();
 		printf("396 ");
 		$$ -> length = 3;
-		$$->name="additive_expression";
+		$$->name="additive_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| additive_expression '-' multiplicative_expression{
+	| additive_exp '-' multiplicative_exp{
 		$$ = new node();
 		printf("405 ");
 		$$ -> length = 3;
-		$$->name="additive_expression";
+		$$->name="additive_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -460,30 +461,30 @@ additive_expression
 	}
 	;
 
-shift_expression
-	: additive_expression{
+shift_exp
+	: additive_exp{
 		$$ = new node();
 		printf("417 ");
 		$$ -> length = 1;
-		$$->name="shift_expression";
+		$$->name="shift_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| shift_expression LEFT_OP additive_expression{
+	| shift_exp LEFT_OP additive_exp{
 		$$ = new node();
 		printf("424 ");
 		$$ -> length = 3;
-		$$->name="shift_expression";
+		$$->name="shift_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| shift_expression RIGHT_OP additive_expression{
+	| shift_exp RIGHT_OP additive_exp{
 		$$ = new node();
 		printf("433 ");
 		$$ -> length = 3;
-		$$->name="shift_expression";
+		$$->name="shift_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -491,50 +492,50 @@ shift_expression
 	}
 	;
 
-relational_expression
-	: shift_expression{
+relational_exp
+	: shift_exp{
 		$$ = new node();
 		printf("445 ");
 		$$ -> length = 1;
-		$$->name="relational_expression";
+		$$->name="relational_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| relational_expression '<' shift_expression{
+	| relational_exp '<' shift_exp{
 		$$ = new node();
 		printf("452 ");
 		$$ -> length = 3;
-		$$->name="relational_expression";
+		$$->name="relational_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| relational_expression '>' shift_expression{
+	| relational_exp '>' shift_exp{
 		$$ = new node();
 		printf("461 ");
 		$$ -> length = 3;
-		$$->name="relational_expression";
+		$$->name="relational_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| relational_expression LE_OP shift_expression{
+	| relational_exp LE_OP shift_exp{
 		$$ = new node();
 		printf("470 ");
 		$$ -> length = 3;
-		$$->name="relational_expression";
+		$$->name="relational_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| relational_expression GE_OP shift_expression{
+	| relational_exp GE_OP shift_exp{
 		$$ = new node();
 		printf("479 ");
 		$$ -> length = 3;
-		$$->name="relational_expression";
+		$$->name="relational_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -542,30 +543,30 @@ relational_expression
 	}
 	;
 
-equality_expression
-	: relational_expression{
+equality_exp
+	: relational_exp{
 		$$ = new node();
 		printf("491 ");
 		$$ -> length = 1;
-		$$->name="equality_expression";
+		$$->name="equality_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| equality_expression EQ_OP relational_expression{
+	| equality_exp EQ_OP relational_exp{
 		$$ = new node();
 		printf("498 ");
 		$$ -> length = 3;
-		$$->name="equality_expression";
+		$$->name="equality_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 	}
-	| equality_expression NE_OP relational_expression{
+	| equality_exp NE_OP relational_exp{
 		$$ = new node();
 		printf("507 ");
 		$$ -> length = 3;
-		$$->name="equality_expression";
+		$$->name="equality_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -573,20 +574,20 @@ equality_expression
 	}
 	;
 
-and_expression
-	: equality_expression{
+and_exp
+	: equality_exp{
 		$$ = new node();
 		printf("519 ");
 		$$ -> length = 1;
-		$$->name="and_expression";
+		$$->name="and_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| and_expression '&' equality_expression{
+	| and_exp '&' equality_exp{
 		$$ = new node();
 		printf("526 ");
 		$$ -> length = 3;
-		$$->name="and_expression";
+		$$->name="and_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -594,20 +595,20 @@ and_expression
 	}
 	;
 
-exclusive_or_expression
-	: and_expression{
+exclusive_or_exp
+	: and_exp{
 		$$ = new node();
 		printf("538 ");
 		$$ -> length = 1;
-		$$->name="exclusive_or_expression";
+		$$->name="exclusive_or_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| exclusive_or_expression '^' and_expression{
+	| exclusive_or_exp '^' and_exp{
 		$$ = new node();
 		printf("545 ");
 		$$ -> length = 3;
-		$$->name="exclusive_or_expression";
+		$$->name="exclusive_or_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -615,20 +616,20 @@ exclusive_or_expression
 	}
 	;
 
-inclusive_or_expression
-	: exclusive_or_expression{
+inclusive_or_exp
+	: exclusive_or_exp{
 		$$ = new node();
 		printf("557 ");
 		$$ -> length = 1;
-		$$->name="inclusive_or_expression";
+		$$->name="inclusive_or_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| inclusive_or_expression '|' exclusive_or_expression{
+	| inclusive_or_exp '|' exclusive_or_exp{
 		$$ = new node();
 		printf("564 ");
 		$$ -> length = 3;
-		$$->name="inclusive_or_expression";
+		$$->name="inclusive_or_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -636,20 +637,20 @@ inclusive_or_expression
 	}
 	;
 
-logical_and_expression
-	: inclusive_or_expression{
+logical_and_exp
+	: inclusive_or_exp{
 		$$ = new node();
 		printf("576 ");
 		$$ -> length = 1;
-		$$->name="logical_and_expression";
+		$$->name="logical_and_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| logical_and_expression AND_OP inclusive_or_expression{
+	| logical_and_exp AND_OP inclusive_or_exp{
 		$$ = new node();
 		printf("583 ");
 		$$ -> length = 3;
-		$$->name="logical_and_expression";
+		$$->name="logical_and_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -657,20 +658,20 @@ logical_and_expression
 	}
 	;
 
-logical_or_expression
-	: logical_and_expression{
+logical_or_exp
+	: logical_and_exp{
 		$$ = new node();
 		printf("595 ");
 		$$ -> length = 1;
-		$$->name="logical_or_expression";
+		$$->name="logical_or_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| logical_or_expression OR_OP logical_and_expression{
+	| logical_or_exp OR_OP logical_and_exp{
 		$$ = new node();
 		printf("602 ");
 		$$ -> length = 3;
-		$$->name="logical_or_expression";
+		$$->name="logical_or_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -678,20 +679,20 @@ logical_or_expression
 	}
 	;
 
-conditional_expression
-	: logical_or_expression{
+conditional_exp
+	: logical_or_exp{
 		$$ = new node();
 		printf("614 ");
 		$$ -> length = 1;
-		$$->name="conditional_expression";		
+		$$->name="conditional_exp";		
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
-	| logical_or_expression '?' expression ':' conditional_expression{
+	| logical_or_exp '?' exp ':' conditional_exp{
 		$$ = new node();
 		printf("621 ");
 		$$ -> length = 5;
-		$$->name="conditional_expression";
+		$$->name="conditional_exp";
 		$$->children=new node* [5];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -701,20 +702,20 @@ conditional_expression
 	}
 	;
 
-assignment_expression
-	: conditional_expression{
+assignment_exp
+	: conditional_exp{
 		$$ = new node();
 		printf("635 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
-	| unary_expression assignment_operator assignment_expression{
+	| unary_exp assignment_operator assignment_exp{
 		$$ = new node();
 		printf("642 ");
 		$$ -> length = 3;
-		$$->name="conditional_expression";
+		$$->name="conditional_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
@@ -735,7 +736,7 @@ assignment_operator
 		$$ = new node();
 		printf("661 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -743,7 +744,7 @@ assignment_operator
 		$$ = new node();
 		printf("668 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -751,7 +752,7 @@ assignment_operator
 		$$ = new node();
 		printf("675 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -759,7 +760,7 @@ assignment_operator
 		$$ = new node();
 		printf("682 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -767,7 +768,7 @@ assignment_operator
 		$$ = new node();
 		printf("689 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -775,7 +776,7 @@ assignment_operator
 		$$ = new node();
 		printf("696 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -783,7 +784,7 @@ assignment_operator
 		$$ = new node();
 		printf("703 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -791,7 +792,7 @@ assignment_operator
 		$$ = new node();
 		printf("710 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -799,7 +800,7 @@ assignment_operator
 		$$ = new node();
 		printf("717 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -807,26 +808,26 @@ assignment_operator
 		$$ = new node();
 		printf("724 ");
 		$$ -> length = 1;
-		$$->name="assignment_expression";
+		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	} 
 	;
 
-expression
-	: assignment_expression{
+exp
+	: assignment_exp{
 		$$ = new node();
-		printf("734 ");
+		printf(" ");
 		$$ -> length = 1;
-		$$->name="expression";
+		$$->name="exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
-	| expression ',' assignment_expression{
+	| exp ',' assignment_exp{
 		$$ = new node();
 		printf("741 ");
 		$$ -> length = 3;
-		$$->name="expression";
+		$$->name="exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
@@ -834,12 +835,12 @@ expression
 	}
 	;
 
-constant_expression
-	: conditional_expression{
+constant_exp
+	: conditional_exp{
 		$$ = new node();
 		printf("753 ");
 		$$ -> length = 1;
-		$$->name="constant_expression";
+		$$->name="constant_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
 	}
@@ -864,6 +865,9 @@ declaration
 		$$->children[0] = $1;
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;		
+	}
+	| ID ID ';'{
+		printf("772");
 	}
 	;
 
@@ -1107,28 +1111,57 @@ type_specifier
 	;
 
 struct_or_union_specifier
-	: struct_or_union ID '{' struct_declaration_list '}' {
+	: struct_or_union ID '{' declaration_list '}' ';' {
 		$$ = new node();
 		printf("995 ");
-		$$ -> length = 5;
+		$$ -> length = 6;
 		$$->name="struct_or_union_specifier";
-		$$->children=new node* [5];
+		$$->children=new node* [6];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
 		$$->children[3] = $4;
 		$$->children[4] = $5.ntnode;		
+		$$->children[5] = $6.ntnode;	
 	}
-	| struct_or_union '{' struct_declaration_list '}' {
+	| struct_or_union ID '{' declaration_list '}' init_declarator_list ';' {
 		$$ = new node();
 		printf("1006 ");
-		$$ -> length = 4;
+		$$ -> length = 7;
 		$$->name="struct_or_union_specifier";
-		$$->children=new node* [4];
+		$$->children=new node* [7];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3.ntnode;		
+		$$->children[3] = $4;
+		$$->children[4] = $5.ntnode;
+		$$->children[5] = $6;
+		$$->children[6] = $7.ntnode;
+	}
+	| struct_or_union '{' declaration_list '}' ';' {
+		$$ = new node();
+		printf("1007 ");
+		$$ -> length = 5;
+		$$->name="struct_or_union_specifier";
+		$$->children=new node* [5];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
-		$$->children[3] = $4.ntnode;		
+		$$->children[3] = $4.ntnode;
+		$$->children[4] = $5.ntnode;
+	}
+	| struct_or_union '{' declaration_list '}' init_declarator_list ';' {
+		$$ = new node();
+		printf("1008 ");
+		$$ -> length = 6;
+		$$->name="struct_or_union_specifier";
+		$$->children=new node* [6];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+		$$->children[3] = $4.ntnode;
+		$$->children[4] = $5;
+		$$->children[5] = $6.ntnode;
 	}
 	| struct_or_union ID {
 		$$ = new node();
@@ -1182,6 +1215,16 @@ struct_declaration_list
 
 struct_declaration
 	: specifier_qualifier_list struct_declarator_list ';' {
+		$$ = new node();
+		printf("1062 ");
+		$$ -> length = 3;
+		$$->name="struct_declaration_list";
+		$$->children=new node* [3];
+		$$->children[0] = $1;
+		$$->children[1] = $2;
+		$$->children[2] = $3.ntnode;
+	}
+	| assignment_exp struct_declarator_list ';' {
 		$$ = new node();
 		printf("1062 ");
 		$$ -> length = 3;
@@ -1260,7 +1303,7 @@ struct_declarator
 		$$->children=new node* [1];
 		$$->children[0] = $1;
 	}
-	| ':' constant_expression{
+	| ':' constant_exp{
 		$$ = new node();
 		printf("1133 ");
 		$$ -> length = 2;
@@ -1269,7 +1312,7 @@ struct_declarator
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 	}
-	| declarator ':' constant_expression{
+	| declarator ':' constant_exp{
 		$$ = new node();
 		printf("1141 ");
 		$$ -> length = 3;
@@ -1346,7 +1389,7 @@ enumerator
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
 	}
-	| ID '=' constant_expression{
+	| ID '=' constant_exp{
 		$$ = new node();
 		printf("1211 ");
 		$$ -> length = 3;
@@ -1416,7 +1459,7 @@ direct_declarator
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;
 	}
-	| direct_declarator '[' constant_expression ']' {
+	| direct_declarator '[' constant_exp ']' {
 		$$ = new node();
 		printf("1274 ");
 		$$ -> length = 4;
@@ -1686,7 +1729,7 @@ direct_abstract_declarator
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2.ntnode;
 	}
-	| '[' constant_expression ']' {
+	| '[' constant_exp ']' {
 		$$ = new node();
 		printf("1520 ");
 		$$ -> name = "direct_abstract_declarator";
@@ -1706,7 +1749,7 @@ direct_abstract_declarator
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3.ntnode;
 	}
-	| direct_abstract_declarator '[' constant_expression ']' {
+	| direct_abstract_declarator '[' constant_exp ']' {
 		$$ = new node();
 		printf("1538 ");
 		$$ -> name = "direct_abstract_declarator";
@@ -1760,7 +1803,7 @@ direct_abstract_declarator
 	;
 
 initializer
-	: assignment_expression  {
+	: assignment_exp  {
 		$$ = new node();
 		printf("1587 ");
 		$$ -> name = "initializer";
@@ -1829,7 +1872,7 @@ other
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
 	}
-	| expression_statement {
+	| exp_statement {
 		$$ = new node();
 		printf("1649 ");
 		$$ -> name = "statement";
@@ -1871,7 +1914,7 @@ statement
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
 	}
-	| expression_statement {
+	| exp_statement {
 		$$ = new node();
 		printf("1649 ");
 		$$ -> name = "statement";
@@ -1916,7 +1959,7 @@ labeled_statement
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3;
 	}
-	| CASE constant_expression ':' statement  {
+	| CASE constant_exp ':' statement  {
 		$$ = new node();
 		printf("1689 ");
 		$$ -> name = "labeled_statement";
@@ -2022,19 +2065,19 @@ statement_list
 	}
 	;
 
-expression_statement
+exp_statement
 	: ';' {
 		$$ = new node();
 		printf("1786 ");
-		$$ -> name = "expression_statement";
+		$$ -> name = "exp_statement";
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1.ntnode;
 	}
-	| expression ';' {
+	| exp ';' {
 		$$ = new node();
 		printf("1793 ");
-		$$ -> name = "expression_statement";
+		$$ -> name = "exp_statement";
 		$$ -> length = 2;
 		$$ -> children = new node* [2];
 		$$ -> children[0] = $1;
@@ -2060,7 +2103,7 @@ stmt
 	}
 	;
 matched_statement
-	: IF '(' expression ')' matched_statement ELSE matched_statement{
+	: IF '(' exp ')' matched_statement ELSE matched_statement{
 		$$ = new node();
 		printf("1803 ");
 		$$ -> name = "matched_statement";
@@ -2084,7 +2127,7 @@ matched_statement
 	}
 	;
 open_statement
-	: IF '(' expression ')' stmt {
+	: IF '(' exp ')' stmt {
 		$$ = new node();
 		printf("1816@ ");
 		$$ -> name = "open_statement";
@@ -2096,7 +2139,7 @@ open_statement
 		$$ -> children[3] = $4.ntnode;
 		$$ -> children[4] = $5;
 	}
-	| IF '(' expression ')' matched_statement ELSE open_statement {
+	| IF '(' exp ')' matched_statement ELSE open_statement {
 		$$ = new node();
 		printf("1817@ ");
 		$$ -> name = "open_statement";
@@ -2120,7 +2163,7 @@ selection_statement
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
 	}
-	| SWITCH '(' expression ')' statement {
+	| SWITCH '(' exp ')' statement {
 		$$ = new node();
 		printf("1825 ");
 		$$ -> name = "selection_statement";
@@ -2135,7 +2178,7 @@ selection_statement
 	;
 
 iteration_statement
-	: WHILE '(' expression ')' statement {
+	: WHILE '(' exp ')' statement {
 		$$ = new node();
 		printf("1839 ");
 		$$ -> name = "iteration_statement";
@@ -2147,7 +2190,7 @@ iteration_statement
 		$$ -> children[3] = $4.ntnode;
 		$$ -> children[4] = $5;
 	}
-	| DO statement WHILE '(' expression ')' ';' {
+	| DO statement WHILE '(' exp ')' ';' {
 		$$ = new node();
 		printf("1850 ");
 		$$ -> name = "iteration_statement";
@@ -2161,7 +2204,7 @@ iteration_statement
 		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7.ntnode;
 	}
-	| FOR '(' expression_statement expression_statement ')' statement {
+	| FOR '(' exp_statement exp_statement ')' statement {
 		$$ = new node();
 		printf("1863 ");
 		$$ -> name = "iteration_statement";
@@ -2174,7 +2217,7 @@ iteration_statement
 		$$ -> children[4] = $5.ntnode;
 		$$ -> children[5] = $6;
 	}
-	| FOR '(' expression_statement expression_statement expression ')' statement {
+	| FOR '(' exp_statement exp_statement exp ')' statement {
 		$$ = new node();
 		printf("1875 ");
 		$$ -> name = "iteration_statement";
@@ -2228,7 +2271,7 @@ jump_statement
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2.ntnode;
 	}
-	| RETURN expression ';'  {
+	| RETURN exp ';'  {
 		$$ = new node();
 		printf("1924 ");
 		$$ -> name = "jump_statement";

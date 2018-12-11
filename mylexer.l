@@ -73,6 +73,7 @@ single \/\/[^\n]*
 \n			{Line++;}
 void		{yylval.ntnode = new node("VOID"); 			return VOID; }
 ":"         {yylval.ntnode = new node(":"); 		return ':'; }
+"."			{yylval.ntnode = new node(".");	    printf("99");		return '.';}
 ","         {yylval.ntnode = new node(","); 		return ','; }
 "("			{yylval.ntnode = new node("("); 		return '('; }
 ")"			{yylval.ntnode = new node(")"); 		return ')'; }
