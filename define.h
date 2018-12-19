@@ -1,8 +1,96 @@
+#pragma once
+#ifndef DUP_H
+#define DUP_H
+#include <map>
 #include <vector>
 #include <string>
 #include <iostream>
-#include <typeinfo>
+#include <stack>
 using namespace std;
+struct typenode
+{
+    string name;
+    typenode *left;
+    typenode *right;
+    typenode(string n = "")
+    {
+        name = n;
+        left = NULL;
+        right = NULL;
+    }
+};
+typenode *type;
+typenode *type2;
+typenode *type3 = new typenode("fun");
+typenode *type4 = new typenode("pointer");
+string var_name;
+bool flag = false;
+
+typenode unsignednode("unsigned");
+typenode shortnode("short");
+typenode intnode("int");
+typenode longnode("long");
+typenode floatnode("float");
+typenode doublenode("double");
+typenode charnode("char");
+typenode voidnode("void");
+typenode signednode("signed");
+map<string, typenode *> auto_define_type;
+stack<typenode*> struct_stack;
+
+struct varmap
+{
+    int name;
+    varmap *parent;
+    map<string, typenode*> vartable;
+    varmap(int n = 0, varmap *p = NULL)
+    {
+        name = n;
+        parent = p;
+    }
+};
+
+varmap *varmap_temp;
+vector<varmap*> s;
+
+struct node
+{
+    int id;
+    string name;
+    double dvalue;
+    int length;
+    node **children;
+    typenode type;
+    string code;
+    varmap *args;
+    node(string n = "")
+    {
+        length = 0;
+        name = n;
+    }
+};
+
+void wFlag(typenode &node)
+{
+    if (flag)
+    {
+        type2 = &node;
+        flag = false;
+    }
+    else
+    {
+        type = &node;
+        flag = true;
+    }
+}
+
+
+
+typenode* rFlag() {
+     if(flag==true)
+        return type;
+     else return type2;    
+}
 // #define ERROR 0
 // #define VOID 13
 // #define MAIN 2
@@ -52,7 +140,6 @@ using namespace std;
 // #define BOOLOP 46
 // #define LSQUBRAC 47
 // #define RSQUBRAC 48
-int Line = 1;
 string Words[] = {
     "ERROR", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
     "SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF",
@@ -96,10 +183,4 @@ vector<Symbol> symbols;
 //         return;
 //     }
 // }
-void comment(string val)
-{
-    for (int i = 0; i < val.length(); i++)
-        if (val[i] == '\n')
-            Line++;
-    ////cout << val << endl;
-}
+#endif

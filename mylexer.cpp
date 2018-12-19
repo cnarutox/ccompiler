@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 63 of your 30 day trial period.
+* You are on day 70 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * mylexer.cpp
 * C++ source file generated from mylexer.l.
 * 
-* Date: 12/11/18
-* Time: 22:19:54
+* Date: 12/19/18
+* Time: 08:54:26
 * 
 * ALex Version: 2.07
 ****************************************************************************/
@@ -40,28 +40,76 @@ using namespace yl;
 mylexer.l
 ParserWizard generated Lex file.
 
-Date: 2018��10��28��
+Date:2018��10��28��
 ****************************************************************************/
-
+#include <map>
+#include <vector>
 #include "myparser.h"
-#include "define.h"
-extern int flag;
-extern struct node {
-	int id;
-	string name;
-	string value;
-	int length;
-	node** children;
-	node(string n = "", string v = "")
-	{
-		length = 0;
-		id = flag++;
-		name = n;
-		value = v;
-	}
+#include "stdlib.h"
+int Line = 1;
+
+extern struct typenode
+{
+    string name;
+    typenode *left;
+    typenode *right;
+    typenode(string n = "")
+    {
+        name = n;
+        left = NULL;
+        right = NULL;
+    }
+};
+extern struct varmap
+{
+    int name;
+    varmap *parent;
+    map<string, typenode*> vartable;
+    varmap(int n = 0, varmap *p = NULL)
+    {
+        name = n;
+        parent = p;
+    }
+};
+extern varmap *varmap_temp;
+extern vector<varmap*> s;
+extern struct node
+{
+    int id;
+    string name;
+    double dvalue;
+    int length;
+    node **children;
+    typenode type;
+    string code;
+    varmap *args;
+    node(string n = "")
+    {
+        length = 0;
+        name = n;
+    }
 };
 
-#line 65 "mylexer.cpp"
+
+void comment(string val)
+{
+    for (int i = 0; i < val.length(); i++)
+        if (val[i] == '\n')
+            Line++;
+    ////cout << val << endl;
+}
+int sign=0;
+void push_into_s(varmap *args) {
+    args = new varmap(sign++, s[s.size() - 1]);
+    s.push_back(args);
+}
+
+void Lex(YYSTYPE YYFAR& yylval, string s)
+{
+    yylval.ntnode = new node(s);
+}
+
+#line 113 "mylexer.cpp"
 // repeated because of possible precompiled header
 #include <yyclex.h>
 
@@ -81,11 +129,11 @@ using namespace yl;
 YYLEXERNAME::YYLEXERNAME()
 {
 	yytables();
-#line 40 ".\\mylexer.l"
+#line 88 ".\\mylexer.l"
 
 	// place any extra initialisation code here
 
-#line 89 "mylexer.cpp"
+#line 137 "mylexer.cpp"
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -93,11 +141,11 @@ YYLEXERNAME::YYLEXERNAME()
 
 YYLEXERNAME::~YYLEXERNAME()
 {
-#line 45 ".\\mylexer.l"
+#line 93 ".\\mylexer.l"
 
 	// place any extra cleanup code here
 
-#line 101 "mylexer.cpp"
+#line 149 "mylexer.cpp"
 }
 
 #ifndef YYTEXT_SIZE
@@ -163,537 +211,537 @@ void YYLEXERNAME::yyunput(int ch)
 
 int YYLEXERNAME::yyaction(int action)
 {
-#line 63 ".\\mylexer.l"
+#line 111 ".\\mylexer.l"
 
 	// extract yylval for use later on in actions
 	YYSTYPE YYFAR& yylval = *(YYSTYPE YYFAR*)yyparserptr->yylvalptr;
 
-#line 172 "mylexer.cpp"
+#line 220 "mylexer.cpp"
 	yyreturnflg = yytrue;
 	switch (action) {
 	case 1:
 		{
-#line 69 ".\\mylexer.l"
+#line 117 ".\\mylexer.l"
 
-#line 179 "mylexer.cpp"
+#line 227 "mylexer.cpp"
 		}
 		break;
 	case 2:
 		{
-#line 70 ".\\mylexer.l"
+#line 118 ".\\mylexer.l"
 
-#line 186 "mylexer.cpp"
+#line 234 "mylexer.cpp"
 		}
 		break;
 	case 3:
 		{
-#line 71 ".\\mylexer.l"
+#line 119 ".\\mylexer.l"
 
-#line 193 "mylexer.cpp"
+#line 241 "mylexer.cpp"
 		}
 		break;
 	case 4:
 		{
-#line 73 ".\\mylexer.l"
+#line 121 ".\\mylexer.l"
 Line++;
-#line 200 "mylexer.cpp"
+#line 248 "mylexer.cpp"
 		}
 		break;
 	case 5:
 		{
-#line 74 ".\\mylexer.l"
-yylval.ntnode = new node("VOID"); 			return VOID; 
-#line 207 "mylexer.cpp"
+#line 122 ".\\mylexer.l"
+Lex(yylval, "VOID"); 			return VOID; 
+#line 255 "mylexer.cpp"
 		}
 		break;
 	case 6:
 		{
-#line 75 ".\\mylexer.l"
-yylval.ntnode = new node(":"); 		return ':'; 
-#line 214 "mylexer.cpp"
+#line 123 ".\\mylexer.l"
+Lex(yylval, ":"); 		        return ':'; 
+#line 262 "mylexer.cpp"
 		}
 		break;
 	case 7:
 		{
-#line 76 ".\\mylexer.l"
-yylval.ntnode = new node(".");	    printf("99");		return '.';
-#line 221 "mylexer.cpp"
+#line 124 ".\\mylexer.l"
+Lex(yylval, ".");	            return '.';
+#line 269 "mylexer.cpp"
 		}
 		break;
 	case 8:
 		{
-#line 77 ".\\mylexer.l"
-yylval.ntnode = new node(","); 		return ','; 
-#line 228 "mylexer.cpp"
+#line 125 ".\\mylexer.l"
+Lex(yylval, ","); 		        return ','; 
+#line 276 "mylexer.cpp"
 		}
 		break;
 	case 9:
 		{
-#line 78 ".\\mylexer.l"
-yylval.ntnode = new node("("); 		return '('; 
-#line 235 "mylexer.cpp"
+#line 126 ".\\mylexer.l"
+Lex(yylval, "(");              push_into_s(yylval.ntnode->args);       return '('; 
+#line 283 "mylexer.cpp"
 		}
 		break;
 	case 10:
 		{
-#line 79 ".\\mylexer.l"
-yylval.ntnode = new node(")"); 		return ')'; 
-#line 242 "mylexer.cpp"
+#line 127 ".\\mylexer.l"
+Lex(yylval, ")"); 		        s.pop_back();                                return ')'; 
+#line 290 "mylexer.cpp"
 		}
 		break;
 	case 11:
 		{
-#line 80 ".\\mylexer.l"
-yylval.ntnode = new node("{"); 		return '{'; 
-#line 249 "mylexer.cpp"
+#line 128 ".\\mylexer.l"
+Lex(yylval, "{");              push_into_s(yylval.ntnode->args);       return '{'; 
+#line 297 "mylexer.cpp"
 		}
 		break;
 	case 12:
 		{
-#line 81 ".\\mylexer.l"
-yylval.ntnode = new node("}"); 		return '}'; 
-#line 256 "mylexer.cpp"
+#line 129 ".\\mylexer.l"
+Lex(yylval, "}");              varmap_temp = s[s.size() - 1];     s.pop_back();   return '}'; 
+#line 304 "mylexer.cpp"
 		}
 		break;
 	case 13:
 		{
-#line 82 ".\\mylexer.l"
-yylval.ntnode = new node("["); 		return '['; 
-#line 263 "mylexer.cpp"
+#line 130 ".\\mylexer.l"
+Lex(yylval, "["); 		        return '['; 
+#line 311 "mylexer.cpp"
 		}
 		break;
 	case 14:
 		{
-#line 83 ".\\mylexer.l"
-yylval.ntnode = new node("]"); 		return ']'; 
-#line 270 "mylexer.cpp"
+#line 131 ".\\mylexer.l"
+Lex(yylval, "]"); 		        return ']'; 
+#line 318 "mylexer.cpp"
 		}
 		break;
 	case 15:
 		{
-#line 84 ".\\mylexer.l"
-yylval.ntnode = new node("INT"); 			return INT; 
-#line 277 "mylexer.cpp"
+#line 132 ".\\mylexer.l"
+Lex(yylval, "INT"); 		    return INT; 
+#line 325 "mylexer.cpp"
 		}
 		break;
 	case 16:
 		{
-#line 85 ".\\mylexer.l"
-yylval.ntnode = new node("FLOAT"); 		return FLOAT; 
-#line 284 "mylexer.cpp"
+#line 133 ".\\mylexer.l"
+Lex(yylval, "FLOAT"); 	        return FLOAT; 
+#line 332 "mylexer.cpp"
 		}
 		break;
 	case 17:
 		{
-#line 86 ".\\mylexer.l"
-yylval.ntnode = new node("CHAR"); 		return CHAR; 
-#line 291 "mylexer.cpp"
+#line 134 ".\\mylexer.l"
+Lex(yylval, "CHAR"); 		    return CHAR; 
+#line 339 "mylexer.cpp"
 		}
 		break;
 	case 18:
 		{
-#line 87 ".\\mylexer.l"
-yylval.ntnode = new node("DOUBLE"); 		return DOUBLE; 
-#line 298 "mylexer.cpp"
+#line 135 ".\\mylexer.l"
+Lex(yylval, "DOUBLE"); 	    return DOUBLE; 
+#line 346 "mylexer.cpp"
 		}
 		break;
 	case 19:
 		{
-#line 88 ".\\mylexer.l"
-yylval.ntnode = new node("SHORT"); 		return SHORT; 
-#line 305 "mylexer.cpp"
+#line 136 ".\\mylexer.l"
+Lex(yylval, "SHORT"); 		    return SHORT; 
+#line 353 "mylexer.cpp"
 		}
 		break;
 	case 20:
 		{
-#line 89 ".\\mylexer.l"
-yylval.ntnode = new node(";"); 		return ';'; 
-#line 312 "mylexer.cpp"
+#line 137 ".\\mylexer.l"
+Lex(yylval, ";"); 		        return ';'; 
+#line 360 "mylexer.cpp"
 		}
 		break;
 	case 21:
 		{
-#line 90 ".\\mylexer.l"
-yylval.ntnode = new node("FOR"); 			return FOR; 
-#line 319 "mylexer.cpp"
+#line 138 ".\\mylexer.l"
+Lex(yylval, "FOR");            push_into_s(yylval.ntnode->args);       return FOR; 
+#line 367 "mylexer.cpp"
 		}
 		break;
 	case 22:
 		{
-#line 91 ".\\mylexer.l"
-yylval.ntnode = new node("="); 		return '='; 
-#line 326 "mylexer.cpp"
+#line 139 ".\\mylexer.l"
+Lex(yylval, "="); 		        return '='; 
+#line 374 "mylexer.cpp"
 		}
 		break;
 	case 23:
 		{
-#line 92 ".\\mylexer.l"
+#line 140 ".\\mylexer.l"
 return -1;
-#line 333 "mylexer.cpp"
+#line 381 "mylexer.cpp"
 		}
 		break;
 	case 24:
 		{
-#line 93 ".\\mylexer.l"
-yylval.ntnode = new node("CONSTANT", yytext);	return CONSTANT; 
-#line 340 "mylexer.cpp"
+#line 141 ".\\mylexer.l"
+Lex(yylval, yytext);           yylval.ntnode->dvalue = atof(yytext);   return CONSTANT; 
+#line 388 "mylexer.cpp"
 		}
 		break;
 	case 25:
 		{
-#line 94 ".\\mylexer.l"
-yylval.ntnode = new node("<");			return '<'; 
-#line 347 "mylexer.cpp"
+#line 142 ".\\mylexer.l"
+Lex(yylval, "<");			    return '<'; 
+#line 395 "mylexer.cpp"
 		}
 		break;
 	case 26:
 		{
-#line 95 ".\\mylexer.l"
-yylval.ntnode = new node(">");			return '>'; 
-#line 354 "mylexer.cpp"
+#line 143 ".\\mylexer.l"
+Lex(yylval, ">");			    return '>'; 
+#line 402 "mylexer.cpp"
 		}
 		break;
 	case 27:
 		{
-#line 96 ".\\mylexer.l"
-yylval.ntnode = new node("LE_OP");			return LE_OP; 
-#line 361 "mylexer.cpp"
+#line 144 ".\\mylexer.l"
+Lex(yylval, "LE_OP");			return LE_OP; 
+#line 409 "mylexer.cpp"
 		}
 		break;
 	case 28:
 		{
-#line 97 ".\\mylexer.l"
-yylval.ntnode = new node("GE_OP");			return GE_OP; 
-#line 368 "mylexer.cpp"
+#line 145 ".\\mylexer.l"
+Lex(yylval, "GE_OP");			return GE_OP; 
+#line 416 "mylexer.cpp"
 		}
 		break;
 	case 29:
 		{
-#line 98 ".\\mylexer.l"
-yylval.ntnode = new node("RIGHT_ASSIGN");return RIGHT_ASSIGN; 
-#line 375 "mylexer.cpp"
+#line 146 ".\\mylexer.l"
+Lex(yylval, "RIGHT_ASSIGN");   return RIGHT_ASSIGN; 
+#line 423 "mylexer.cpp"
 		}
 		break;
 	case 30:
 		{
-#line 99 ".\\mylexer.l"
-yylval.ntnode = new node("LEFT_ASSIGN");		return LEFT_ASSIGN; 
-#line 382 "mylexer.cpp"
+#line 147 ".\\mylexer.l"
+Lex(yylval, "LEFT_ASSIGN");	return LEFT_ASSIGN; 
+#line 430 "mylexer.cpp"
 		}
 		break;
 	case 31:
 		{
-#line 100 ".\\mylexer.l"
-yylval.ntnode = new node("NE_OP");			return NE_OP; 
-#line 389 "mylexer.cpp"
+#line 148 ".\\mylexer.l"
+Lex(yylval, "NE_OP");			return NE_OP; 
+#line 437 "mylexer.cpp"
 		}
 		break;
 	case 32:
 		{
-#line 101 ".\\mylexer.l"
-yylval.ntnode = new node("EQ_OP");			return EQ_OP; 
-#line 396 "mylexer.cpp"
+#line 149 ".\\mylexer.l"
+Lex(yylval, "EQ_OP");			return EQ_OP; 
+#line 444 "mylexer.cpp"
 		}
 		break;
 	case 33:
 		{
-#line 102 ".\\mylexer.l"
-yylval.ntnode = new node("+");			return '+'; 
-#line 403 "mylexer.cpp"
+#line 150 ".\\mylexer.l"
+Lex(yylval, "+");			    return '+'; 
+#line 451 "mylexer.cpp"
 		}
 		break;
 	case 34:
 		{
-#line 103 ".\\mylexer.l"
-yylval.ntnode = new node("SUB_ASSIGN");	return SUB_ASSIGN;
-#line 410 "mylexer.cpp"
+#line 151 ".\\mylexer.l"
+Lex(yylval, "SUB_ASSIGN");	    return SUB_ASSIGN;
+#line 458 "mylexer.cpp"
 		}
 		break;
 	case 35:
 		{
-#line 104 ".\\mylexer.l"
-yylval.ntnode = new node("PTR_OP"); 		return PTR_OP;
-#line 417 "mylexer.cpp"
+#line 152 ".\\mylexer.l"
+Lex(yylval, "PTR_OP"); 		return PTR_OP;
+#line 465 "mylexer.cpp"
 		}
 		break;
 	case 36:
 		{
-#line 105 ".\\mylexer.l"
-yylval.ntnode = new node("INC_OP"); 		return INC_OP;
-#line 424 "mylexer.cpp"
+#line 153 ".\\mylexer.l"
+Lex(yylval, "INC_OP"); 		return INC_OP;
+#line 472 "mylexer.cpp"
 		}
 		break;
 	case 37:
 		{
-#line 106 ".\\mylexer.l"
-yylval.ntnode = new node("DEC_OP"); 		return DEC_OP;
-#line 431 "mylexer.cpp"
+#line 154 ".\\mylexer.l"
+Lex(yylval, "DEC_OP"); 		return DEC_OP;
+#line 479 "mylexer.cpp"
 		}
 		break;
 	case 38:
 		{
-#line 107 ".\\mylexer.l"
-yylval.ntnode = new node("MUL_ASSIGN");	return MUL_ASSIGN;
-#line 438 "mylexer.cpp"
+#line 155 ".\\mylexer.l"
+Lex(yylval, "MUL_ASSIGN");     return MUL_ASSIGN;
+#line 486 "mylexer.cpp"
 		}
 		break;
 	case 39:
 		{
-#line 108 ".\\mylexer.l"
-yylval.ntnode = new node("DIV_ASSIGN");	return DIV_ASSIGN;
-#line 445 "mylexer.cpp"
+#line 156 ".\\mylexer.l"
+Lex(yylval, "DIV_ASSIGN");	    return DIV_ASSIGN;
+#line 493 "mylexer.cpp"
 		}
 		break;
 	case 40:
 		{
-#line 109 ".\\mylexer.l"
-yylval.ntnode = new node("MOD_ASSIGN");	return MOD_ASSIGN;
-#line 452 "mylexer.cpp"
+#line 157 ".\\mylexer.l"
+Lex(yylval, "MOD_ASSIGN");	    return MOD_ASSIGN;
+#line 500 "mylexer.cpp"
 		}
 		break;
 	case 41:
 		{
-#line 110 ".\\mylexer.l"
-yylval.ntnode = new node("ADD_ASSIGN");    return ADD_ASSIGN;
-#line 459 "mylexer.cpp"
+#line 158 ".\\mylexer.l"
+Lex(yylval, "ADD_ASSIGN");     return ADD_ASSIGN;
+#line 507 "mylexer.cpp"
 		}
 		break;
 	case 42:
 		{
-#line 111 ".\\mylexer.l"
-yylval.ntnode = new node("-");			return '-'; 
-#line 466 "mylexer.cpp"
+#line 159 ".\\mylexer.l"
+Lex(yylval, "-");			    return '-'; 
+#line 514 "mylexer.cpp"
 		}
 		break;
 	case 43:
 		{
-#line 112 ".\\mylexer.l"
-yylval.ntnode = new node("/");			return '/'; 
-#line 473 "mylexer.cpp"
+#line 160 ".\\mylexer.l"
+Lex(yylval, "/");			    return '/'; 
+#line 521 "mylexer.cpp"
 		}
 		break;
 	case 44:
 		{
-#line 113 ".\\mylexer.l"
-yylval.ntnode = new node("*");			return '*'; 
-#line 480 "mylexer.cpp"
+#line 161 ".\\mylexer.l"
+Lex(yylval, "*");			    return '*'; 
+#line 528 "mylexer.cpp"
 		}
 		break;
 	case 45:
 		{
-#line 114 ".\\mylexer.l"
-yylval.ntnode = new node("&");			return '&'; 
-#line 487 "mylexer.cpp"
+#line 162 ".\\mylexer.l"
+Lex(yylval, "&");			    return '&'; 
+#line 535 "mylexer.cpp"
 		}
 		break;
 	case 46:
 		{
-#line 115 ".\\mylexer.l"
-yylval.ntnode = new node("|");			return '|'; 
-#line 494 "mylexer.cpp"
+#line 163 ".\\mylexer.l"
+Lex(yylval, "|");			    return '|'; 
+#line 542 "mylexer.cpp"
 		}
 		break;
 	case 47:
 		{
-#line 116 ".\\mylexer.l"
-yylval.ntnode = new node("~");			return '~'; 
-#line 501 "mylexer.cpp"
+#line 164 ".\\mylexer.l"
+Lex(yylval, "~");			    return '~'; 
+#line 549 "mylexer.cpp"
 		}
 		break;
 	case 48:
 		{
-#line 117 ".\\mylexer.l"
-yylval.ntnode = new node("^");			return '^'; 
-#line 508 "mylexer.cpp"
+#line 165 ".\\mylexer.l"
+Lex(yylval, "^");			    return '^'; 
+#line 556 "mylexer.cpp"
 		}
 		break;
 	case 49:
 		{
-#line 118 ".\\mylexer.l"
-yylval.ntnode = new node("AND_OP");	return AND_OP; 
-#line 515 "mylexer.cpp"
+#line 166 ".\\mylexer.l"
+Lex(yylval, "AND_OP");	        return AND_OP; 
+#line 563 "mylexer.cpp"
 		}
 		break;
 	case 50:
 		{
-#line 119 ".\\mylexer.l"
-yylval.ntnode = new node("OR_OP");			return OR_OP; 
-#line 522 "mylexer.cpp"
+#line 167 ".\\mylexer.l"
+Lex(yylval, "OR_OP");			return OR_OP; 
+#line 570 "mylexer.cpp"
 		}
 		break;
 	case 51:
 		{
-#line 121 ".\\mylexer.l"
-yylval.ntnode = new node("IF");			return IF; 
-#line 529 "mylexer.cpp"
+#line 169 ".\\mylexer.l"
+Lex(yylval, "IF");              return IF; 
+#line 577 "mylexer.cpp"
 		}
 		break;
 	case 52:
 		{
-#line 122 ".\\mylexer.l"
-yylval.ntnode = new node("BREAK");			return BREAK;
-#line 536 "mylexer.cpp"
+#line 170 ".\\mylexer.l"
+Lex(yylval, "BREAK");			return BREAK;
+#line 584 "mylexer.cpp"
 		}
 		break;
 	case 53:
 		{
-#line 123 ".\\mylexer.l"
-yylval.ntnode = new node("CASE");			return CASE;
-#line 543 "mylexer.cpp"
+#line 171 ".\\mylexer.l"
+Lex(yylval, "CASE");			return CASE;
+#line 591 "mylexer.cpp"
 		}
 		break;
 	case 54:
 		{
-#line 124 ".\\mylexer.l"
-yylval.ntnode = new node("CONST");			return CONST;
-#line 550 "mylexer.cpp"
+#line 172 ".\\mylexer.l"
+Lex(yylval, "CONST");			return CONST;
+#line 598 "mylexer.cpp"
 		}
 		break;
 	case 55:
 		{
-#line 125 ".\\mylexer.l"
-yylval.ntnode = new node("CONTINUE");		return CONTINUE;
-#line 557 "mylexer.cpp"
+#line 173 ".\\mylexer.l"
+Lex(yylval, "CONTINUE");		return CONTINUE;
+#line 605 "mylexer.cpp"
 		}
 		break;
 	case 56:
 		{
-#line 126 ".\\mylexer.l"
-yylval.ntnode = new node("DEFAULT");		return DEFAULT;
-#line 564 "mylexer.cpp"
+#line 174 ".\\mylexer.l"
+Lex(yylval, "DEFAULT");		return DEFAULT;
+#line 612 "mylexer.cpp"
 		}
 		break;
 	case 57:
 		{
-#line 127 ".\\mylexer.l"
-yylval.ntnode = new node("DO");			return DO;
-#line 571 "mylexer.cpp"
+#line 175 ".\\mylexer.l"
+Lex(yylval, "DO");			    return DO;
+#line 619 "mylexer.cpp"
 		}
 		break;
 	case 58:
 		{
-#line 128 ".\\mylexer.l"
-yylval.ntnode = new node("ELSE");			return ELSE;
-#line 578 "mylexer.cpp"
+#line 176 ".\\mylexer.l"
+Lex(yylval, "ELSE");			return ELSE;
+#line 626 "mylexer.cpp"
 		}
 		break;
 	case 59:
 		{
-#line 130 ".\\mylexer.l"
-yylval.ntnode = new node("GOTO");			return GOTO;
-#line 585 "mylexer.cpp"
+#line 178 ".\\mylexer.l"
+Lex(yylval, "GOTO");			return GOTO;
+#line 633 "mylexer.cpp"
 		}
 		break;
 	case 60:
 		{
-#line 131 ".\\mylexer.l"
-yylval.ntnode = new node("RETURN");		return RETURN;
-#line 592 "mylexer.cpp"
+#line 179 ".\\mylexer.l"
+Lex(yylval, "RETURN");		    return RETURN;
+#line 640 "mylexer.cpp"
 		}
 		break;
 	case 61:
 		{
-#line 132 ".\\mylexer.l"
-yylval.ntnode = new node("REGISTER");		return REGISTER;
-#line 599 "mylexer.cpp"
+#line 180 ".\\mylexer.l"
+Lex(yylval, "REGISTER");		return REGISTER;
+#line 647 "mylexer.cpp"
 		}
 		break;
 	case 62:
 		{
-#line 133 ".\\mylexer.l"
-yylval.ntnode = new node("SIGNED");		return SIGNED;
-#line 606 "mylexer.cpp"
+#line 181 ".\\mylexer.l"
+Lex(yylval, "SIGNED");		    return SIGNED;
+#line 654 "mylexer.cpp"
 		}
 		break;
 	case 63:
 		{
-#line 134 ".\\mylexer.l"
-yylval.ntnode = new node("UNSIGNED");	return UNSIGNED;
-#line 613 "mylexer.cpp"
+#line 182 ".\\mylexer.l"
+Lex(yylval, "UNSIGNED");	    return UNSIGNED;
+#line 661 "mylexer.cpp"
 		}
 		break;
 	case 64:
 		{
-#line 135 ".\\mylexer.l"
-yylval.ntnode = new node("SIZEOF");		return SIZEOF;
-#line 620 "mylexer.cpp"
+#line 183 ".\\mylexer.l"
+Lex(yylval, "SIZEOF");		    return SIZEOF;
+#line 668 "mylexer.cpp"
 		}
 		break;
 	case 65:
 		{
-#line 136 ".\\mylexer.l"
-yylval.ntnode = new node("STATIC");		return STATIC;
-#line 627 "mylexer.cpp"
+#line 184 ".\\mylexer.l"
+Lex(yylval, "STATIC");		    return STATIC;
+#line 675 "mylexer.cpp"
 		}
 		break;
 	case 66:
 		{
-#line 137 ".\\mylexer.l"
-yylval.ntnode = new node("STRUCT");		return STRUCT;
-#line 634 "mylexer.cpp"
+#line 185 ".\\mylexer.l"
+Lex(yylval, "STRUCT");		    push_into_s(yylval.ntnode->args);       return STRUCT;
+#line 682 "mylexer.cpp"
 		}
 		break;
 	case 67:
 		{
-#line 138 ".\\mylexer.l"
-yylval.ntnode = new node("SWITCH");		return SWITCH;
-#line 641 "mylexer.cpp"
+#line 186 ".\\mylexer.l"
+Lex(yylval, "SWITCH");		    return SWITCH;
+#line 689 "mylexer.cpp"
 		}
 		break;
 	case 68:
 		{
-#line 139 ".\\mylexer.l"
-yylval.ntnode = new node("TYPEDEF");		return TYPEDEF;
-#line 648 "mylexer.cpp"
+#line 187 ".\\mylexer.l"
+Lex(yylval, "TYPEDEF");		return TYPEDEF;
+#line 696 "mylexer.cpp"
 		}
 		break;
 	case 69:
 		{
-#line 140 ".\\mylexer.l"
-yylval.ntnode = new node("UNION");			return UNION;
-#line 655 "mylexer.cpp"
+#line 188 ".\\mylexer.l"
+Lex(yylval, "UNION");			return UNION;
+#line 703 "mylexer.cpp"
 		}
 		break;
 	case 70:
 		{
-#line 141 ".\\mylexer.l"
-yylval.ntnode = new node("VOLATILE"); 		return VOLATILE;
-#line 662 "mylexer.cpp"
+#line 189 ".\\mylexer.l"
+Lex(yylval, "VOLATILE"); 		return VOLATILE;
+#line 710 "mylexer.cpp"
 		}
 		break;
 	case 71:
 		{
-#line 142 ".\\mylexer.l"
-yylval.ntnode = new node("WHILE");			return WHILE;
-#line 669 "mylexer.cpp"
+#line 190 ".\\mylexer.l"
+Lex(yylval, "WHILE");          push_into_s(yylval.ntnode->args);  return WHILE;
+#line 717 "mylexer.cpp"
 		}
 		break;
 	case 72:
 		{
-#line 143 ".\\mylexer.l"
-yylval.ntnode = new node("ENUM"); 			return ENUM;
-#line 676 "mylexer.cpp"
+#line 191 ".\\mylexer.l"
+Lex(yylval, "ENUM"); 			return ENUM;
+#line 724 "mylexer.cpp"
 		}
 		break;
 	case 73:
 		{
-#line 144 ".\\mylexer.l"
-yylval.ntnode = new node("ELLIPSIS");	    return ELLIPSIS;
-#line 683 "mylexer.cpp"
+#line 192 ".\\mylexer.l"
+Lex(yylval, "ELLIPSIS");	    return ELLIPSIS;
+#line 731 "mylexer.cpp"
 		}
 		break;
 	case 74:
 		{
-#line 145 ".\\mylexer.l"
-yylval.ntnode = new node("ID", yytext);	return ID;
-#line 690 "mylexer.cpp"
+#line 193 ".\\mylexer.l"
+Lex(yylval, yytext);	        return ID;
+#line 738 "mylexer.cpp"
 		}
 		break;
 	case 75:
 		{
-#line 146 ".\\mylexer.l"
+#line 194 ".\\mylexer.l"
 return -1;
-#line 697 "mylexer.cpp"
+#line 745 "mylexer.cpp"
 		}
 		break;
 	default:
@@ -1454,8 +1502,8 @@ void YYLEXERNAME::yytables()
 	};
 	yybackup = backup;
 }
-#line 147 ".\\mylexer.l"
+#line 195 ".\\mylexer.l"
   
 /////////////////////////////////////////////////////////////////////////////
 // programs section
- 
+

@@ -3,26 +3,74 @@
 mylexer.l
 ParserWizard generated Lex file.
 
-Date: 2018��10��28��
+Date:2018��10��28��
 ****************************************************************************/
-
+#include <map>
+#include <vector>
 #include "myparser.h"
-#include "define.h"
-extern int flag;
-extern struct node {
-	int id;
-	string name;
-	string value;
-	int length;
-	node** children;
-	node(string n = "", string v = "")
-	{
-		length = 0;
-		id = flag++;
-		name = n;
-		value = v;
-	}
+#include "stdlib.h"
+int Line = 1;
+
+extern struct typenode
+{
+    string name;
+    typenode *left;
+    typenode *right;
+    typenode(string n = "")
+    {
+        name = n;
+        left = NULL;
+        right = NULL;
+    }
 };
+extern struct varmap
+{
+    int name;
+    varmap *parent;
+    map<string, typenode*> vartable;
+    varmap(int n = 0, varmap *p = NULL)
+    {
+        name = n;
+        parent = p;
+    }
+};
+extern varmap *varmap_temp;
+extern vector<varmap*> s;
+extern struct node
+{
+    int id;
+    string name;
+    double dvalue;
+    int length;
+    node **children;
+    typenode type;
+    string code;
+    varmap *args;
+    node(string n = "")
+    {
+        length = 0;
+        name = n;
+    }
+};
+
+
+void comment(string val)
+{
+    for (int i = 0; i < val.length(); i++)
+        if (val[i] == '\n')
+            Line++;
+    ////cout << val << endl;
+}
+int sign=0;
+void push_into_s(varmap *args) {
+    args = new varmap(sign++, s[s.size() - 1]);
+    s.push_back(args);
+}
+
+void Lex(YYSTYPE YYFAR& yylval, string s)
+{
+    yylval.ntnode = new node(s);
+}
 %}
 
 /////////////////////////////////////////////////////////////////////////////
@@ -71,80 +119,79 @@ single \/\/[^\n]*
 {single}	{}
 // {literal}   {yylval.ntnode = new node(STRING_LITERAL); 	return STRING_LITERAL;}
 \n			{Line++;}
-void		{yylval.ntnode = new node("VOID"); 			return VOID; }
-":"         {yylval.ntnode = new node(":"); 		return ':'; }
-"."			{yylval.ntnode = new node(".");	    printf("99");		return '.';}
-","         {yylval.ntnode = new node(","); 		return ','; }
-"("			{yylval.ntnode = new node("("); 		return '('; }
-")"			{yylval.ntnode = new node(")"); 		return ')'; }
-"{"			{yylval.ntnode = new node("{"); 		return '{'; }
-"}"			{yylval.ntnode = new node("}"); 		return '}'; }
-"["			{yylval.ntnode = new node("["); 		return '['; }
-"]"			{yylval.ntnode = new node("]"); 		return ']'; }
-int 		{yylval.ntnode = new node("INT"); 			return INT; }
-float		{yylval.ntnode = new node("FLOAT"); 		return FLOAT; }
-char		{yylval.ntnode = new node("CHAR"); 		return CHAR; }
-double		{yylval.ntnode = new node("DOUBLE"); 		return DOUBLE; }
-short		{yylval.ntnode = new node("SHORT"); 		return SHORT; }
-;			{yylval.ntnode = new node(";"); 		return ';'; }
-for			{yylval.ntnode = new node("FOR"); 			return FOR; }
-"="			{yylval.ntnode = new node("="); 		return '='; }
+void		{Lex(yylval, "VOID"); 			return VOID; }
+":"         {Lex(yylval, ":"); 		        return ':'; }
+"."			{Lex(yylval, ".");	            return '.';}
+","         {Lex(yylval, ","); 		        return ','; }
+"("			{Lex(yylval, "(");              push_into_s(yylval.ntnode->args);       return '('; }
+")"			{Lex(yylval, ")"); 		        s.pop_back();                                return ')'; }
+"{"			{Lex(yylval, "{");              push_into_s(yylval.ntnode->args);       return '{'; }
+"}"			{Lex(yylval, "}");              varmap_temp = s[s.size() - 1];     s.pop_back();   return '}'; }
+"["			{Lex(yylval, "["); 		        return '['; }
+"]"			{Lex(yylval, "]"); 		        return ']'; }
+int 		{Lex(yylval, "INT"); 		    return INT; }
+float		{Lex(yylval, "FLOAT"); 	        return FLOAT; }
+char		{Lex(yylval, "CHAR"); 		    return CHAR; }
+double		{Lex(yylval, "DOUBLE"); 	    return DOUBLE; }
+short		{Lex(yylval, "SHORT"); 		    return SHORT; }
+;			{Lex(yylval, ";"); 		        return ';'; }
+for			{Lex(yylval, "FOR");            push_into_s(yylval.ntnode->args);       return FOR; }
+"="			{Lex(yylval, "="); 		        return '='; }
 {number}+{id}	{return -1;}
-{number}	{yylval.ntnode = new node("CONSTANT", yytext);	return CONSTANT; }
-"<"			{yylval.ntnode = new node("<");			return '<'; }
-">"			{yylval.ntnode = new node(">");			return '>'; }
-"<="        {yylval.ntnode = new node("LE_OP");			return LE_OP; }
-">="        {yylval.ntnode = new node("GE_OP");			return GE_OP; }
-">>="       {yylval.ntnode = new node("RIGHT_ASSIGN");return RIGHT_ASSIGN; }
-"<<="       {yylval.ntnode = new node("LEFT_ASSIGN");		return LEFT_ASSIGN; }
-"!="        {yylval.ntnode = new node("NE_OP");			return NE_OP; }
-"==" 		{yylval.ntnode = new node("EQ_OP");			return EQ_OP; }
-"+"			{yylval.ntnode = new node("+");			return '+'; }
-"-="		{yylval.ntnode = new node("SUB_ASSIGN");	return SUB_ASSIGN;}
-"->"        {yylval.ntnode = new node("PTR_OP"); 		return PTR_OP;}
-"++"		{yylval.ntnode = new node("INC_OP"); 		return INC_OP;}
-"--"		{yylval.ntnode = new node("DEC_OP"); 		return DEC_OP;}
-"*="		{yylval.ntnode = new node("MUL_ASSIGN");	return MUL_ASSIGN;}
-"/="		{yylval.ntnode = new node("DIV_ASSIGN");	return DIV_ASSIGN;}
-"%="		{yylval.ntnode = new node("MOD_ASSIGN");	return MOD_ASSIGN;}
-"+="		{yylval.ntnode = new node("ADD_ASSIGN");    return ADD_ASSIGN;}
-"-"			{yylval.ntnode = new node("-");			return '-'; }
-"/"			{yylval.ntnode = new node("/");			return '/'; }
-"*"			{yylval.ntnode = new node("*");			return '*'; }
-"&"			{yylval.ntnode = new node("&");			return '&'; }
-"|"         {yylval.ntnode = new node("|");			return '|'; }
-"~"			{yylval.ntnode = new node("~");			return '~'; }
-"^"			{yylval.ntnode = new node("^");			return '^'; }
-"&&"		{yylval.ntnode = new node("AND_OP");	return AND_OP; }
-"||"		{yylval.ntnode = new node("OR_OP");			return OR_OP; }
-// !			{yylval.ntnode = new node(BOOLOP);	printf("BOOLOP");	return BOOLOP; }
-if			{yylval.ntnode = new node("IF");			return IF; }
-break       {yylval.ntnode = new node("BREAK");			return BREAK;}
-case        {yylval.ntnode = new node("CASE");			return CASE;}
-const       {yylval.ntnode = new node("CONST");			return CONST;}
-continue    {yylval.ntnode = new node("CONTINUE");		return CONTINUE;}
-default     {yylval.ntnode = new node("DEFAULT");		return DEFAULT;}
-do          {yylval.ntnode = new node("DO");			return DO;}
-else        {yylval.ntnode = new node("ELSE");			return ELSE;}
-// extern      {yylval.ntnode = new node(EXTERN);	printf("EXTERN");	return EXTERN;}
-goto        {yylval.ntnode = new node("GOTO");			return GOTO;}
-return      {yylval.ntnode = new node("RETURN");		return RETURN;}
-register    {yylval.ntnode = new node("REGISTER");		return REGISTER;}
-signed      {yylval.ntnode = new node("SIGNED");		return SIGNED;}
-unsigned    {yylval.ntnode = new node("UNSIGNED");	return UNSIGNED;}
-sizeof      {yylval.ntnode = new node("SIZEOF");		return SIZEOF;}
-static      {yylval.ntnode = new node("STATIC");		return STATIC;}
-struct      {yylval.ntnode = new node("STRUCT");		return STRUCT;}
-switch      {yylval.ntnode = new node("SWITCH");		return SWITCH;}
-typedef     {yylval.ntnode = new node("TYPEDEF");		return TYPEDEF;}
-union       {yylval.ntnode = new node("UNION");			return UNION;}
-volatile    {yylval.ntnode = new node("VOLATILE"); 		return VOLATILE;}
-while      	{yylval.ntnode = new node("WHILE");			return WHILE;}
-enum		{yylval.ntnode = new node("ENUM"); 			return ENUM;}
-ellipsis	{yylval.ntnode = new node("ELLIPSIS");	    return ELLIPSIS;}
-{id}		{yylval.ntnode = new node("ID", yytext);	return ID;}
+{number}	{Lex(yylval, yytext);           yylval.ntnode->dvalue = atof(yytext);   return CONSTANT; }
+"<"			{Lex(yylval, "<");			    return '<'; }
+">"			{Lex(yylval, ">");			    return '>'; }
+"<="        {Lex(yylval, "LE_OP");			return LE_OP; }
+">="        {Lex(yylval, "GE_OP");			return GE_OP; }
+">>="       {Lex(yylval, "RIGHT_ASSIGN");   return RIGHT_ASSIGN; }
+"<<="       {Lex(yylval, "LEFT_ASSIGN");	return LEFT_ASSIGN; }
+"!="        {Lex(yylval, "NE_OP");			return NE_OP; }
+"==" 		{Lex(yylval, "EQ_OP");			return EQ_OP; }
+"+"			{Lex(yylval, "+");			    return '+'; }
+"-="		{Lex(yylval, "SUB_ASSIGN");	    return SUB_ASSIGN;}
+"->"        {Lex(yylval, "PTR_OP"); 		return PTR_OP;}
+"++"		{Lex(yylval, "INC_OP"); 		return INC_OP;}
+"--"		{Lex(yylval, "DEC_OP"); 		return DEC_OP;}
+"*="		{Lex(yylval, "MUL_ASSIGN");     return MUL_ASSIGN;}
+"/="		{Lex(yylval, "DIV_ASSIGN");	    return DIV_ASSIGN;}
+"%="		{Lex(yylval, "MOD_ASSIGN");	    return MOD_ASSIGN;}
+"+="		{Lex(yylval, "ADD_ASSIGN");     return ADD_ASSIGN;}
+"-"			{Lex(yylval, "-");			    return '-'; }
+"/"			{Lex(yylval, "/");			    return '/'; }
+"*"			{Lex(yylval, "*");			    return '*'; }
+"&"			{Lex(yylval, "&");			    return '&'; }
+"|"         {Lex(yylval, "|");			    return '|'; }
+"~"			{Lex(yylval, "~");			    return '~'; }
+"^"			{Lex(yylval, "^");			    return '^'; }
+"&&"		{Lex(yylval, "AND_OP");	        return AND_OP; }
+"||"		{Lex(yylval, "OR_OP");			return OR_OP; }
+// !			{yylval, yylval.ntnode = new node(BOOLOP);	        printf("BOOLOP");	return BOOLOP; }
+if			{Lex(yylval, "IF");              return IF; }
+break       {Lex(yylval, "BREAK");			return BREAK;}
+case        {Lex(yylval, "CASE");			return CASE;}
+const       {Lex(yylval, "CONST");			return CONST;}
+continue    {Lex(yylval, "CONTINUE");		return CONTINUE;}
+default     {Lex(yylval, "DEFAULT");		return DEFAULT;}
+do          {Lex(yylval, "DO");			    return DO;}
+else        {Lex(yylval, "ELSE");			return ELSE;}
+// extern      {yyylval, ylval.ntnode = new node(EXTERN);	        printf("EXTERN");	return EXTERN;}
+goto        {Lex(yylval, "GOTO");			return GOTO;}
+return      {Lex(yylval, "RETURN");		    return RETURN;}
+register    {Lex(yylval, "REGISTER");		return REGISTER;}
+signed      {Lex(yylval, "SIGNED");		    return SIGNED;}
+unsigned    {Lex(yylval, "UNSIGNED");	    return UNSIGNED;}
+sizeof      {Lex(yylval, "SIZEOF");		    return SIZEOF;}
+static      {Lex(yylval, "STATIC");		    return STATIC;}
+struct      {Lex(yylval, "STRUCT");		    push_into_s(yylval.ntnode->args);       return STRUCT;}
+switch      {Lex(yylval, "SWITCH");		    return SWITCH;}
+typedef     {Lex(yylval, "TYPEDEF");		return TYPEDEF;}
+union       {Lex(yylval, "UNION");			return UNION;}
+volatile    {Lex(yylval, "VOLATILE"); 		return VOLATILE;}
+while      	{Lex(yylval, "WHILE");          push_into_s(yylval.ntnode->args);  return WHILE;}
+enum		{Lex(yylval, "ENUM"); 			return ENUM;}
+ellipsis	{Lex(yylval, "ELLIPSIS");	    return ELLIPSIS;}
+{id}		{Lex(yylval, yytext);	        return ID;}
 .			{return -1;}
 %%  
 /////////////////////////////////////////////////////////////////////////////
 // programs section
- 

@@ -5,38 +5,24 @@ ParserWizard generated YACC file.
 
 Date: 2018��10��28��
 ****************************************************************************/
+#include "define.h"
 #include "mylexer.h"
-#include <string>
-int flag = 0;
-struct node {
-	int id;
-	string name;
-	string value;
-	int length;
-	node** children;
-	node(string n = "", string v = "")
-	{
-		length = 0;
-		id = flag++;
-		name = n;
-		value = v;
-	}
-};
 
-void traverse(node* root) {
-	cout<<root -> id<<":\t\t\t"<<root -> name<<"\t\t\t"<<root -> value<<"\t\t\tchildren:";
-	if (root -> length != 0) {
-		for (int i = 0; i < root -> length; i++) {
-			cout<<root -> children[i] -> id<<" ";
-		}
-		cout<<endl;
-		for (int i = 0; i < root -> length; i++) {
-			traverse(root -> children[i]);
-		}
-	} else {
-		cout<<endl;
+void traverse(typenode *root) {
+	if(root!=NULL)
+		cout << root->name << endl;
+	if(root->left!=NULL)
+	{
+		cout << "left ";
+		traverse(root->left);
 	}
+	if(root->right!=NULL)
+	{
+		cout << "right ";
+		traverse(root->right);	
+	}	
 }
+
 %}
 %union {
 	struct node* ntnode;
@@ -59,8 +45,9 @@ void traverse(node* root) {
 %type <ntnode> initializer,initializer_list,statement,labeled_statement,compound_statement
 %type <ntnode> declaration_list,statement_list,exp_statement
 %type <ntnode> iteration_statement,jump_statement,translation_unit,external_declaration
-%type <ntnode> function_definition, if_statement,selection_statement
+%type <ntnode> function_definition,selection_statement
 %type <ntnode> open_statement, matched_statement, stmt,other
+
 
 
 
@@ -81,6 +68,8 @@ void traverse(node* root) {
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
 %start translation_unit
+
+
 
 %name myparser
 
@@ -124,7 +113,9 @@ primary_exp
 		$$ -> length = 1;
 		$$->name="primary_exp";
 		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;
+		$$->children[0] = $1.ntnode;	
+
+		//$$->type = $1.ntnode;
 	}
 	| CONSTANT{
 		$$ = new node();
@@ -133,6 +124,8 @@ primary_exp
 		$$->name="primary_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
+
+		$$->dvalue = $1.ntnode->dvalue;
 	}
 	| STRING_LITERAL{
 		$$ = new node();
@@ -163,6 +156,8 @@ postfix_exp
 		$$->name="postfix_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| postfix_exp '[' exp ']'{	
 		$$ = new node();
@@ -265,6 +260,8 @@ unary_exp
 		$$->name="unary_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| INC_OP unary_exp{
 		$$ = new node();
@@ -285,6 +282,7 @@ unary_exp
 		$$->children[1] = $2;
 	}
 	| unary_operator cast_exp{
+		//cast_exp:单目表达式/强制类型转换
 		$$ = new node();
 		printf("257 ");
 		$$ -> length = 2;
@@ -375,6 +373,8 @@ cast_exp
 		$$->name="cast_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| '(' type_name ')' cast_exp{
 		$$ = new node();
@@ -397,6 +397,8 @@ multiplicative_exp
 		$$->name="multiplicative_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| multiplicative_exp '*' cast_exp{
 		$$ = new node();
@@ -438,6 +440,8 @@ additive_exp
 		$$->name="additive_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| additive_exp '+' multiplicative_exp{
 		$$ = new node();
@@ -469,6 +473,8 @@ shift_exp
 		$$->name="shift_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| shift_exp LEFT_OP additive_exp{
 		$$ = new node();
@@ -500,6 +506,8 @@ relational_exp
 		$$->name="relational_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| relational_exp '<' shift_exp{
 		$$ = new node();
@@ -551,6 +559,8 @@ equality_exp
 		$$->name="equality_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| equality_exp EQ_OP relational_exp{
 		$$ = new node();
@@ -582,6 +592,8 @@ and_exp
 		$$->name="and_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| and_exp '&' equality_exp{
 		$$ = new node();
@@ -603,6 +615,8 @@ exclusive_or_exp
 		$$->name="exclusive_or_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| exclusive_or_exp '^' and_exp{
 		$$ = new node();
@@ -624,6 +638,8 @@ inclusive_or_exp
 		$$->name="inclusive_or_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| inclusive_or_exp '|' exclusive_or_exp{
 		$$ = new node();
@@ -645,6 +661,8 @@ logical_and_exp
 		$$->name="logical_and_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| logical_and_exp AND_OP inclusive_or_exp{
 		$$ = new node();
@@ -666,6 +684,8 @@ logical_or_exp
 		$$->name="logical_or_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
+
+		$$->dvalue = $1->dvalue;
 	}
 	| logical_or_exp OR_OP logical_and_exp{
 		$$ = new node();
@@ -686,7 +706,9 @@ conditional_exp
 		$$ -> length = 1;
 		$$->name="conditional_exp";		
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1;	
+
+		$$->dvalue = $1->dvalue;	
 	}
 	| logical_or_exp '?' exp ':' conditional_exp{
 		$$ = new node();
@@ -704,6 +726,9 @@ conditional_exp
 
 assignment_exp
 	: conditional_exp{
+		//(1)谓词表达式
+
+		//(2)条件表达式 a<b?a:b
 		$$ = new node();
 		printf("635 ");
 		$$ -> length = 1;
@@ -715,7 +740,7 @@ assignment_exp
 		$$ = new node();
 		printf("642 ");
 		$$ -> length = 3;
-		$$->name="conditional_exp";
+		$$->name="assignment_exp";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
@@ -736,7 +761,7 @@ assignment_operator
 		$$ = new node();
 		printf("661 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -744,7 +769,7 @@ assignment_operator
 		$$ = new node();
 		printf("668 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -752,7 +777,7 @@ assignment_operator
 		$$ = new node();
 		printf("675 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -760,7 +785,7 @@ assignment_operator
 		$$ = new node();
 		printf("682 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -768,7 +793,7 @@ assignment_operator
 		$$ = new node();
 		printf("689 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -776,7 +801,7 @@ assignment_operator
 		$$ = new node();
 		printf("696 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -784,7 +809,7 @@ assignment_operator
 		$$ = new node();
 		printf("703 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -792,7 +817,7 @@ assignment_operator
 		$$ = new node();
 		printf("710 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -800,7 +825,7 @@ assignment_operator
 		$$ = new node();
 		printf("717 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -808,7 +833,7 @@ assignment_operator
 		$$ = new node();
 		printf("724 ");
 		$$ -> length = 1;
-		$$->name="assignment_exp";
+		$$->name="assignment_operator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	} 
@@ -843,6 +868,8 @@ constant_exp
 		$$->name="constant_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
+
+		$$->dvalue = $1->dvalue;
 	}
 	;
 
@@ -866,13 +893,13 @@ declaration
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;		
 	}
-	| ID ID ';'{
-		printf("772");
-	}
+	// | ID ID ';'{
+	// 	printf("772");
+	// }
 	;
 
 declaration_specifiers
-	: storage_class_specifier{
+	: storage_class_specifier{ //static
 		$$ = new node();
 		printf("783 ");
 		$$ -> length = 1;
@@ -880,7 +907,7 @@ declaration_specifiers
 		$$->children=new node* [1];
 		$$->children[0] = $1;	
 	}
-	| storage_class_specifier declaration_specifiers
+	| storage_class_specifier declaration_specifiers //extern static
 	{
 		$$ = new node();
 		printf("791 ");
@@ -890,15 +917,16 @@ declaration_specifiers
 		$$->children[0] = $1;
 		$$->children[1] = $2;		
 	}
-	| type_specifier{
+	| type_specifier{ // int
 		$$ = new node();
 		printf("799 ");
 		$$ -> length = 1;
 		$$->name="declaration_specifiers";
 		$$->children=new node* [1];
-		$$->children[0] = $1;	
+		$$->children[0] = $1;
+		type3->right = rFlag();	
 	}
-	| type_specifier declaration_specifiers{
+	| type_specifier declaration_specifiers{ // lont int
 		$$ = new node();
 		printf("806 ");
 		$$ -> length = 2;
@@ -907,7 +935,7 @@ declaration_specifiers
 		$$->children[0] = $1;
 		$$->children[1] = $2;		
 	}
-	| type_qualifier{
+	| type_qualifier{ //const
 		$$ = new node();
 		printf("814 ");
 		$$ -> length = 1;
@@ -915,7 +943,7 @@ declaration_specifiers
 		$$->children=new node* [1];
 		$$->children[0] = $1;	
 	}
-	| type_qualifier declaration_specifiers{
+	| type_qualifier declaration_specifiers{ //const int
 		$$ = new node();
 		printf("821 ");
 		$$ -> length = 2;
@@ -964,7 +992,9 @@ init_declarator
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
-		$$->children[2] = $3;							
+		$$->children[2] = $3;	
+
+		//s.back()
 	}
 	;
 
@@ -1018,7 +1048,8 @@ type_specifier
 		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;		
+		$$->children[0] = $1.ntnode;
+		wFlag(voidnode);
 	}
 	| CHAR{
 		$$ = new node();
@@ -1026,7 +1057,8 @@ type_specifier
 		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;		
+		$$->children[0] = $1.ntnode;	
+		wFlag(charnode);
 	}
 	| SHORT{
 		$$ = new node();
@@ -1035,6 +1067,7 @@ type_specifier
 		$$->name="type_specifier";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
+		wFlag(shortnode);
 	}
 	| INT{
 		$$ = new node();
@@ -1042,7 +1075,8 @@ type_specifier
 		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;		
+		$$->children[0] = $1.ntnode;	
+		wFlag(intnode);
 	}
 	| LONG{
 		$$ = new node();
@@ -1051,6 +1085,7 @@ type_specifier
 		$$->name="type_specifier";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
+		wFlag(longnode);
 	}
 	| FLOAT{
 		$$ = new node();
@@ -1058,7 +1093,8 @@ type_specifier
 		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;		
+		$$->children[0] = $1.ntnode;	
+		wFlag(floatnode);
 	}
 	| DOUBLE{
 		$$ = new node();
@@ -1066,7 +1102,8 @@ type_specifier
 		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;		
+		$$->children[0] = $1.ntnode;	
+		wFlag(doublenode);
 	}
 	| SIGNED{
 		$$ = new node();
@@ -1075,6 +1112,7 @@ type_specifier
 		$$->name="type_specifier";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
+		wFlag(signednode);
 	}
 	| UNSIGNED{
 		$$ = new node();
@@ -1083,6 +1121,7 @@ type_specifier
 		$$->name="type_specifier";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
+		wFlag(unsignednode);
 	}
 	| struct_or_union_specifier{
 		$$ = new node();
@@ -1090,7 +1129,7 @@ type_specifier
 		$$ -> length = 1;
 		$$->name="type_specifier";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1;
 	}
 	| enum_specifier{
 		$$ = new node();
@@ -1108,10 +1147,13 @@ type_specifier
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
+	| type_specifier pointer{
+		printf("999");
+	}
 	;
 
 struct_or_union_specifier
-	: struct_or_union ID '{' declaration_list '}' ';' {
+	: struct_or_union ID '{' declaration_list '}' ';' {  //struct a { int a = 0;};
 		$$ = new node();
 		printf("995 ");
 		$$ -> length = 6;
@@ -1122,9 +1164,44 @@ struct_or_union_specifier
 		$$->children[2] = $3.ntnode;
 		$$->children[3] = $4;
 		$$->children[4] = $5.ntnode;		
-		$$->children[5] = $6.ntnode;	
+		$$->children[5] = $6.ntnode;
+
+		map<string, typenode*>::iterator iter;
+		typenode* temp_ptr;
+		typenode* temp1;
+		typenode* temp2;
+		typenode* temp3=new typenode("?");
+		for(iter = varmap_temp->vartable.begin(); iter!=varmap_temp->vartable.end(); ++iter){
+				cout<<iter->first<<' '<<iter->second->name<<' ';
+				temp_ptr = new typenode(string(iter->first));
+				typenode* root = new typenode("X");
+				root->left = temp_ptr;
+				root->right = iter->second;
+				struct_stack.push(root);
+		}
+		cout<<endl;
+		while(struct_stack.size()>=1){
+			cout<<struct_stack.size()<<endl;
+			if(struct_stack.size() !=1){
+				temp1 = struct_stack.top();struct_stack.pop();
+				temp2 = struct_stack.top();struct_stack.pop();
+				typenode* temp_ptr2 = new typenode("X");
+				temp_ptr2->left = temp1;
+				temp_ptr2->right = temp2;											
+				struct_stack.push(temp_ptr2);				
+			}
+			else{
+				temp3 = struct_stack.top();struct_stack.pop();
+				break;
+			}
+		}
+		typenode* temp = new typenode("record");
+		temp->left = temp3;
+		auto_define_type[$2.ntnode->name] = temp;	
+		traverse(temp);
+		s.pop_back();
 	}
-	| struct_or_union ID '{' declaration_list '}' init_declarator_list ';' {
+	| struct_or_union ID '{' declaration_list '}' init_declarator_list ';' { // struct a {int a = 0;} b[2];
 		$$ = new node();
 		printf("1006 ");
 		$$ -> length = 7;
@@ -1138,7 +1215,7 @@ struct_or_union_specifier
 		$$->children[5] = $6;
 		$$->children[6] = $7.ntnode;
 	}
-	| struct_or_union '{' declaration_list '}' ';' {
+	| struct_or_union '{' declaration_list '}' ';' { // struct a {int a = 0;};
 		$$ = new node();
 		printf("1007 ");
 		$$ -> length = 5;
@@ -1150,7 +1227,7 @@ struct_or_union_specifier
 		$$->children[3] = $4.ntnode;
 		$$->children[4] = $5.ntnode;
 	}
-	| struct_or_union '{' declaration_list '}' init_declarator_list ';' {
+	| struct_or_union '{' declaration_list '}' init_declarator_list ';' { //struct {int a = 0;}a[2];
 		$$ = new node();
 		printf("1008 ");
 		$$ -> length = 6;
@@ -1163,7 +1240,7 @@ struct_or_union_specifier
 		$$->children[4] = $5;
 		$$->children[5] = $6.ntnode;
 	}
-	| struct_or_union ID {
+	| struct_or_union ID { // struct a
 		$$ = new node();
 		printf("1016 ");
 		$$ -> length = 2;
@@ -1218,7 +1295,7 @@ struct_declaration
 		$$ = new node();
 		printf("1062 ");
 		$$ -> length = 3;
-		$$->name="struct_declaration_list";
+		$$->name="struct_declaration";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
@@ -1228,7 +1305,7 @@ struct_declaration
 		$$ = new node();
 		printf("1062 ");
 		$$ -> length = 3;
-		$$->name="struct_declaration_list";
+		$$->name="struct_declaration";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
@@ -1325,7 +1402,7 @@ struct_declarator
 	;
 
 enum_specifier
-	: ENUM '{' enumerator_list '}' {
+	: ENUM '{' enumerator_list '}' { //enum {a=1,b}
 		$$ = new node();
 		printf("1153 ");
 		$$ -> length = 4;
@@ -1336,7 +1413,7 @@ enum_specifier
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
 	}
-	| ENUM ID '{' enumerator_list '}' {
+	| ENUM ID '{' enumerator_list '}' { //enum q{a,b}
 		$$ = new node();
 		printf("1163 ");
 		$$ -> length = 5;
@@ -1440,6 +1517,7 @@ declarator
 	}
 	;
 
+
 direct_declarator
 	: ID{
 		$$ = new node();
@@ -1448,6 +1526,9 @@ direct_declarator
 		$$->name="direct_declarator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
+
+		var_name = $1.ntnode->name;
+		s.back()->vartable[$1.ntnode->name] = rFlag();
 	}
 	| '(' declarator ')' {
 		$$ = new node();
@@ -1469,6 +1550,14 @@ direct_declarator
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
+
+		typenode temp("array");
+		char num[25];
+		_itoa_s(int($3->dvalue), num, 10);
+		temp.left = new typenode(string(num));
+		temp.right = rFlag();
+		type = &temp;
+		traverse(type);
 	}
 	| direct_declarator '[' ']' {
 		$$ = new node();
@@ -1501,6 +1590,10 @@ direct_declarator
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
+		map<string, typenode*>::iterator iter;
+		for(iter = s.back()->vartable.begin();iter!=s.back()->vartable.end();iter++){
+			s[s.size()-2]->vartable[iter->first] = iter->second;
+		}	
 	}
 	| direct_declarator '(' ')' {
 		$$ = new node();
@@ -1509,8 +1602,12 @@ direct_declarator
 		$$->name="direct_declarator";
 		$$->children=new node* [3];
 		$$->children[0] = $1;
-		$$->children[1] = $2.ntnode;
+		$$->children[1] = $2.ntnode; 
 		$$->children[2] = $3.ntnode;
+
+		typenode* temp = new typenode("fun");
+		temp->right = rFlag();	
+		s.back()->vartable[var_name] = temp;			
 	}
 	;
 
@@ -1522,8 +1619,14 @@ pointer
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1.ntnode;
+
+		typenode* temp = new typenode("pointer");
+		temp->left=rFlag();
+		flag = !flag;
+		wFlag(*temp);
+		//traverse(temp);
 	}
-	| '*' type_qualifier_list {
+	| '*' type_qualifier_list { // *const
 		$$ = new node ();
 		$$ -> name = "pointer";
 		$$ -> length = 2;
@@ -1531,15 +1634,20 @@ pointer
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2;
 	}
-	| '*' pointer {
+	| '*' pointer { // **
 		$$ = new node ();
 		$$ -> name = "pointer";
 		$$ -> length = 2;
 		$$ -> children = new node* [2];
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2;
+
+		typenode* temp = new typenode("pointer");
+		temp->left = rFlag();
+		flag = !flag;
+		wFlag(*temp);
 	}
-	| '*' type_qualifier_list pointer {
+	| '*' type_qualifier_list pointer { //*const*
 		$$ = new node ();
 		$$ -> name = "pointer";
 		$$ -> length = 2;
@@ -1578,6 +1686,10 @@ parameter_type_list
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
+
+		type3->left = rFlag();
+		s.back()->vartable[var_name] = type3;
+		traverse(type3);
 	}
 	| parameter_list ',' ELLIPSIS {
 		$$ = new node();
@@ -1609,8 +1721,18 @@ parameter_list
 		$$ -> children[0] = $1;
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3;
+		typenode *temp = new typenode("X");
+		flag = !flag;
+		temp->left = rFlag();
+		cout<<"left"<<endl;
+		traverse(rFlag());
+		flag = !flag;
+		temp->right = rFlag();
+		cout<<"right"<<endl;
+		traverse(rFlag());	
+		wFlag(*temp);
 	}
-	;
+	;		
 
 parameter_declaration
 	: declaration_specifiers declarator {
@@ -1644,20 +1766,22 @@ identifier_list
 	: ID {
 		$$ = new node();
 		printf("1441 ");
-		$$ -> name = "type_qualifier_list";
+		$$ -> name = "identifier_list";
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1.ntnode;
+		s.back()->vartable[$1.ntnode->name] = rFlag();
 	}
 	| identifier_list ',' ID {
 		$$ = new node();
-		printf("1448 ");
-		$$ -> name = "type_qualifier_list";
+		printf("1448 ");   
+		$$ -> name = "identifier_list";
 		$$ -> length = 3;
 		$$ -> children = new node* [3];
 		$$ -> children[0] = $1;
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3.ntnode;
+		s.back()->vartable[$3.ntnode->name] = rFlag();	
 	}
 	;
 
@@ -1665,14 +1789,14 @@ type_name
 	: specifier_qualifier_list  {
 		$$ = new node();
 		printf("1460 ");
-		$$ -> name = "type_name";
+	  	$$ -> name = "type_name";
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-	}
+	}  
 	| specifier_qualifier_list abstract_declarator  {
 		$$ = new node();
-		printf("1467 ");
+		printf("1467 ");  
 		$$ -> name = "type_name";
 		$$ -> length = 2;
 		$$ -> children = new node* [2];
@@ -1832,7 +1956,6 @@ initializer
 		$$ -> children[2] = $3.ntnode;
 		$$ -> children[3] = $4.ntnode;
 	}
-	|{}
 	;
 
 initializer_list
@@ -2117,7 +2240,7 @@ matched_statement
 		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7;
 	}
-	|other {
+	| other {
 		$$ = new node();
 		printf("1815 ");
 		$$ -> name = "matched_statement";
@@ -2129,7 +2252,7 @@ matched_statement
 open_statement
 	: IF '(' exp ')' stmt {
 		$$ = new node();
-		printf("1816@ ");
+		printf("1816 ");
 		$$ -> name = "open_statement";
 		$$ -> length = 5;
 		$$ -> children = new node* [5];
@@ -2216,6 +2339,11 @@ iteration_statement
 		$$ -> children[3] = $4;
 		$$ -> children[4] = $5.ntnode;
 		$$ -> children[5] = $6;
+		map<string, typenode*>::iterator iter;
+		for(iter = s.back()->vartable.begin();iter!=s.back()->vartable.end();iter++){
+			s[s.size()-2]->vartable[iter->first] = iter->second;
+		}
+		s.pop_back();		
 	}
 	| FOR '(' exp_statement exp_statement exp ')' statement {
 		$$ = new node();
@@ -2230,6 +2358,12 @@ iteration_statement
 		$$ -> children[4] = $5;
 		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7;
+		map<string, typenode*>::iterator iter;
+		for(iter = s.back()->vartable.begin();iter!=s.back()->vartable.end();iter++)
+		{
+			s[s.size()-2]->vartable[iter->first] = iter->second;
+		}
+		s.pop_back();
 	}
 	;
 
@@ -2292,7 +2426,7 @@ translation_unit
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
 		cout<<endl;
-		traverse($$);
+		// traverse($$);
 	}
 	| translation_unit external_declaration {
 		$$ = new node();
@@ -2303,7 +2437,7 @@ translation_unit
 		$$ -> children[0] = $1;
 		$$ -> children[1] = $2;
 		cout<<endl;
-		traverse($$);
+		// traverse($$);
 	}
 	;
 
@@ -2378,7 +2512,7 @@ function_definition
 
 int main(void)
 {
-	
+	s.push_back(new varmap());
 //  FILE *stream;
 //	freopen_s(&stream, "in.txt", "r", stdin);
 //	freopen_s(&stream, "out.txt", "w", stdout);
