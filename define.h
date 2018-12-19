@@ -12,11 +12,13 @@ struct typenode
     string name;
     typenode *left;
     typenode *right;
-    typenode(string n = "")
+    int width;    
+    typenode(string n = "", int w = 0)
     {
         name = n;
         left = NULL;
         right = NULL;
+        width = w;
     }
 };
 typenode *type;
@@ -26,16 +28,16 @@ typenode *type4 = new typenode("pointer");
 string var_name;
 bool flag = false;
 
-typenode unsignednode("unsigned");
-typenode shortnode("short");
-typenode intnode("int");
-typenode longnode("long");
-typenode floatnode("float");
-typenode doublenode("double");
-typenode charnode("char");
+typenode unsignednode("unsigned", 4);
+typenode shortnode("short", 2);
+typenode intnode("int", 4);
+typenode longnode("long", 8);
+typenode floatnode("float", 4);
+typenode doublenode("double", 8);
+typenode charnode("char", 1);
 typenode voidnode("void");
-typenode signednode("signed");
-map<string, typenode *> auto_define_type;
+typenode signednode("signed", 4);
+map<string, typenode*> auto_define_type;
 stack<typenode*> struct_stack;
 
 struct varmap
@@ -51,8 +53,7 @@ struct varmap
 };
 
 varmap *varmap_temp;
-vector<varmap*> s;
-
+vector<varmap*> s;//fuhao-table
 struct node
 {
     int id;
@@ -69,6 +70,33 @@ struct node
         name = n;
     }
 };
+
+bool isComputable(string s){
+    if(s == "int" || s == "float" || s == "double" || 
+    s == "unsigned" || s == "signed" || s == "short" || s == "char")
+        return true;
+    else return false;
+}
+
+bool isInteger(string s){
+    if(s == "int" || s == "unsigned" || s == "signed" || s == "short" || s== "char")
+        return true;
+    else return false;
+}
+
+typenode* search(string myname,int i) {
+    if(s[i]->vartable.count(myname)>0){
+        return s[i]->vartable[myname];
+    }
+    else{
+        if(s[i]->vartable.count(myname)==0&&i>0){
+            i--;
+            search(myname,i);
+        }
+        else cout << "Unsupported type!" << myname;
+        return NULL;
+    }
+}
 
 void wFlag(typenode &node)
 {

@@ -22,6 +22,38 @@ void traverse(typenode *root) {
 		traverse(root->right);	
 	}	
 }
+void compare_traverse(typenode *root, vector<string> &v) {
+	if(root!=NULL)
+		//cout << root->name << endl;
+		v.push_back(root->name);
+	if(root->left!=NULL)
+	{
+		//cout << "left ";
+		traverse(root->left);
+	}
+	if(root->right!=NULL)
+	{
+		//cout << "right ";
+		traverse(root->right);	
+	}
+}
+typenode* search_struct(typenode *root, string name) {
+	if(root == NULL)
+		return false;
+	if(root->left != NULL)
+	{
+		cout << "left " << root->left->name;
+		if (root->left->name == name)
+			return root->right;
+		else return search_struct(root->left, name);
+	}
+	if(root->right != NULL)
+	{
+		cout << "right " << root->right->name;
+		return search_struct(root->right, name);
+	}
+	return false;
+}
 
 %}
 %union {
@@ -113,9 +145,12 @@ primary_exp
 		$$ -> length = 1;
 		$$->name="primary_exp";
 		$$->children=new node* [1];
-		$$->children[0] = $1.ntnode;	
+		$$->children[0] = $1.ntnode;
 
-		//$$->type = $1.ntnode;
+		if(search($1.ntnode->name,s.size()-1)!=NULL)
+		{
+			$$->type = *search($1.ntnode->name,s.size()-1);
+		}
 	}
 	| CONSTANT{
 		$$ = new node();
@@ -126,6 +161,7 @@ primary_exp
 		$$->children[0] = $1.ntnode;
 
 		$$->dvalue = $1.ntnode->dvalue;
+		$$->type = doublenode;
 	}
 	| STRING_LITERAL{
 		$$ = new node();
@@ -158,6 +194,7 @@ postfix_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;			
 	}
 	| postfix_exp '[' exp ']'{	
 		$$ = new node();
@@ -200,6 +237,13 @@ postfix_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
+
+		map<string, typenode*>::iterator i;
+		if ((i = auto_define_type.find($1->type.name)) != auto_define_type.end())
+		{
+			cout << search_struct(i->second, $3.ntnode->name);
+		}
+		else cout << "struct doesn't exist!\n";
 	}
 	| postfix_exp PTR_OP ID{
 		$$ = new node();
@@ -219,6 +263,9 @@ postfix_exp
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
+
+		if(!isComputable($1->type.name))
+			cout<<"No additive calculation can be made for uncalculable types."<<endl;
 	}
 	| postfix_exp DEC_OP{
 		$$ = new node();
@@ -228,6 +275,9 @@ postfix_exp
 		$$->children=new node* [2];
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
+
+		if(!isComputable($1->type.name))
+			cout<<"Can't subtract from uncalculable types."<<endl;
 	}
 	;
 
@@ -262,6 +312,7 @@ unary_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| INC_OP unary_exp{
 		$$ = new node();
@@ -271,6 +322,9 @@ unary_exp
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
+
+		if(!isComputable($2->type.name))
+			cout<<"No additive calculation can be made for uncalculable types."<<endl;
 	}
 	| DEC_OP unary_exp{
 		$$ = new node();
@@ -280,6 +334,9 @@ unary_exp
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
+
+		if(!isComputable($2->type.name))
+			cout<<"Can't subtract from uncalculable types ."<<endl;
 	}
 	| unary_operator cast_exp{
 		//cast_exp:单目表达式/强制类型转换
@@ -299,6 +356,12 @@ unary_exp
 		$$->children=new node* [2];
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
+
+		if($2->type.width!=0)
+		{
+			$$->dvalue = $2->type.width; 
+		}
+		else cout<<"Unknown type, unable to perform sizeof operation."<<endl;
 	}
 	| SIZEOF '(' type_name ')'{
 		$$ = new node();
@@ -310,6 +373,9 @@ unary_exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
+
+		if($3->type.width!=0)$$->dvalue = $3->type.width;
+		else cout<<"Unknown type, unable to perform sizeof operation."<<endl;
 	}
 	;
 
@@ -375,6 +441,7 @@ cast_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| '(' type_name ')' cast_exp{
 		$$ = new node();
@@ -399,6 +466,7 @@ multiplicative_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;			
 	}
 	| multiplicative_exp '*' cast_exp{
 		$$ = new node();
@@ -409,6 +477,9 @@ multiplicative_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || isComputable($3->type.name))
+			cout<<"Mismatch of Operator Types in Multiplication Operations."<<endl;		
 	}
 	| multiplicative_exp '/' cast_exp{
 		$$ = new node();
@@ -419,6 +490,9 @@ multiplicative_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || isComputable($3->type.name))
+			cout<<"Divisional Operator Type Mismatch."<<endl;
 	}
 	| multiplicative_exp '%' cast_exp{
 		$$ = new node();
@@ -429,6 +503,9 @@ multiplicative_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || isComputable($3->type.name))
+			cout<<"Complementation Operator Type Mismatch."<<endl;
 	}
 	;
 
@@ -442,6 +519,7 @@ additive_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| additive_exp '+' multiplicative_exp{
 		$$ = new node();
@@ -452,6 +530,9 @@ additive_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+				
+		if (!isComputable($1->type.name) || isComputable($3->type.name))
+			cout<<"Operator type mismatch."<<endl;		
 	}
 	| additive_exp '-' multiplicative_exp{
 		$$ = new node();
@@ -462,6 +543,9 @@ additive_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || isComputable($3->type.name))
+			cout<<"Operator type mismatch."<<endl;	
 	}
 	;
 
@@ -475,6 +559,7 @@ shift_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| shift_exp LEFT_OP additive_exp{
 		$$ = new node();
@@ -485,6 +570,9 @@ shift_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Shift Operator Operator Mismatch ."<<endl;
 	}
 	| shift_exp RIGHT_OP additive_exp{
 		$$ = new node();
@@ -495,6 +583,9 @@ shift_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Shift Operator Operator Mismatch ."<<endl;
 	}
 	;
 
@@ -508,6 +599,7 @@ relational_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;		
 	}
 	| relational_exp '<' shift_exp{
 		$$ = new node();
@@ -518,6 +610,9 @@ relational_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Relational expression type mismatch ."<<endl;
 	}
 	| relational_exp '>' shift_exp{
 		$$ = new node();
@@ -528,6 +623,9 @@ relational_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Relational expression type mismatch ."<<endl;
 	}
 	| relational_exp LE_OP shift_exp{
 		$$ = new node();
@@ -538,6 +636,9 @@ relational_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Relational expression type mismatch ."<<endl;
 	}
 	| relational_exp GE_OP shift_exp{
 		$$ = new node();
@@ -548,6 +649,9 @@ relational_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Relational expression type mismatch ."<<endl;
 	}
 	;
 
@@ -561,6 +665,7 @@ equality_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| equality_exp EQ_OP relational_exp{
 		$$ = new node();
@@ -571,6 +676,9 @@ equality_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Relational expression type mismatch ."<<endl;
 	}
 	| equality_exp NE_OP relational_exp{
 		$$ = new node();
@@ -581,6 +689,9 @@ equality_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isComputable($1->type.name) || !isComputable($3->type.name))
+				cout<<"Relational expression type mismatch ."<<endl;
 	}
 	;
 
@@ -594,6 +705,7 @@ and_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| and_exp '&' equality_exp{
 		$$ = new node();
@@ -604,6 +716,9 @@ and_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isInteger($1->type.name) || !isInteger($3->type.name))
+				cout<<"Intersection Operator Type Mismatch ."<<endl;
 	}
 	;
 
@@ -617,6 +732,7 @@ exclusive_or_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| exclusive_or_exp '^' and_exp{
 		$$ = new node();
@@ -627,6 +743,9 @@ exclusive_or_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isInteger($1->type.name) || !isInteger($3->type.name))
+				cout<<"Intersection Operator Type Mismatch ."<<endl;
 	}
 	;
 
@@ -640,6 +759,7 @@ inclusive_or_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| inclusive_or_exp '|' exclusive_or_exp{
 		$$ = new node();
@@ -650,6 +770,9 @@ inclusive_or_exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
+
+		if (!isInteger($1->type.name) || !isInteger($3->type.name))
+				cout<<"Or operation left-right operand type mismatch "<<endl;
 	}
 	;
 
@@ -663,6 +786,7 @@ logical_and_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| logical_and_exp AND_OP inclusive_or_exp{
 		$$ = new node();
@@ -686,6 +810,7 @@ logical_or_exp
 		$$->children[0] = $1;
 
 		$$->dvalue = $1->dvalue;
+		$$->type = $1->type;
 	}
 	| logical_or_exp OR_OP logical_and_exp{
 		$$ = new node();
@@ -709,6 +834,7 @@ conditional_exp
 		$$->children[0] = $1;	
 
 		$$->dvalue = $1->dvalue;	
+		$$->type = $1->type;
 	}
 	| logical_or_exp '?' exp ':' conditional_exp{
 		$$ = new node();
@@ -720,7 +846,18 @@ conditional_exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
-		$$->children[4] = $5;				
+		$$->children[4] = $5;	
+
+		vector<string> v1;
+		vector<string> v2;
+		compare_traverse(&$3->type, v1);
+		compare_traverse(&$5->type, v2);
+		if (v1==v2){
+			cout<<"Two sides equal"<<endl;
+		}	
+		else{
+			cout<<"Two sides don't equal"<<endl;
+		}			
 	}
 	;
 
@@ -735,6 +872,8 @@ assignment_exp
 		$$->name="assignment_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;		
+
+		$$->type = $1->type;
 	}
 	| unary_exp assignment_operator assignment_exp{
 		$$ = new node();
@@ -744,7 +883,18 @@ assignment_exp
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
-		$$->children[2] = $3;	
+		$$->children[2] = $3;
+
+		vector<string> v1;
+		vector<string> v2;
+		compare_traverse(&$1->type, v1);
+		compare_traverse(&$2->type, v2);
+		if (v1==v2){
+			cout<<"Two sides equal"<<endl;
+		}	
+		else{
+			cout<<"Two sides don't equal"<<endl;
+		}
 	}
 	;
 
@@ -891,7 +1041,9 @@ declaration
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
-		$$->children[2] = $3.ntnode;		
+		$$->children[2] = $3.ntnode;
+
+		//$$->type = $1->type;		
 	}
 	// | ID ID ';'{
 	// 	printf("772");
@@ -961,7 +1113,9 @@ init_declarator_list
 		$$ -> length = 1;
 		$$->name="init_declarator_list";
 		$$->children=new node* [1];
-		$$->children[0] = $1;		
+		$$->children[0] = $1;	
+
+		//$$->type = $1->type;	
 	}
 	| init_declarator_list ',' init_declarator{
 		$$ = new node();
@@ -994,7 +1148,19 @@ init_declarator
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;	
 
+		
 		//s.back()
+		/* $$->type = $1->type;
+		vector<string> v1;
+		vector<string> v2;
+		compare_traverse($$->type, v1);
+		compare_traverse(type, v2);
+		if (v1==v2){
+			cout<<"Assignment matching of left and right values."<<endl;			
+		}
+		else{
+			cout<<"Assignment left-right mismatch "<<endl;
+		} */				
 	}
 	;
 
@@ -1148,7 +1314,6 @@ type_specifier
 		$$->children[0] = $1.ntnode;		
 	}
 	| type_specifier pointer{
-		printf("999");
 	}
 	;
 
@@ -1165,6 +1330,7 @@ struct_or_union_specifier
 		$$->children[3] = $4;
 		$$->children[4] = $5.ntnode;		
 		$$->children[5] = $6.ntnode;
+		int width_sum = 0;
 
 		map<string, typenode*>::iterator iter;
 		typenode* temp_ptr;
@@ -1177,6 +1343,7 @@ struct_or_union_specifier
 				typenode* root = new typenode("X");
 				root->left = temp_ptr;
 				root->right = iter->second;
+				width_sum += iter->second->width;
 				struct_stack.push(root);
 		}
 		cout<<endl;
@@ -1197,6 +1364,7 @@ struct_or_union_specifier
 		}
 		typenode* temp = new typenode("record");
 		temp->left = temp3;
+		temp->width = width_sum;
 		auto_define_type[$2.ntnode->name] = temp;	
 		traverse(temp);
 		s.pop_back();
@@ -1247,7 +1415,15 @@ struct_or_union_specifier
 		$$->name="struct_or_union_specifier";
 		$$->children=new node* [2];
 		$$->children[0] = $1;
-		$$->children[1] = $2.ntnode;		
+		$$->children[1] = $2.ntnode;	
+
+		map<string, typenode*>::iterator i;
+		cout << $2.ntnode->type.name;
+		if ((i = auto_define_type.find($2.ntnode->type.name)) != auto_define_type.end())
+		{
+			cout << search_struct(i->second, $3.ntnode->name)->name;
+		}
+		else cout << "struct doesn't exist!\n";
 	}
 	;
 
@@ -1556,6 +1732,7 @@ direct_declarator
 		_itoa_s(int($3->dvalue), num, 10);
 		temp.left = new typenode(string(num));
 		temp.right = rFlag();
+		temp.width = rFlag()->width * $3->dvalue;
 		type = &temp;
 		traverse(type);
 	}
@@ -1622,6 +1799,7 @@ pointer
 
 		typenode* temp = new typenode("pointer");
 		temp->left=rFlag();
+		temp->width = 4;
 		flag = !flag;
 		wFlag(*temp);
 		//traverse(temp);
@@ -1644,6 +1822,7 @@ pointer
 
 		typenode* temp = new typenode("pointer");
 		temp->left = rFlag();
+		temp->width = 4;
 		flag = !flag;
 		wFlag(*temp);
 	}
@@ -1934,6 +2113,8 @@ initializer
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
+
+		//$$->type = $1->type;
 	}
 	| '{' initializer_list '}'  {
 		$$ = new node();
@@ -2217,7 +2398,7 @@ stmt
 		$$ -> children[0] = $1;
 	}
 	| open_statement {
-		$$ = new node();
+		$$ = new node(); 
 		printf("1795 ");
 		$$ -> name = "stmt";
 		$$ -> length = 1;
