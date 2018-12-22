@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 71 of your 30 day trial period.
+* You are on day 74 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * mylexer.cpp
 * C++ source file generated from mylexer.l.
 * 
-* Date: 12/19/18
-* Time: 16:50:42
+* Date: 12/23/18
+* Time: 06:08:03
 * 
 * ALex Version: 2.07
 ****************************************************************************/
@@ -285,7 +285,7 @@ Lex(yylval, "(");              push_into_s(yylval.ntnode->args);       return '(
 	case 10:
 		{
 #line 127 ".\\mylexer.l"
-Lex(yylval, ")"); 		        s.pop_back();                                return ')'; 
+Lex(yylval, ")"); 		        return ')'; 
 #line 290 "mylexer.cpp"
 		}
 		break;
@@ -572,7 +572,7 @@ Lex(yylval, "OR_OP");			return OR_OP;
 	case 51:
 		{
 #line 169 ".\\mylexer.l"
-Lex(yylval, "IF");              return IF; 
+Lex(yylval, "IF");             return IF; 
 #line 577 "mylexer.cpp"
 		}
 		break;
@@ -677,7 +677,7 @@ Lex(yylval, "STATIC");		    return STATIC;
 	case 66:
 		{
 #line 185 ".\\mylexer.l"
-Lex(yylval, "STRUCT");		    push_into_s(yylval.ntnode->args);       return STRUCT;
+Lex(yylval, "STRUCT");		    return STRUCT;
 #line 682 "mylexer.cpp"
 		}
 		break;

@@ -124,7 +124,7 @@ void		{Lex(yylval, "VOID"); 			return VOID; }
 "."			{Lex(yylval, ".");	            return '.';}
 ","         {Lex(yylval, ","); 		        return ','; }
 "("			{Lex(yylval, "(");              push_into_s(yylval.ntnode->args);       return '('; }
-")"			{Lex(yylval, ")"); 		        s.pop_back();                                return ')'; }
+")"			{Lex(yylval, ")"); 		        return ')'; }
 "{"			{Lex(yylval, "{");              push_into_s(yylval.ntnode->args);       return '{'; }
 "}"			{Lex(yylval, "}");              varmap_temp = s[s.size() - 1];     s.pop_back();   return '}'; }
 "["			{Lex(yylval, "["); 		        return '['; }
@@ -166,7 +166,7 @@ for			{Lex(yylval, "FOR");            push_into_s(yylval.ntnode->args);       re
 "&&"		{Lex(yylval, "AND_OP");	        return AND_OP; }
 "||"		{Lex(yylval, "OR_OP");			return OR_OP; }
 // !			{yylval, yylval.ntnode = new node(BOOLOP);	        printf("BOOLOP");	return BOOLOP; }
-if			{Lex(yylval, "IF");              return IF; }
+if			{Lex(yylval, "IF");             return IF; }
 break       {Lex(yylval, "BREAK");			return BREAK;}
 case        {Lex(yylval, "CASE");			return CASE;}
 const       {Lex(yylval, "CONST");			return CONST;}
@@ -182,7 +182,7 @@ signed      {Lex(yylval, "SIGNED");		    return SIGNED;}
 unsigned    {Lex(yylval, "UNSIGNED");	    return UNSIGNED;}
 sizeof      {Lex(yylval, "SIZEOF");		    return SIZEOF;}
 static      {Lex(yylval, "STATIC");		    return STATIC;}
-struct      {Lex(yylval, "STRUCT");		    push_into_s(yylval.ntnode->args);       return STRUCT;}
+struct      {Lex(yylval, "STRUCT");		    return STRUCT;}
 switch      {Lex(yylval, "SWITCH");		    return SWITCH;}
 typedef     {Lex(yylval, "TYPEDEF");		return TYPEDEF;}
 union       {Lex(yylval, "UNION");			return UNION;}

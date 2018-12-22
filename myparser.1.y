@@ -7,6 +7,21 @@ Date: 2018��10��28��
 ****************************************************************************/
 #include "define.h"
 #include "mylexer.h"
+
+void traverse(typenode *root) {
+	if(root!=NULL)
+		cout << root->name << endl;
+	if(root->left!=NULL)
+	{
+		cout << "left ";
+		traverse(root->left);
+	}
+	if(root->right!=NULL)
+	{
+		cout << "right ";
+		traverse(root->right);	
+	}	
+}
 void compare_traverse(typenode *root, vector<string> &v) {
 	if(root!=NULL)
 		//cout << root->name << endl;
@@ -21,7 +36,7 @@ void compare_traverse(typenode *root, vector<string> &v) {
 	}
 }
 void show_vector(vector<typenode*> &v){
-	cout<<endl<<"&&&&&after_post_traverse&&&&&&&"<<endl;
+	cout<<"&&&&&after_post_traverse&&&&&&&"<<endl;
 	vector<typenode*>::iterator iter;
 	for (iter=v.begin();iter!=v.end();iter++){
 		cout<<(*iter)->name<<' ';
@@ -30,12 +45,12 @@ void show_vector(vector<typenode*> &v){
 }
 
 void show_string(vector<string> &v) {
-	cout<<"''''''''''''''"<<endl;
-	for (int i=0; i<v.size();i++) {
-		cout<<v[i]<<" ";
+	cout << "&&&&&after_post_traverse&&&&&&&" << endl;
+	vector<string>::iterator iter;
+	for (iter = v.begin();iter != v.end();iter++) {
+		cout << (*iter) << ' ';
 	}
-	cout<<endl;
-	cout<<"pppppppppppppppp"<<endl;
+	cout << endl;
 }
 
 void post_traverse(typenode* root, vector<string> &v_temp)
@@ -44,7 +59,8 @@ void post_traverse(typenode* root, vector<string> &v_temp)
 		post_traverse(root->left, v_temp);
 		post_traverse(root->right, v_temp);
 		v_temp.push_back(root->name);
-	}	
+	}
+	show_string(v_temp);	
 }
 
 bool check_type(typenode* tp1, typenode* tp2){
@@ -52,44 +68,25 @@ bool check_type(typenode* tp1, typenode* tp2){
 	vector<string> temp2;
 	post_traverse(tp1, temp1);
 	post_traverse(tp2, temp2);
-	// show_string(temp1);
-	// show_string(temp2);
-	if (temp1.size() != temp2.size())
-		return false;
-	for(int i = 0; i < temp1.size(); i++) {
-		if (temp1[i] != temp2[i]){
-			if(temp2[i] == "double" && isComputable(temp1[i]))
-			{
-				cout<<"warning: lose precision!!\n";
-				return true;
-			}
-			return false;
-		}
-	}
-	return true;
+	return temp1 == temp2;	
 }
 
-void search_struct(typenode *root, string name, typenode &p) {
-	cout << '~\n';
+typenode* search_struct(typenode *root, string name) {
 	if(root == NULL)
-	{
-		cout << "root->left->name == name" << endl;
-	}
+		return false;
 	if(root->left != NULL)
 	{
 		cout << "left " << root->left->name << endl;
 		if (root->left->name == name)
-		{
-			cout << "into left\n";
-			p = *(root -> right);
-		} 
-		else search_struct(root->left, name, p);
+			return root->right;
+		else return search_struct(root->left, name);
 	}
 	if(root->right != NULL)
 	{
 		cout << "right " << root->right->name << endl;
-		search_struct(root->right, name, p);
+		return search_struct(root->right, name);
 	}
+	return false;
 }
 
 %}
@@ -105,7 +102,7 @@ void search_struct(typenode *root, string name, typenode &p) {
 %type <ntnode> logical_and_exp,logical_or_exp,conditional_exp
 %type <ntnode> assignment_exp,assignment_operator,exp
 %type <ntnode> constant_exp,declaration,declaration_specifiers
-%type <ntnode> init_declarator_list,init_declarator,storage_class_specifier,struct_or_union_def,def_concat
+%type <ntnode> init_declarator_list,init_declarator,storage_class_specifier
 %type <ntnode> type_specifier,struct_or_union_specifier,struct_or_union,struct_declaration_list
 %type <ntnode> struct_declaration,specifier_qualifier_list,struct_declarator_list,struct_declarator
 %type <ntnode> enum_specifier,enumerator_list,enumerator,type_qualifier,declarator,direct_declarator
@@ -115,7 +112,7 @@ void search_struct(typenode *root, string name, typenode &p) {
 %type <ntnode> declaration_list,statement_list,exp_statement
 %type <ntnode> iteration_statement,jump_statement,translation_unit,external_declaration
 %type <ntnode> function_definition,selection_statement
-%type <ntnode> open_statement, matched_statement, stmt,other,direct_pre_declarator
+%type <ntnode> open_statement, matched_statement, stmt,other
 
 
 
@@ -183,16 +180,11 @@ primary_exp
 		$$->name="primary_exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
-		
-		traverse_vartable(s.size()-1);
-		typenode* ptr = search($1.ntnode->name,s.size()-1);						
-		if(ptr != NULL)
+
+		if(search($1.ntnode->name,s.size()-1)!=NULL)
 		{
-			$$->type = *ptr;
-			cout<<"****************"<<endl;
-			cout<<$1.ntnode->name<<":"<<$$->type.name<<endl;
+			$$->type = *search($1.ntnode->name,s.size()-1);
 		}
-		var_name = $1.ntnode->name;
 	}
 	| CONSTANT{
 		$$ = new node();
@@ -222,15 +214,8 @@ primary_exp
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;	
-		s.pop_back();  
 	}
 
-	;
-
-	postfix_pre_exp
-	: postfix_exp '('{
-		fun_name = var_name;
-	}
 	;
 
 postfix_exp
@@ -255,44 +240,41 @@ postfix_exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
-		$$->type = $1->type;
 	}
-	|postfix_pre_exp ')'{
+	| postfix_exp '(' ')'{
 		$$ = new node();
 		printf("159 ");
 		$$ -> length = 3;
 		$$->name="postfix_exp";
 		$$->children=new node* [3];
-		typenode* temp = search(fun_name, s.size()-1);
-		if(temp->right != NULL)
-			$$ -> type = *(temp->right);
-		else{
-			temp = new typenode();
-			$$->type = *temp;
-		}
-		s.pop_back();  
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3.ntnode;
 	}
-	| postfix_pre_exp argument_exp_list ')'{
+	| postfix_exp '(' argument_exp_list ')'{
 		$$ = new node();
 		printf("168 ");
 		$$ -> length = 4;
 		$$->name="postfix_exp";
-		s.pop_back();  
+		$$->children=new node* [4];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+		$$->children[3] = $4.ntnode;
+
 		vector<string> v_argument_list_temp; 
-		cout<<fun_name<<":fun_name"<<endl;
-		typenode* type_exp = (search(fun_name, s.size()-1));
-		traverse(type_exp);
-		cout << "type_exp.name"<<type_exp->name << endl;
+		show_string(v_argument_list);
+		typenode* type_exp = search($1->name, s.size()-1);
+		cout << type_exp->name << endl;
 		if(type_exp->name == "fun"){
 			cout<<"&&&&&&&It is a function!!!&&&&&&";
-			if (v_argument_list_temp.size()!=v_argument_list.size()){
+			post_traverse(type_exp->left, v_argument_list_temp);
+			if(v_argument_list_temp == v_argument_list){
+		 		cout<<"&&&&&&&Argument_list matched!!!&&&&&&&&"<<endl;
+			}
+			else{
 				cout<<"&&&&&&Argument_list matching failed."<<endl;
-			}
-			for(int i=0; i<v_argument_list_temp.size();i++){
-				if(v_argument_list[i]!=v_argument_list_temp[i])
-					cout<<"&&&&&&Argument_list matching failed."<<endl;				
-			}
-			cout<<"&&&&&&&Argument_list matched!!!&&&&&&&&"<<endl;
+		    }
 		}
 		cout<<"&&&&&clear v_argument_list&&&"<<endl;
 		v_argument_list.clear();
@@ -307,34 +289,12 @@ postfix_exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
 
-		if ($1->type.name == "record")
+		map<string, typenode*>::iterator i;
+		if ((i = auto_define_type.find($1->type.name)) != auto_define_type.end())
 		{
-			typenode pointer;
-			pointer.name = "###";
-			search_struct(&($1->type), $3.ntnode->name, pointer);
-			cout<< pointer.name<<"////////"<<endl;
-			if (pointer.name == "###")
-				cout << "struct doesn't have " << $3.ntnode->name << endl;
-			else{
-				cout<<"struct has "<<$3.ntnode->name<<endl;
-			}
-			$$->type = pointer;
-		} 
-		else if($1->type.name == "array" && $1->type.right->name == "record"){
-			typenode pointer;
-			pointer.name = "#O#O#O";
-			search_struct($1->type.right, $3.ntnode->name, pointer);
-			cout<< pointer.name <<"////////"<<endl;
-			if (pointer.name == "#O#O#O")
-				cout << "struct doesn't have " << $3.ntnode->name << endl;
-			else{
-				cout<<"struct has "<<$3.ntnode->name<<endl;
-			}
-			$$->type = pointer;
+			cout << search_struct(i->second, $3.ntnode->name);
 		}
 		else cout << "struct doesn't exist!\n";
-
-	
 	}
 	| postfix_exp PTR_OP ID{
 		$$ = new node();
@@ -393,7 +353,6 @@ argument_exp_list
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 
-		v_argument_list.push_back($1->type.name);
 		v_argument_list.push_back($3->type.name);
 	}
 	;
@@ -469,7 +428,6 @@ unary_exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
-		s.pop_back();  
 
 		if($3->type.width!=0)$$->dvalue = $3->type.width;
 		else cout<<"Unknown type, unable to perform sizeof operation."<<endl;
@@ -550,7 +508,6 @@ cast_exp
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;
 		$$->children[3] = $4;
-		s.pop_back();  
 	}
 	;
 
@@ -845,14 +802,13 @@ exclusive_or_exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->type=$3->type;
-
 		if (!isInteger($1->type.name) || !isInteger($3->type.name))
 				cout<<"Intersection Operator Type Mismatch ."<<endl;
 	}
 	;
 
 inclusive_or_exp
-	: exclusive_or_exp{
+	: exclusive_or_exp {
 		$$ = new node();
 		printf("557 ");
 		$$ -> length = 1;
@@ -873,7 +829,6 @@ inclusive_or_exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->type=$3->type;
-
 		if (!isInteger($1->type.name) || !isInteger($3->type.name))
 				cout<<"Or operation left-right operand type mismatch "<<endl;
 	}
@@ -958,11 +913,11 @@ conditional_exp
 		vector<string> v2;
 		compare_traverse(&$3->type, v1);
 		compare_traverse(&$5->type, v2);
-		if (v1 == v2){
-			cout<<"match"<<endl;
+		if (v1==v2){
+			cout<<"Two sides equal"<<endl;
 		}	
 		else{
-			cout<<"mismatch!"<<endl;
+			cout<<"Two sides don't equal"<<endl;
 		}			
 	}
 	;
@@ -970,9 +925,6 @@ conditional_exp
 assignment_exp
 	: conditional_exp{
 		//(1)谓词表达式
-
-
-
 
 		//(2)条件表达式 a<b?a:b
 		$$ = new node();
@@ -992,11 +944,13 @@ assignment_exp
 		$$->children=new node* [3];
 		$$->children[0] = $1;
 		$$->children[1] = $2;
-		$$->children[2] = $3;   
+		$$->children[2] = $3;
 		$$->type = $3->type;
-		cout<<"############";traverse(&($1->type));
-		cout<<"^^^^^^^^^^^";traverse(&($3->type));
-		if (check_type(&$1->type, &$3->type)){
+		vector<string> v1;
+		vector<string> v2;
+		compare_traverse(&$1->type, v1);
+		compare_traverse(&$2->type, v2);
+		if (v1==v2){
 			cout<<"Two sides equal"<<endl;
 		}	
 		else{
@@ -1099,12 +1053,12 @@ assignment_operator
 exp
 	: assignment_exp{
 		$$ = new node();
-		printf("123456 ");
+		printf("123456");
 		$$ -> length = 1;
 		$$->name="exp";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
-		$$->type=$1->type;	
+		//$$->type=$1->type;		
 	}
 	| exp ',' assignment_exp{
 		$$ = new node();
@@ -1115,7 +1069,6 @@ exp
 		$$->children[0] = $1;
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
-		$$->type=$3->type;
 	}
 	;
 
@@ -1152,7 +1105,7 @@ declaration
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;
 
-		$$->type = $1->type;		
+		//$$->type = $1->type;		
 	}
 	// | ID ID ';'{
 	// 	printf("772");
@@ -1229,7 +1182,7 @@ init_declarator_list
 		$$->children=new node* [1];
 		$$->children[0] = $1;	
 
-		$$->type = $1->type;	
+		//$$->type = $1->type;	
 	}
 	| init_declarator_list ',' init_declarator{
 		$$ = new node();
@@ -1262,22 +1215,19 @@ init_declarator
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;	
 
-		traverse_vartable(s.size()-1);
-		$$->type = $1->type;
+		
+		//s.back()
+		/* $$->type = $1->type;
 		vector<string> v1;
 		vector<string> v2;
-		compare_traverse(&($1->type), v1);
-		compare_traverse(&($3->type), v2);
-		cout << "initializer.name " << $3->type.name << endl;
-		cout << "declarator.name " << $1->type.name << endl;
-		show_string(v1);
-		show_string(v2);
-		if (check_type(&($1->type), &($3->type))){
-			cout<<"match!"<<endl;
+		compare_traverse($$->type, v1);
+		compare_traverse(type, v2);
+		if (v1==v2){
+			cout<<"Assignment matching of left and right values."<<endl;			
 		}
 		else{
-			cout<<"!mismatch "<<endl;
-		}				
+			cout<<"Assignment left-right mismatch "<<endl;
+		} */				
 	}
 	;
 
@@ -1422,10 +1372,6 @@ type_specifier
 		$$->name="type_specifier";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
-
-		wFlag($1->type);
-		$$ -> type = $1 -> type;
-
 	}
 	| enum_specifier{
 		$$ = new node();
@@ -1447,52 +1393,7 @@ type_specifier
 	}
 	;
 
-struct_or_union_def
-	: struct_or_union ID '{' declaration_list '}' {
-		$$ = new node();
-		printf("986 ");
-		wFlag(*(create_struct($2.ntnode->name)));
-	}
-	|
-	struct_or_union '{' declaration_list '}' {
-		static int i = 1;
-		$$ = new node();
-		printf("987 ");
-		wFlag(*(create_struct("struct" + to_string(i))));
-		// s.back()->vartable["struct" + to_string(i++)] = rFlag();
-	}
-	;
-	def_concat
-	:';'{
-		$$ = new node();
-		printf("988 ");
-	}
-	| init_declarator_list ';'{
-		$$ = new node();
-		printf("989 ");
-		// s.back()->vartable[] = rFlag();
-	}
-	;
-
 struct_or_union_specifier
-	: struct_or_union_def def_concat {
-		$$ = new node();
-		printf("990 ");
-	}
-	| struct_or_union ID {
-		$$ = new node();
-		printf("991 ");
-		
-		map<string, typenode*>::iterator i;
-		if ((i = auto_define_type.find($2.ntnode->name)) != auto_define_type.end())
-		{
-			$$->type = *auto_define_type[$2.ntnode->name];
-		}
-		else cout << "struct doesn't exist!\n";
-	}
-	;
-
-/* struct_or_union_specifier
 	: struct_or_union ID '{' declaration_list '}' ';' {  //struct a { int a = 0;};
 		$$ = new node();
 		printf("995 ");
@@ -1505,10 +1406,46 @@ struct_or_union_specifier
 		$$->children[3] = $4;
 		$$->children[4] = $5.ntnode;		
 		$$->children[5] = $6.ntnode;
-		
-		create_struct($2.ntnode->name);
+		int width_sum = 0;
+
+		map<string, typenode*>::iterator iter;
+		typenode* temp_ptr;
+		typenode* temp1;
+		typenode* temp2;
+		typenode* temp3=new typenode("?");
+		for(iter = varmap_temp->vartable.begin(); iter!=varmap_temp->vartable.end(); ++iter){
+				cout<<iter->first<<' '<<iter->second->name<<' ';
+				temp_ptr = new typenode(string(iter->first));
+				typenode* root = new typenode("X");
+				root->left = temp_ptr;
+				root->right = iter->second;
+				width_sum += iter->second->width;
+				struct_stack.push(root);
+		}
+		cout<<endl;
+		while(struct_stack.size()>=1){
+			cout<<struct_stack.size()<<endl;
+			if(struct_stack.size() !=1){
+				temp1 = struct_stack.top();struct_stack.pop();
+				temp2 = struct_stack.top();struct_stack.pop();
+				typenode* temp_ptr2 = new typenode("X");
+				temp_ptr2->left = temp1;
+				temp_ptr2->right = temp2;											
+				struct_stack.push(temp_ptr2);				
+			}
+			else{
+				temp3 = struct_stack.top();struct_stack.pop();
+				break;
+			}
+		}
+		typenode* temp = new typenode("record");
+		temp->left = temp3;
+		temp->width = width_sum;
+		auto_define_type[$2.ntnode->name] = temp;	
+		traverse(temp);
+		s.pop_back();
 	}
-	| struct_or_union ID '{' declaration_list '}' init_declarator_list ';' { // match!
+	| struct_or_union ID '{' declaration_list '}' init_declarator_list ';' { // struct a {int a = 0;} b[2];
 		$$ = new node();
 		printf("1006 ");
 		$$ -> length = 7;
@@ -1521,8 +1458,6 @@ struct_or_union_specifier
 		$$->children[4] = $5.ntnode;
 		$$->children[5] = $6;
 		$$->children[6] = $7.ntnode;
-
-		create_struct($2.ntnode->name);
 	}
 	| struct_or_union '{' declaration_list '}' ';' { // struct a {int a = 0;};
 		$$ = new node();
@@ -1559,13 +1494,15 @@ struct_or_union_specifier
 		$$->children[1] = $2.ntnode;	
 
 		map<string, typenode*>::iterator i;
+		cout << "ID: " << $2.ntnode->name << endl;
 		if ((i = auto_define_type.find($2.ntnode->name)) != auto_define_type.end())
 		{
-			$$->type = *auto_define_type[$2.ntnode->name];
+			cout << "struct was found\n";
+			cout << search_struct(i->second, $2.ntnode->name)->name;
 		}
 		else cout << "struct doesn't exist!\n";
 	}
-	; */
+	;
 
 struct_or_union
 	: STRUCT{
@@ -1830,15 +1767,9 @@ declarator
 		$$->name="declarator";
 		$$->children=new node* [1];
 		$$->children[0] = $1;
-		$$->type = $1->type;
 	}
 	;
-direct_pre_declarator
-	: direct_declarator '('{
-		fun_name = var_name;
-		cout<<"!!!!!!!!"<<endl;
-	}
-	;
+
 
 direct_declarator
 	: ID{
@@ -1848,10 +1779,9 @@ direct_declarator
 		$$->name="direct_declarator";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;
+
 		var_name = $1.ntnode->name;
 		s.back()->vartable[$1.ntnode->name] = rFlag();
-		offset += rFlag()->width;
-		$$->type = *rFlag();
 	}
 	| '(' declarator ')' {
 		$$ = new node();
@@ -1862,8 +1792,6 @@ direct_declarator
 		$$->children[0] = $1.ntnode;
 		$$->children[1] = $2;
 		$$->children[2] = $3.ntnode;
-		$$->type = *rFlag();
-		s.pop_back();  
 	}
 	| direct_declarator '[' constant_exp ']' {
 		$$ = new node();
@@ -1875,30 +1803,17 @@ direct_declarator
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->children[3] = $4.ntnode;
-
-		typenode* root = rFlag();
-		typenode* basetype = root;
-		typenode* parent = root;		
-		while(basetype->right != NULL) {
-			parent = basetype;						
-			basetype = basetype->right;
-		}
-		typenode* temp = new typenode("array");	
-		char num[25];
-		_itoa_s(int($3->dvalue), num, 10);
-		root->width = root->width *= $3->dvalue;
-		temp -> left = new typenode(string(num));
-		temp -> right = basetype;
-		if(root->right != NULL){
-			parent -> right = temp;
-		}
-		else 
-			root = temp;
-        wFlag(*root);
-		s.back()->vartable[var_name] = rFlag();
-		offset += rFlag()->width;
-		$$->type = *rFlag();
-		traverse(root);
+		//typenode* temp = new typenode("array");	
+		// char num[25];
+		// _itoa_s(int($3->dvalue), num, 10);
+		// temp->type.left = new typenode(string(num));
+		// if(rFlag()->right == NULL)
+		// 		temp->right = type;
+		// else 
+		// temp -> right = rFlag() -> right;
+		// rFlag() -> right = temp;
+        // wFlag(*rFlag());
+		// traverse(rFlag());
 	}
 	| direct_declarator '[' ']' {
 		$$ = new node();
@@ -1910,31 +1825,45 @@ direct_declarator
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3.ntnode;
 	}
-	| direct_pre_declarator parameter_type_list ')' {
+	| direct_declarator '(' parameter_type_list ')' {
 		$$ = new node();
 		printf("1293 ");
 		$$ -> length = 4;
 		$$->name="direct_declarator";
 		$$->children=new node* [4];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+		$$->children[3] = $4.ntnode;
 	}
-	| direct_pre_declarator identifier_list ')' {
+	| direct_declarator '(' identifier_list ')' {
 		$$ = new node();
 		printf("1303 ");
 		$$ -> length = 4;
 		$$->name="direct_declarator";
+		$$->children=new node* [4];
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode;
+		$$->children[2] = $3;
+		$$->children[3] = $4.ntnode;
 		map<string, typenode*>::iterator iter;
 		for(iter = s.back()->vartable.begin();iter!=s.back()->vartable.end();iter++){
 			s[s.size()-2]->vartable[iter->first] = iter->second;
 		}	
-		s.pop_back();  
 	}
-	| direct_pre_declarator ')' {
+	| direct_declarator '(' ')' {
 		$$ = new node();
 		printf("1313 ");
 		$$ -> length = 3;
 		$$->name="direct_declarator";
 		$$->children=new node* [3];
-		fun_name = var_name;
+		$$->children[0] = $1;
+		$$->children[1] = $2.ntnode; 
+		$$->children[2] = $3.ntnode;
+
+		typenode* temp = new typenode("fun");
+		temp->right = rFlag();	
+		s.back()->vartable[var_name] = temp;			
 	}
 	;
 
@@ -2094,7 +2023,6 @@ identifier_list
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1.ntnode;
 		s.back()->vartable[$1.ntnode->name] = rFlag();
-		offset += rFlag()->width;
 	}
 	| identifier_list ',' ID {
 		$$ = new node();
@@ -2106,7 +2034,6 @@ identifier_list
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3.ntnode;
 		s.back()->vartable[$3.ntnode->name] = rFlag();	
-		offset += rFlag()->width;
 	}
 	;
 
@@ -2168,7 +2095,6 @@ direct_abstract_declarator
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2;
 		$$ -> children[2] = $3.ntnode;
-		s.pop_back();  
 	}
 	| '[' ']' {
 		$$ = new node();
@@ -2218,7 +2144,6 @@ direct_abstract_declarator
 		$$ -> children = new node* [2];
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2.ntnode;
-		s.pop_back();  
 	}
 	| '(' parameter_type_list ')' {
 		$$ = new node();
@@ -2229,7 +2154,6 @@ direct_abstract_declarator
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2;
 		$$ -> children[2] = $3.ntnode;
-		s.pop_back();  
 	}
 	| direct_abstract_declarator '(' ')' {
 		$$ = new node();
@@ -2240,7 +2164,6 @@ direct_abstract_declarator
 		$$ -> children[0] = $1;
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3.ntnode;
-		s.pop_back();  
 	}
 	| direct_abstract_declarator '(' parameter_type_list ')' {
 		$$ = new node();
@@ -2252,7 +2175,6 @@ direct_abstract_declarator
 		$$ -> children[1] = $2.ntnode;
 		$$ -> children[2] = $3;
 		$$ -> children[3] = $4.ntnode;
-		s.pop_back();  
 	}
 	;
 
@@ -2265,7 +2187,7 @@ initializer
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
 
-		$$->type = $1->type;
+		//$$->type = $1->type;
 	}
 	| '{' initializer_list '}'  {
 		$$ = new node();
@@ -2351,9 +2273,6 @@ other
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
 	}
-	| {
-		printf("other");
-	}
 	;
 statement
 	: labeled_statement {
@@ -2363,8 +2282,6 @@ statement
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-
-		traverse_vartable(s.size() - 1);
 	}
 	| compound_statement {
 		$$ = new node();
@@ -2373,7 +2290,6 @@ statement
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-		traverse_vartable(s.size() - 1);
 	}
 	| exp_statement {
 		$$ = new node();
@@ -2382,7 +2298,6 @@ statement
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-		traverse_vartable(s.size() - 1);
 	}
 	| selection_statement {
 		$$ = new node();
@@ -2392,7 +2307,6 @@ statement
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
 		$$->type=$1->type;
-		traverse_vartable(s.size() - 1);
 	}
 	| iteration_statement {
 		$$ = new node();
@@ -2401,7 +2315,6 @@ statement
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-		traverse_vartable(s.size() - 1);
 	}
 	| jump_statement {
 		$$ = new node();
@@ -2410,7 +2323,6 @@ statement
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-		traverse_vartable(s.size() - 1);
 	}
 	;
 
@@ -2466,7 +2378,7 @@ compound_statement
 		$$ -> children = new node* [3];
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2;
-		$$ -> children[2] = $3.ntnode;
+		$$ -> children[2] = $3.ntnode;	
 	}
 	| '{' declaration_list '}' {
 		$$ = new node();
@@ -2499,8 +2411,6 @@ declaration_list
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-
-		traverse_vartable(s.size() - 1);
 	}
 	| declaration_list declaration {
 		$$ = new node();
@@ -2585,8 +2495,6 @@ matched_statement
 		$$ -> children[4] = $5;
 		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7;
-		s.pop_back();
-		traverse_vartable(s.size() - 1);		
 	}
 	| other {
 		$$ = new node();
@@ -2595,8 +2503,6 @@ matched_statement
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-		traverse_vartable(s.size() - 1);
-		// s.pop_back();
 		$$->type=$1->type;
 	}
 	;
@@ -2613,12 +2519,10 @@ open_statement
 		$$ -> children[3] = $4.ntnode;
 		$$ -> children[4] = $5;
 		$$->type=$5->type;
-		s.pop_back();
-		traverse_vartable(s.size() - 1);
 	}
 	| IF '(' exp ')' matched_statement ELSE open_statement {
 		$$ = new node();
-		printf("1817 ");
+		printf("1817@ ");
 		$$ -> name = "open_statement";
 		$$ -> length = 7;
 		$$ -> children = new node* [7];
@@ -2629,14 +2533,12 @@ open_statement
 		$$ -> children[4] = $5;
 		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7;
-		s.pop_back();
-		traverse_vartable(s.size() - 1);
 	}
 	;
 selection_statement
 	: stmt {
 		$$ = new node();
-		printf("1818 ");
+		printf("1816 ");
 		$$ -> name = "selection_statement";
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
@@ -2653,7 +2555,6 @@ selection_statement
 		$$ -> children[2] = $3;
 		$$ -> children[3] = $4.ntnode;
 		$$ -> children[4] = $5;
-		s.pop_back();  
 	}
 	;
 
@@ -2669,7 +2570,6 @@ iteration_statement
 		$$ -> children[2] = $3;
 		$$ -> children[3] = $4.ntnode;
 		$$ -> children[4] = $5;
-		s.pop_back();
 	}
 	| DO statement WHILE '(' exp ')' ';' {
 		$$ = new node();
@@ -2684,7 +2584,6 @@ iteration_statement
 		$$ -> children[4] = $5;
 		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7.ntnode;
-		s.pop_back();  
 	}
 	| FOR '(' exp_statement exp_statement ')' statement {
 		$$ = new node();
@@ -2763,7 +2662,7 @@ jump_statement
 		$$ -> children = new node* [2];
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2.ntnode;
-		rtn_stmt.push(&voidnode);		
+		//rtn_stmt.push(&voidnode);		
 	}
 	| RETURN exp ';'  {
 		$$ = new node();
@@ -2774,8 +2673,7 @@ jump_statement
 		$$ -> children[0] = $1.ntnode;
 		$$ -> children[1] = $2;
 		$$ -> children[2] = $3.ntnode;	
-		rtn_stmt.push(&($2->type));	
-		cout<<$2->name<<": "<<$2->type.name<<endl;		
+		//rtn_stmt.push(&(exp->type));				
 	}
 	;
 
@@ -2833,26 +2731,6 @@ function_definition
 		$$ -> children[1] = $2;
 		$$ -> children[2] = $3;
 		$$ -> children[3] = $4;
-		type3->right = &($1->type);
-		s.back()->vartable[fun_name] = type3;
-		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;		
-		if (rtn_stmt.size() == 0 && type3->right != NULL){
-			cout<<"type error in 1991!"<<endl;
-		}
-		while(rtn_stmt.size()>0){ 
-		typenode *a = rtn_stmt.top();
-		cout<<"stack top"<<a->name<<endl;
-		if(!check_type(a,&($1->type)))
-		{
-					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					
-		}
-		rtn_stmt.pop();
-		}	
-		cout<<"+++++++++++++++++++++"<<endl;
-		s.pop_back();
 	}
 	| declaration_specifiers declarator compound_statement {
 		$$ = new node();
@@ -2865,27 +2743,18 @@ function_definition
 		$$ -> children[2] = $3;
 
 		type3->right = &($1->type);
-		cout<<"fun_name:"<<fun_name<<endl;
-		s[s.size()-2]->vartable[fun_name] = type3;
+		s.back()->vartable[var_name] = type3;
 		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;	
-		if (rtn_stmt.size() == 0 && type3->right != NULL){
-			cout<<"type error in 1991!"<<endl;
-		}	
+		cout<<"???NNNN"<<endl;
 		while(rtn_stmt.size()>0){
 			typenode *a = rtn_stmt.top();
-			cout<<"stack top"<<a->name<<endl;
-			if(!check_type(a,&($1->type)))
+			if(check_type(a,&($1->type)!=true)
 			{
 					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					 							
 			}
 			rtn_stmt.pop();
-		}	
-		cout<<"+++++++++++++++++++++"<<endl;
-		traverse_vartable(s.size()-1);	
-		s.pop_back();
+		}
+		
 	}
 	| declarator declaration_list compound_statement {
 		$$ = new node();
@@ -2896,26 +2765,6 @@ function_definition
 		$$ -> children[0] = $1;
 		$$ -> children[1] = $2;
 		$$ -> children[2] = $3;
-		type3->right = &($1->type);
-		s.back()->vartable[fun_name] = type3;
-		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;
-		if (rtn_stmt.size() == 0 && type3->right != NULL){
-			cout<<"type error in 1991!"<<endl;
-		}		
-		while(rtn_stmt.size()>0){
-		typenode *a = rtn_stmt.top();
-		cout<<"stack top"<<a->name<<endl;
-		if(!check_type(a,&($1->type)))
-		{
-					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					 							
-		}
-		rtn_stmt.pop();
-		}	
-		cout<<"+++++++++++++++++++++"<<endl;
-		s.pop_back();
 	}
 	| declarator compound_statement {
 		$$ = new node();
@@ -2925,26 +2774,6 @@ function_definition
 		$$ -> children = new node* [2];
 		$$ -> children[0] = $1;
 		$$ -> children[1] = $2;
-		type3->right = &($1->type);
-		s.back()->vartable[fun_name] = type3;
-		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;	
-		if (rtn_stmt.size() == 0 && type3->right != NULL){
-			cout<<"type error in 1991!"<<endl;
-		}	
-		while(rtn_stmt.size()>0){
-		typenode *a = rtn_stmt.top();
-		cout<<"stack top"<<a->name<<endl;
-		if(!check_type(a,&($1->type)))
-		{
-					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					 							
-		}
-		rtn_stmt.pop();
-		}	
-		cout<<"+++++++++++++++++++++"<<endl;
-		s.pop_back();
 	}
 	;
 
