@@ -6,9 +6,15 @@
 #include <string>
 #include <iostream>
 #include <stack>
+#include <algorithm>
 using namespace std;
 int offset = 0;
 int struct_width;
+int nextinstr = -1;
+int switch_addr;
+int default_label;
+map<int, int> switch_map;
+vector<int> nextlist;
 string struct_name;
 struct typenode
 {
@@ -21,9 +27,10 @@ struct typenode
     {
         name = n;
         left = NULL;
-        right = NULL;  
+        right = NULL;
         width = w;
         addr = offset;
+        // cout << endl << "------------------offset:" << offset <<"-----------------"<<endl;
     }
     void copy(const typenode &type)
     {
@@ -37,7 +44,7 @@ struct typenode
 void traverse(typenode *root)
 {
     if (root != NULL)
-        cout << root->name << endl;
+        cout << root->name << " "<<root->addr <<endl;
     if (root->left != NULL)
     {
         cout << "left ";
@@ -72,7 +79,16 @@ map<string, typenode *> auto_define_type;
 stack<typenode *> struct_stack;
 
 vector<string> v_argument_list;
-vector<int, vector<string>> code;
+map<int, vector<string>> code;
+
+void show_code() {
+    cout<<"middle code start!"<<endl;
+    for (int i = 0; i < code.size(); i++) {
+        cout<<i<<": ("<<code[i][0]+", "+code[i][1]+", "+code[i][2]+", "+ code[i][3] +")"<<endl;      
+    } 
+    cout<<"middle code end!"<<endl;
+}
+
 struct varmap
 {
     int name;
@@ -97,17 +113,18 @@ struct node
     typenode type;
     varmap *args;
     int instr;
-    vector<int> nextlist;
-    vector<int> falselist;
-    vector<int> truelist;
+    vector<int>* nextlist;
+    vector<int>* falselist;
+    vector<int>* truelist;
     node(string n = "")
     {
         length = 0;
         name = n;
+        nextlist = new vector<int>();
+        falselist = new vector<int>();
+        truelist = new vector<int>();
     }
 };
-
-
 
 vector<int> makelist(int i = -1){
     vector<int> list;
@@ -119,34 +136,57 @@ vector<int> makelist(int i = -1){
 
 int newlabel() {
     static int label = -1;
-    return ++label;
+    nextinstr = ++label;
+    return label;
 }
 
-// void backpatch(vector<int> &p, index) {
-//     char num[25];
-// 	   _itoa_s(int(index), num, 10);
-//     for (int i = 0; i < p.size(); i++) {
-//         code[i][3] = string(num); 
-//     }
+void backpatch(vector<int> *p, int index) {
+    cout<<"PPPP"<<index<<endl;
+    char num[25];
+    _itoa_s(index, num, 10);
+    for (int i = 0; i < p->size(); i++) {
+        cout<<"qqqqq"<<(*p)[i]<<endl;
+        code[(*p)[i]][3] = string(num); 
+    }
+}
+
+// void copy(vector<int> *v1, vector<int> *v2) {
+//         for (int i=0; i<v2->size(); i++) {
+//             v1->push_back((*v2)[i]);
+//         }
 // }
 
-/* void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
-    code[label][0] = op;
-    code[label][1] = arg1;
-    code[label][2] = arg2;
-    code[label][3] = res;        
+void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
+    char num1[25];
+    _itoa_s(arg1, num1, 10);
+    char num2[25];
+    _itoa_s(arg2, num2, 10);
+    char num3[25];
+    _itoa_s(res, num3, 10);
+    code[label] = vector<string>();
+    code[label].push_back(op);
+    code[label].push_back(string(num1));
+    code[label].push_back(string(num2));
+    code[label].push_back(string(num3));
+    show_code();
 }
 
-vector<int> merge(vector<int> p1, vector<int> p2) {
-    vector<int> res;
-    for(int i = 0; i < p1.size(); i++) {
-        res.push_back(p1[i]);
+vector<int>* merge(vector<int>* p1, vector<int>* p2, vector<int>* p3=new vector<int>()) {
+    vector<int>* res = new vector<int>();
+    for(int i = 0; i < p1->size(); i++) {
+        res->push_back((*p1)[i]);
     }
-    for(int i = 0; i < p2.size(); i++) {
-        res.push_back(p2[i]);
+    for(int i = 0; i < p2->size(); i++) {
+        res->push_back((*p2)[i]);
+    }
+    if(p3->size() > 0){
+        for (int i = 0; i < p3->size(); i++)
+        {
+            res->push_back((*p3)[i]);
+        }
     }
     return res;
-} */
+} 
 
 bool isComputable(string s)
 {
@@ -182,28 +222,29 @@ typenode* create_struct(string name){
         cout << iter->second->width << '%';
         width_sum += iter->second->width;
         struct_stack.push(root);
-		}
-		cout<<endl;
-		while(struct_stack.size()>=1){
-			cout<<struct_stack.size()<<endl;
-			if(struct_stack.size() !=1){
-				temp1 = struct_stack.top();struct_stack.pop();
-				temp2 = struct_stack.top();struct_stack.pop();
-				typenode* temp_ptr2 = new typenode("X");
-				temp_ptr2->left = temp1;
-				temp_ptr2->right = temp2;											
-				struct_stack.push(temp_ptr2);				
-			}
-			else{
-				temp3 = struct_stack.top();struct_stack.pop();
-				break;
-			}
-		}
-		typenode* temp = new typenode("record");
-		temp->left = temp3;
+        }
+        cout<<endl;
+        while(struct_stack.size()>=1){
+            cout<<struct_stack.size()<<endl;
+            if(struct_stack.size() !=1){
+                temp1 = struct_stack.top();struct_stack.pop();
+                temp2 = struct_stack.top();struct_stack.pop();
+                typenode* temp_ptr2 = new typenode("X");
+                temp_ptr2->left = temp1;
+                temp_ptr2->right = temp2;											
+                struct_stack.push(temp_ptr2);				
+            }
+            else{
+                temp3 = struct_stack.top();struct_stack.pop();
+                break;
+            }
+        }
+        typenode* temp = new typenode("record");
+        temp->left = temp3;
         struct_width = temp->width = width_sum;
+        offset -= struct_width;
         traverse(temp);
-		return auto_define_type[name] = temp;
+        return auto_define_type[name] = temp;
 }
 
 typenode *search(string myname, int i)
@@ -234,16 +275,17 @@ typenode *search(string myname, int i)
 
 void traverse_vartable(int i, string tab = "--")
 {
-        cout<<endl<<i<<tab<<endl;
+    
+        cout<<endl<<i<<tab;
         map<string, typenode*>::iterator iter;
-		for(iter = s[i]->vartable.begin(); iter!=s[i]->vartable.end(); ++iter)
+        for(iter = s[i]->vartable.begin(); iter!=s[i]->vartable.end(); ++iter)
         {
-            cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width;
+            cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width<< '; '<<endl;
         }
         if(i>0){
             i--; 
             traverse_vartable(i, tab + "--");           
-       }    
+    } 
 }
 void wFlag(typenode &node)
 {
@@ -274,7 +316,6 @@ typenode *rFlag()
         return tmp;
     }
 }
-
 
 // #define ERROR 0
 // #define VOID 13

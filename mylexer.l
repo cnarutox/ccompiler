@@ -10,17 +10,29 @@ Date:2018��10��28��
 #include "myparser.h"
 #include "stdlib.h"
 int Line = 1;
-
+extern int offset;
 extern struct typenode
 {
+    int addr;
+    int width;
     string name;
     typenode *left;
     typenode *right;
-    typenode(string n = "")
+    typenode(string n = "", int w = 0)
     {
         name = n;
         left = NULL;
         right = NULL;
+        width = w;
+        addr = offset;
+        // cout << endl << "------------------offset:" << offset <<"-----------------"<<endl;
+    }
+    void copy(const typenode &type)
+    {
+        name = type.name;
+        width = type.width;
+        left = type.left;
+        right = type.right;
     }
 };
 extern struct varmap
@@ -44,12 +56,18 @@ extern struct node
     int length;
     node **children;
     typenode type;
-    string code;
     varmap *args;
+    int instr;
+    vector<int>* nextlist;
+    vector<int>* falselist;
+    vector<int>* truelist;
     node(string n = "")
     {
         length = 0;
         name = n;
+        nextlist = new vector<int>();
+        falselist = new vector<int>();
+        truelist = new vector<int>();
     }
 };
 
@@ -145,11 +163,13 @@ for			{Lex(yylval, "FOR");            push_into_s(yylval.ntnode->args);       re
 ">="        {Lex(yylval, "GE_OP");			return GE_OP; }
 "&="        {Lex(yylval, "AND_ASSIGN");     return AND_ASSIGN; }
 "|="        {Lex(yylval, "OR_ASSIGN");      return OR_ASSIGN; }
+"^="        {Lex(yylval, "XOR_ASSIGN");     return XOR_ASSIGN; }
 ">>="       {Lex(yylval, "RIGHT_ASSIGN");   return RIGHT_ASSIGN; }
 "<<="       {Lex(yylval, "LEFT_ASSIGN");	return LEFT_ASSIGN; }
 "!="        {Lex(yylval, "NE_OP");			return NE_OP; }
 "==" 		{Lex(yylval, "EQ_OP");			return EQ_OP; }
 "+"			{Lex(yylval, "+");			    return '+'; }
+"%"			{Lex(yylval, "%");			    return '%'; }
 "-="		{Lex(yylval, "SUB_ASSIGN");	    return SUB_ASSIGN;}
 "->"        {Lex(yylval, "PTR_OP"); 		return PTR_OP;}
 "++"		{Lex(yylval, "INC_OP"); 		return INC_OP;}
@@ -167,7 +187,7 @@ for			{Lex(yylval, "FOR");            push_into_s(yylval.ntnode->args);       re
 "^"			{Lex(yylval, "^");			    return '^'; }
 "&&"		{Lex(yylval, "AND_OP");	        return AND_OP; }
 "||"		{Lex(yylval, "OR_OP");			return OR_OP; }
-// !			{yylval, yylval.ntnode = new node(BOOLOP);	        printf("BOOLOP");	return BOOLOP; }
+"!"     	{Lex(yylval, "!");			    return '!';}
 if			{Lex(yylval, "IF");             return IF; }
 break       {Lex(yylval, "BREAK");			return BREAK;}
 case        {Lex(yylval, "CASE");			return CASE;}
@@ -192,6 +212,8 @@ volatile    {Lex(yylval, "VOLATILE"); 		return VOLATILE;}
 while      	{Lex(yylval, "WHILE");          push_into_s(yylval.ntnode->args);  return WHILE;}
 enum		{Lex(yylval, "ENUM"); 			return ENUM;}
 ellipsis	{Lex(yylval, "ELLIPSIS");	    return ELLIPSIS;}
+true	{Lex(yylval, "TRUE");	    return TRUE;}
+false	{Lex(yylval, "FALSE");	    return FALSE;}
 {id}		{Lex(yylval, yytext);	        return ID;}
 .			{return -1;}
 %%  

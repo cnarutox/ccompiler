@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 74 of your 30 day trial period.
+* You are on day 77 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.h
 * C++ header file generated from myparser.y.
 * 
-* Date: 12/23/18
-* Time: 06:37:47
+* Date: 12/26/18
+* Time: 07:08:52
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -31,11 +31,11 @@
 
 #ifndef YYSTYPE
 union tagYYSTYPE {
-#line 96 ".\\myparser.y"
+#line 92 ".\\myparser.y"
 
-	struct node* ntnode;
-	int value;
-
+		struct node* ntnode;
+		int value;
+	
 #line 40 "myparser.h"
 };
 
@@ -68,38 +68,40 @@ union tagYYSTYPE {
 #define XOR_ASSIGN 280
 #define OR_ASSIGN 281
 #define TYPE_NAME 282
-#define TYPEDEF 283
-#define EXTERN 284
-#define STATIC 285
-#define AUTO 286
-#define REGISTER 287
-#define CHAR 288
-#define SHORT 289
-#define INT 290
-#define LONG 291
-#define SIGNED 292
-#define UNSIGNED 293
-#define FLOAT 294
-#define DOUBLE 295
-#define CONST 296
-#define VOLATILE 297
-#define VOID 298
-#define STRUCT 299
-#define UNION 300
-#define ENUM 301
-#define ELLIPSIS 302
-#define CASE 303
-#define DEFAULT 304
-#define IF 305
-#define ELSE 306
-#define SWITCH 307
-#define WHILE 308
-#define DO 309
-#define FOR 310
-#define GOTO 311
-#define CONTINUE 312
-#define BREAK 313
-#define RETURN 314
+#define TRUE 283
+#define FALSE 284
+#define TYPEDEF 285
+#define EXTERN 286
+#define STATIC 287
+#define AUTO 288
+#define REGISTER 289
+#define CHAR 290
+#define SHORT 291
+#define INT 292
+#define LONG 293
+#define SIGNED 294
+#define UNSIGNED 295
+#define FLOAT 296
+#define DOUBLE 297
+#define CONST 298
+#define VOLATILE 299
+#define VOID 300
+#define STRUCT 301
+#define UNION 302
+#define ENUM 303
+#define ELLIPSIS 304
+#define CASE 305
+#define DEFAULT 306
+#define IF 307
+#define ELSE 308
+#define SWITCH 309
+#define WHILE 310
+#define DO 311
+#define FOR 312
+#define GOTO 313
+#define CONTINUE 314
+#define BREAK 315
+#define RETURN 316
 /////////////////////////////////////////////////////////////////////////////
 // myparser
 
@@ -132,22 +134,22 @@ protected:
 	virtual void yycopyattribute(void YYFAR* dest, const void YYFAR* src, int count);
 
 public:
-#line 146 ".\\myparser.y"
+#line 143 ".\\myparser.y"
 
-	// place any extra class members here
-
-#line 140 "myparser.h"
+		// place any extra class members here
+	
+#line 142 "myparser.h"
 };
 
 #ifndef YYPARSERNAME
 #define YYPARSERNAME myparser
 #endif
 
-#line 161 ".\\myparser.y"
+#line 158 ".\\myparser.y"
 
-#ifndef YYSTYPE
-#define YYSTYPE int
-#endif
-
-#line 153 "myparser.h"
+	#ifndef YYSTYPE
+	#define YYSTYPE int
+	#endif
+	
+#line 155 "myparser.h"
 #endif
