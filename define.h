@@ -72,7 +72,7 @@ map<string, typenode *> auto_define_type;
 stack<typenode *> struct_stack;
 
 vector<string> v_argument_list;
-
+vector<int, vector<string>> code;
 struct varmap
 {
     int name;
@@ -95,14 +95,58 @@ struct node
     int length;
     node **children;
     typenode type;
-    string code;
     varmap *args;
+    int instr;
+    vector<int> nextlist;
+    vector<int> falselist;
+    vector<int> truelist;
     node(string n = "")
     {
         length = 0;
         name = n;
     }
 };
+
+
+
+vector<int> makelist(int i = -1){
+    vector<int> list;
+    if (i != -1) {
+        list.push_back(i);
+    }
+    return list;
+}
+
+int newlabel() {
+    static int label = -1;
+    return ++label;
+}
+
+// void backpatch(vector<int> &p, index) {
+//     char num[25];
+// 	   _itoa_s(int(index), num, 10);
+//     for (int i = 0; i < p.size(); i++) {
+//         code[i][3] = string(num); 
+//     }
+// }
+
+/* void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
+    code[label][0] = op;
+    code[label][1] = arg1;
+    code[label][2] = arg2;
+    code[label][3] = res;        
+}
+
+vector<int> merge(vector<int> p1, vector<int> p2) {
+    vector<int> res;
+    for(int i = 0; i < p1.size(); i++) {
+        res.push_back(p1[i]);
+    }
+    for(int i = 0; i < p2.size(); i++) {
+        res.push_back(p2[i]);
+    }
+    return res;
+} */
 
 bool isComputable(string s)
 {

@@ -143,6 +143,8 @@ for			{Lex(yylval, "FOR");            push_into_s(yylval.ntnode->args);       re
 ">"			{Lex(yylval, ">");			    return '>'; }
 "<="        {Lex(yylval, "LE_OP");			return LE_OP; }
 ">="        {Lex(yylval, "GE_OP");			return GE_OP; }
+"&="        {Lex(yylval, "AND_ASSIGN");     return AND_ASSIGN; }
+"|="        {Lex(yylval, "OR_ASSIGN");      return OR_ASSIGN; }
 ">>="       {Lex(yylval, "RIGHT_ASSIGN");   return RIGHT_ASSIGN; }
 "<<="       {Lex(yylval, "LEFT_ASSIGN");	return LEFT_ASSIGN; }
 "!="        {Lex(yylval, "NE_OP");			return NE_OP; }

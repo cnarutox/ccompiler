@@ -1002,6 +1002,7 @@ assignment_exp
 		else{
 			cout<<"Two sides don't equal"<<endl;
 		}
+		gen(newlabel(), $1->name, );
 	}
 	;
 
@@ -1010,7 +1011,7 @@ assignment_operator
 		$$ = new node();
 		printf("654 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name="=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1018,7 +1019,7 @@ assignment_operator
 		$$ = new node();
 		printf("661 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name="*=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1026,7 +1027,7 @@ assignment_operator
 		$$ = new node();
 		printf("668 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name="/=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1034,7 +1035,7 @@ assignment_operator
 		$$ = new node();
 		printf("675 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name="%=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1042,7 +1043,7 @@ assignment_operator
 		$$ = new node();
 		printf("682 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name="+=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1050,7 +1051,7 @@ assignment_operator
 		$$ = new node();
 		printf("689 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name="-=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1058,7 +1059,7 @@ assignment_operator
 		$$ = new node();
 		printf("696 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name="<<=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1066,7 +1067,7 @@ assignment_operator
 		$$ = new node();
 		printf("703 ");
 		$$ -> length = 1;
-		$$->name="assignment_operator";
+		$$->name=">>=";
 		$$->children=new node* [1];
 		$$->children[0] = $1.ntnode;		
 	}
@@ -1116,6 +1117,8 @@ exp
 		$$->children[1] = $2.ntnode;
 		$$->children[2] = $3;
 		$$->type=$3->type;
+
+		gen(newlabel(), ',', $1->instr, $3->instr, $3->type.addr);
 	}
 	;
 
@@ -2586,7 +2589,8 @@ matched_statement
 		$$ -> children[5] = $6.ntnode;
 		$$ -> children[6] = $7;
 		s.pop_back();
-		traverse_vartable(s.size() - 1);		
+		traverse_vartable(s.size() - 1);	
+						
 	}
 	| other {
 		$$ = new node();
@@ -2775,7 +2779,6 @@ jump_statement
 		$$ -> children[1] = $2;
 		$$ -> children[2] = $3.ntnode;	
 		rtn_stmt.push(&($2->type));	
-		cout<<$2->name<<": "<<$2->type.name<<endl;		
 	}
 	;
 
@@ -2787,8 +2790,6 @@ translation_unit
 		$$ -> length = 1;
 		$$ -> children = new node* [1];
 		$$ -> children[0] = $1;
-		cout<<endl;
-		// traverse($$);
 	}
 	| translation_unit external_declaration {
 		$$ = new node();
@@ -2798,8 +2799,6 @@ translation_unit
 		$$ -> children = new node* [2];
 		$$ -> children[0] = $1;
 		$$ -> children[1] = $2;
-		cout<<endl;
-		// traverse($$);
 	}
 	;
 
@@ -2835,9 +2834,6 @@ function_definition
 		$$ -> children[3] = $4;
 		type3->right = &($1->type);
 		s.back()->vartable[fun_name] = type3;
-		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;		
 		if (rtn_stmt.size() == 0 && type3->right != NULL){
 			cout<<"type error in 1991!"<<endl;
 		}
@@ -2847,11 +2843,9 @@ function_definition
 		if(!check_type(a,&($1->type)))
 		{
 					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					
 		}
 		rtn_stmt.pop();
 		}	
-		cout<<"+++++++++++++++++++++"<<endl;
 		s.pop_back();
 	}
 	| declaration_specifiers declarator compound_statement {
@@ -2867,23 +2861,17 @@ function_definition
 		type3->right = &($1->type);
 		cout<<"fun_name:"<<fun_name<<endl;
 		s[s.size()-2]->vartable[fun_name] = type3;
-		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;	
 		if (rtn_stmt.size() == 0 && type3->right != NULL){
 			cout<<"type error in 1991!"<<endl;
 		}	
 		while(rtn_stmt.size()>0){
 			typenode *a = rtn_stmt.top();
-			cout<<"stack top"<<a->name<<endl;
 			if(!check_type(a,&($1->type)))
 			{
 					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					 							
 			}
 			rtn_stmt.pop();
 		}	
-		cout<<"+++++++++++++++++++++"<<endl;
 		traverse_vartable(s.size()-1);	
 		s.pop_back();
 	}
@@ -2898,23 +2886,17 @@ function_definition
 		$$ -> children[2] = $3;
 		type3->right = &($1->type);
 		s.back()->vartable[fun_name] = type3;
-		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;
 		if (rtn_stmt.size() == 0 && type3->right != NULL){
 			cout<<"type error in 1991!"<<endl;
 		}		
 		while(rtn_stmt.size()>0){
 		typenode *a = rtn_stmt.top();
-		cout<<"stack top"<<a->name<<endl;
 		if(!check_type(a,&($1->type)))
 		{
 					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					 							
 		}
 		rtn_stmt.pop();
 		}	
-		cout<<"+++++++++++++++++++++"<<endl;
 		s.pop_back();
 	}
 	| declarator compound_statement {
@@ -2927,23 +2909,17 @@ function_definition
 		$$ -> children[1] = $2;
 		type3->right = &($1->type);
 		s.back()->vartable[fun_name] = type3;
-		traverse(type3);
-		cout<<"_______________________"<<endl;
-		cout<<"stack size"<<rtn_stmt.size()<<endl;	
 		if (rtn_stmt.size() == 0 && type3->right != NULL){
 			cout<<"type error in 1991!"<<endl;
 		}	
 		while(rtn_stmt.size()>0){
 		typenode *a = rtn_stmt.top();
-		cout<<"stack top"<<a->name<<endl;
 		if(!check_type(a,&($1->type)))
 		{
 					cout<<"type error in 1991!"<<endl;
-					cout<<"left"<<$1->type.name<<"right"<<a->name<<endl;					 							
 		}
 		rtn_stmt.pop();
 		}	
-		cout<<"+++++++++++++++++++++"<<endl;
 		s.pop_back();
 	}
 	;
