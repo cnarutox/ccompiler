@@ -7,6 +7,7 @@
 #include <iostream>
 #include <stack>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 int offset = 0;
 int struct_width;
@@ -16,6 +17,7 @@ int default_label;
 map<int, int> switch_map;
 vector<int> nextlist;
 string struct_name;
+fstream file("code.txt");
 struct typenode
 {
     int addr;
@@ -43,18 +45,18 @@ struct typenode
 
 void traverse(typenode *root)
 {
-    if (root != NULL)
-        cout << root->name << " "<<root->addr <<endl;
-    if (root->left != NULL)
-    {
-        cout << "left ";
-        traverse(root->left);
-    }
-    if (root->right != NULL)
-    {
-        cout << "right ";
-        traverse(root->right);
-    }
+    // if (root != NULL)
+    //     cout << root->name << " "<<root->addr <<endl;
+    // if (root->left != NULL)
+    // {
+    //     cout << "left ";
+    //     traverse(root->left);
+    // }
+    // if (root->right != NULL)
+    // {
+    //     cout << "right ";
+    //     traverse(root->right);
+    // }
 }
 stack<typenode*> rtn_stmt;
 typenode *type;
@@ -82,11 +84,9 @@ vector<string> v_argument_list;
 map<int, vector<string>> code;
 
 void show_code() {
-    cout<<"middle code start!"<<endl;
     for (int i = 0; i < code.size(); i++) {
-        cout<<i<<": ("<<code[i][0]+", "+code[i][1]+", "+code[i][2]+", "+ code[i][3] +")"<<endl;      
+		file <<i<<": ("<<code[i][0]+", "+code[i][1]+", "+code[i][2]+", "+ code[i][3] +")"<<endl;
     } 
-    cout<<"middle code end!"<<endl;
 }
 
 struct varmap
@@ -103,6 +103,7 @@ struct varmap
 
 varmap *varmap_temp;
 vector<varmap *> s; //fuhao-table
+//
 struct node
 {
     int id;
@@ -141,20 +142,12 @@ int newlabel() {
 }
 
 void backpatch(vector<int> *p, int index) {
-    cout<<"PPPP"<<index<<endl;
     char num[25];
     _itoa_s(index, num, 10);
     for (int i = 0; i < p->size(); i++) {
-        cout<<"qqqqq"<<(*p)[i]<<endl;
         code[(*p)[i]][3] = string(num); 
     }
 }
-
-// void copy(vector<int> *v1, vector<int> *v2) {
-//         for (int i=0; i<v2->size(); i++) {
-//             v1->push_back((*v2)[i]);
-//         }
-// }
 
 void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
     char num1[25];
@@ -168,7 +161,6 @@ void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
     code[label].push_back(string(num1));
     code[label].push_back(string(num2));
     code[label].push_back(string(num3));
-    show_code();
 }
 
 vector<int>* merge(vector<int>* p1, vector<int>* p2, vector<int>* p3=new vector<int>()) {
@@ -207,6 +199,7 @@ bool isInteger(string s)
 
 typenode* create_struct(string name){
     int width_sum = 0;
+
     map<string, typenode*>::iterator iter;
     typenode *temp_ptr;
     typenode *temp1;
@@ -214,18 +207,19 @@ typenode* create_struct(string name){
     typenode *temp3 = new typenode("?");
     for (iter = varmap_temp->vartable.begin(); iter != varmap_temp->vartable.end(); ++iter)
     {
-        cout << iter->first << ' ' << iter->second->name << ' ';
+        //cout << iter->first << ' ' << iter->second->name << ' ';
         temp_ptr = new typenode(string(iter->first));
         typenode *root = new typenode("X");
         root->left = temp_ptr;
         root->right = iter->second;
-        cout << iter->second->width << '%';
+        root->left->addr = width_sum;
+        //cout << iter->second->width << '%';
         width_sum += iter->second->width;
         struct_stack.push(root);
         }
-        cout<<endl;
+       //cout<<endl;
         while(struct_stack.size()>=1){
-            cout<<struct_stack.size()<<endl;
+            //cout<<struct_stack.size()<<endl;
             if(struct_stack.size() !=1){
                 temp1 = struct_stack.top();struct_stack.pop();
                 temp2 = struct_stack.top();struct_stack.pop();
@@ -252,7 +246,7 @@ typenode *search(string myname, int i)
     if (s[i]->vartable.count(myname) > 0)
     {
         // cout<<"s[i]->vartable[myname]"<<s[i]->vartable[myname]->name<<endl;
-        cout<<myname<<" yes in "<<i<<endl;
+        //cout<<myname<<" yes in "<<i<<endl;
         traverse(s[i]->vartable[myname]);
             //traverse_vartable(i);
             //traverse(s[i]->vartable[myname]);
@@ -276,16 +270,16 @@ typenode *search(string myname, int i)
 void traverse_vartable(int i, string tab = "--")
 {
     
-        cout<<endl<<i<<tab;
-        map<string, typenode*>::iterator iter;
-        for(iter = s[i]->vartable.begin(); iter!=s[i]->vartable.end(); ++iter)
-        {
-            cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width<< '; '<<endl;
-        }
-        if(i>0){
-            i--; 
-            traverse_vartable(i, tab + "--");           
-    } 
+    //     cout<<endl<<i<<tab;
+    //     map<string, typenode*>::iterator iter;
+    //     for(iter = s[i]->vartable.begin(); iter!=s[i]->vartable.end(); ++iter)
+    //     {
+    //         cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width<< '; '<<endl;
+    //     }
+    //     if(i>0){
+    //         i--; 
+    //         traverse_vartable(i, tab + "--");           
+    // } 
 }
 void wFlag(typenode &node)
 {
@@ -329,7 +323,7 @@ typenode *rFlag()
 // #define SEMICOL 9
 // #define FOR 10
 // #define ASSIGN 11
-// #define NUMBER 12
+// #define NUMB 12
 // #define COMPARISON 13
 // #define ADD 14
 // #define MINUS 15

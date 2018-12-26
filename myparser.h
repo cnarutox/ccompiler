@@ -19,7 +19,7 @@
 * C++ header file generated from myparser.y.
 * 
 * Date: 12/26/18
-* Time: 07:08:52
+* Time: 13:49:38
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -31,7 +31,7 @@
 
 #ifndef YYSTYPE
 union tagYYSTYPE {
-#line 92 ".\\myparser.y"
+#line 95 ".\\myparser.y"
 
 		struct node* ntnode;
 		int value;
@@ -134,7 +134,7 @@ protected:
 	virtual void yycopyattribute(void YYFAR* dest, const void YYFAR* src, int count);
 
 public:
-#line 143 ".\\myparser.y"
+#line 146 ".\\myparser.y"
 
 		// place any extra class members here
 	
@@ -145,7 +145,7 @@ public:
 #define YYPARSERNAME myparser
 #endif
 
-#line 158 ".\\myparser.y"
+#line 161 ".\\myparser.y"
 
 	#ifndef YYSTYPE
 	#define YYSTYPE int
