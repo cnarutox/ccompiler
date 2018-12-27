@@ -58,6 +58,27 @@ void traverse(typenode *root)
     //     traverse(root->right);
     // }
 }
+void traverse_list(typenode *root, vector<string> &v)
+{
+    if (root != NULL)
+    {
+       // cout<<"i am null!!"<<endl;
+        //cout << root->name << " " << endl;
+        if (root->right==NULL && root->left==NULL){
+            v.push_back(root->name);
+        }
+    }    
+    if (root->left != NULL)
+    {
+        //cout << "left ";
+        traverse_list(root->left, v);
+    }
+    if (root->right != NULL)
+    {
+        //cout << "right ";
+        traverse_list(root->right, v);
+    }
+}
 stack<typenode*> rtn_stmt;
 typenode *type;
 typenode *type2;
@@ -85,7 +106,7 @@ map<int, vector<string>> code;
 
 void show_code() {
     for (int i = 0; i < code.size(); i++) {
-		file <<i<<": ("<<code[i][0]+", "+code[i][1]+", "+code[i][2]+", "+ code[i][3] +")"<<endl;
+		cout <<i<<": ("<<code[i][0]+", "+code[i][1]+", "+code[i][2]+", "+ code[i][3] +")"<<endl;
     } 
 }
 
@@ -237,8 +258,23 @@ typenode* create_struct(string name){
         temp->left = temp3;
         struct_width = temp->width = width_sum;
         offset -= struct_width;
-        traverse(temp);
+        //traverse(temp);
         return auto_define_type[name] = temp;
+}
+
+void traverse_vartable(int i, string tab = "--")
+{
+    
+        cout<<endl<<i<<tab;
+        map<string, typenode*>::iterator iter;
+        for(iter = s[i]->vartable.begin(); iter!=s[i]->vartable.end(); ++iter)
+        {
+            cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width<< '; '<<endl;
+        }
+        if(i>0){
+            i--; 
+            traverse_vartable(i, tab + "--");           
+    } 
 }
 
 typenode *search(string myname, int i)
@@ -247,9 +283,9 @@ typenode *search(string myname, int i)
     {
         // cout<<"s[i]->vartable[myname]"<<s[i]->vartable[myname]->name<<endl;
         //cout<<myname<<" yes in "<<i<<endl;
-        traverse(s[i]->vartable[myname]);
-            //traverse_vartable(i);
-            //traverse(s[i]->vartable[myname]);
+        //traverse(s[i]->vartable[myname]);
+        traverse_vartable(i);
+        //traverse(s[i]->vartable[myname]);
         return s[i]->vartable[myname];
     }
     else
@@ -260,27 +296,14 @@ typenode *search(string myname, int i)
             i--;
             return search(myname, i);
         }
-        else{
-            cout << "Cannot find " << myname<<"!"<<endl;
+        else
+        {
+            cout << "Cannot find " << myname << "!" << endl;
             return NULL;
         }
     }
 }
 
-void traverse_vartable(int i, string tab = "--")
-{
-    
-    //     cout<<endl<<i<<tab;
-    //     map<string, typenode*>::iterator iter;
-    //     for(iter = s[i]->vartable.begin(); iter!=s[i]->vartable.end(); ++iter)
-    //     {
-    //         cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width<< '; '<<endl;
-    //     }
-    //     if(i>0){
-    //         i--; 
-    //         traverse_vartable(i, tab + "--");           
-    // } 
-}
 void wFlag(typenode &node)
 {
     if (flag)

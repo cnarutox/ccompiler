@@ -294,41 +294,45 @@
 		}
 		| postfix_pre_exp argument_exp_list ')'{
 			$$ = new node();
-			printf("168 ");
+			//printf("168 ");
 			$$ -> length = 4;
 			$$->name="postfix_exp";
 			s.pop_back();  
 			vector<string> v_argument_list_temp; //??no value
 			typenode* type_exp = (search(fun_name, s.size()-1));
-			traverse(type_exp);//?
-			cout<<"~~~~~";
-			cout<<v_argument_list.size();
-			for(int x=0;x<v_argument_list.size();x++){
-				cout<<v_argument_list[x]<<" ";
-			}
+			traverse_list(type_exp->left, v_argument_list_temp);//?
+			//for(int x=0;x<v_argument_list_temp.size();x++){
+				//cout<<v_argument_list_temp[x]<<" ";
+			//}
+			//for(int x=0;x<v_argument_list.size();x++){
+				//cout<<v_argument_list[x]<<" ";
+			//}
 			if(type_exp->name == "fun"){
 				int i=0;
 				if (v_argument_list_temp.size()!=v_argument_list.size()){
-					cout<<"Argument_list matching failed."<<endl;
+					// cout<<"Argument_list matching failed."<<endl;
 				}
 				else{
-					while(i<v_argument_list_temp.size()&&v_argument_list[i]!=v_argument_list_temp[i]){
-						i++;
-						cout<<v_argument_list[i]<<" "<<v_argument_list_temp[i]<<endl;
+					// while(i<v_argument_list_temp.size()&&v_argument_list[i]!=v_argument_list_temp[i]){
+					// 	i++;
+					// 	cout<<v_argument_list[i]<<" "<<v_argument_list_temp[i]<<endl;
+						// }
+					for(i=0; i<v_argument_list_temp.size();i++){
+						if(v_argument_list[i]!=v_argument_list_temp[i])
+						{
+							//cout<<"Argument_list matching failed."<<endl;
+							break;
+						}			
 					}
-				// for(int i=0; i<v_argument_list_temp.size();i++){
-				// 	if(v_argument_list[i]!=v_argument_list_temp[i])
-				// 		cout<<"Argument_list matching failed."<<endl;			
-				// }
 				}
 				if(i==v_argument_list_temp.size()){
-				cout<<"i"<<i<<endl;//i=0;
-				cout<<"-----------------------"<<endl;
-				cout<<"|Argument_list matched!|"<<endl;
-				cout<<"-----------------------"<<endl;
+					//cout<<"i"<<i<<endl;//i=0;
+					cout<<"-----------------------"<<endl;
+					cout<<"|Argument_list matched!|"<<endl;
+					cout<<"-----------------------"<<endl;
 				}
 				else{
-					cout<<"Argument_list matching failed."<<endl;
+					// cout<<"Argument_list matching failed."<<endl;
 				}
 			}
 			// cout<<"clear v_argument_list"<<endl;
@@ -414,7 +418,7 @@
 	argument_exp_list
 		: assignment_exp{
 			$$ = new node();
-			printf("215 ");
+			//printf("215 ");
 			$$ -> length = 1;
 			$$->name="argument_exp_list";
 			$$->children=new node* [1];
@@ -425,7 +429,7 @@
 		}
 		| argument_exp_list ',' assignment_exp{
 			$$ = new node();
-			printf("222 ");
+			//printf("222 ");
 			$$ -> length = 3;
 			$$->name="argument_exp_list";
 			$$->children=new node* [3];
@@ -433,7 +437,7 @@
 			$$->children[1] = $2.ntnode;
 			$$->children[2] = $3;
 
-			v_argument_list.push_back($1->type.name);
+			// v_argument_list.push_back($1->type.name);
 			v_argument_list.push_back($3->type.name);
 		}
 		;
@@ -1091,7 +1095,7 @@
 
 	assignment_exp
 		: conditional_exp{
-			//(1)谓词表达式
+			//(1)谓词表达式
 
 
 
@@ -2837,12 +2841,6 @@
 			$$ = new node();
 			//printf("1981 ");
 			$$ -> name = "function_definition";
-			$$ -> length = 4;
-			$$ -> children = new node* [4];
-			$$ -> children[0] = $1;
-			$$ -> children[1] = $2;
-			$$ -> children[2] = $3;
-			$$ -> children[3] = $4;
 			type3->right = &($1->type);
 			s.back()->vartable[fun_name] = type3;
 			if (rtn_stmt.size() == 0 && type3->right->name !="void" ){
