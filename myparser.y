@@ -206,6 +206,8 @@
 			$$->dvalue = $1.ntnode->dvalue;
 			$$->type = *(new typenode("double", 8));
 			offset += $$->type.width;
+			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			gen(newlabel(), "=#", $1.ntnode->dvalue, 0, $$->type.addr);
 		}
 		| STRING_LITERAL{
 			$$ = new node();
@@ -360,7 +362,7 @@
 					cout<<"struct has "<<$3.ntnode->name<<endl;
 				}
 				$$->type = pointer;
-				$$->type.addr = $1->type.addr+temp_addr;
+				$$->type.addr = $1->type.addr + temp_addr;
 				cout<<"struct has ";
 			} 
 			else if($1->type.name == "array" && $1->type.right->name == "record"){
@@ -487,14 +489,24 @@
 			//printf("257 ");
 			$$ -> length = 2;
 			$$->name="unary_exp";
-			$$->children=new node* [2];
-			$$->children[0] = $1;
-			$$->children[1] = $2;
-			if($1->name=="!") {
+			if($1->name == "!") {
 				$$->truelist = $2->falselist;
 			    $$->falselist = $2->truelist;
 			}
-			$$->type = $2->type;				
+			if($1->name != "*" && $1->name != "&"){
+				$$ -> type = $2->type;
+			}
+			else{
+				$$ -> type.addr = offset;
+				offset += $$ -> type.width;
+				gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+				if ($1->name == "&") {
+					gen(newlabel(), "=&", $2->type.addr, 0, $$ -> type.addr);
+				}
+				if ($1->name == "*") {
+					gen(newlabel(), "=*", $2->type.addr, 0, $$ -> type.addr);
+				}
+			}
 		}
 		| SIZEOF unary_exp{
 			$$ = new node();
@@ -532,7 +544,7 @@
 		: '&'{
 			$$ = new node();
 			//printf("286 ");
-			$$->name="&r";
+			$$->name="&";
 		}
 		| '*'{
 			$$ = new node();
@@ -617,10 +629,11 @@
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
 				cout<<"Mismatch of Operator Types in Multiplication Operations."<<endl;
-			gen(newlabel(), "*", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
 			$$->type = $1->type;
 			$$->type.addr = offset;
+			gen(newlabel(), "DEC", $$->type.addr, 0, $$->type.width);
+			gen(newlabel(), "*", $1->type.addr, $3->type.addr, offset);
+			offset += max($1->type.width, $3->type.width);
 												
 		}
 		| multiplicative_exp '/' cast_exp{
@@ -635,10 +648,11 @@
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
 				cout<<"Divisional Operator Type Mismatch."<<endl;
-			gen(newlabel(), "/", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
 			$$->type = $1->type;
 			$$->type.addr = offset;
+			gen(newlabel(), "DEC", $$->type.addr, 0, $$->type.width);
+			gen(newlabel(), "/", $1->type.addr, $3->type.addr, offset);
+			offset += max($1->type.width, $3->type.width);
 		}
 		| multiplicative_exp '%' cast_exp{
 			$$ = new node();
@@ -652,10 +666,11 @@
 
 			if (!isComputable($1->type.name) || isComputable($3->type.name))
 				cout<<"Complementation Operator Type Mismatch."<<endl;
-			gen(newlabel(), "%", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
 			$$->type = $1->type;
 			$$->type.addr = offset;
+			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			gen(newlabel(), "%", $1->type.addr, $3->type.addr, offset);
+			offset += max($1->type.width, $3->type.width);
 		}
 		;
 
@@ -680,11 +695,12 @@
 			$$ -> length = 3;
 			$$->name="additive_exp";
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-				cout<<"Operator type r,  $4->type.addrmismatch."<<endl;		
-			gen(newlabel(), "+", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
+				cout<<"Operator type r,  $4->type.addrmismatch."<<endl;	
 			$$->type = $1->type;
 			$$->type.addr = offset;
+			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);	
+			gen(newlabel(), "+", $1->type.addr, $3->type.addr, offset);
+			offset += max($1->type.width, $3->type.width);
 		}
 		| additive_exp '-' multiplicative_exp{
 			$$ = new node();
@@ -693,10 +709,11 @@
 			$$->name="additive_exp";
 			if (!isComputable($1->type.name) || isComputable($3->type.name))
 				cout<<"Operator type mismatch."<<endl;	
-			gen(newlabel(), "-", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
 			$$->type = $1->type;
 			$$->type.addr = offset;
+			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			gen(newlabel(), "-", $1->type.addr, $3->type.addr, offset);
+			offset += max($1->type.width, $3->type.width);
 		}
 		;
 
@@ -1095,7 +1112,8 @@
 
 	assignment_exp
 		: conditional_exp{
-			//(1)谓词表达式
+			//(1)谓词表达式
+
 
 
 
@@ -1951,9 +1969,6 @@
 			//printf("1240 ");
 			$$ -> length = 2;
 			$$->name="declarator";
-			$$->children=new node* [2];
-			$$->children[0] = $1;
-			$$->children[1] = $2;
 		}
 		| direct_declarator{
 			$$ = new node();
@@ -1981,9 +1996,11 @@
 			$$->children[0] = $1.ntnode;
 			var_name = $1.ntnode->name;
 			s.back()->vartable[$1.ntnode->name] = rFlag();
+			//gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 			//cout << $1.ntnode->name << rFlag()->width << endl;
 			$$->type = *rFlag();
 			offset += rFlag()->width;
+			gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 		}
 		| '(' declarator ')' {
 			$$ = new node();
@@ -2030,7 +2047,8 @@
 			s.back()->vartable[var_name] = rFlag();
 			$$->type = *rFlag();
 			offset += rFlag()->width;
-			traverse(root);
+			gen(newlabel(), "DEC", $1->type.width, 0, $1->type.addr);
+			//traverse(root);
 		}
 		| direct_declarator '[' ']' {
 			$$ = new node();
@@ -2149,6 +2167,8 @@
 			$$ -> children[0] = $1;
 
 			type3->left = rFlag();
+
+			gen(newlabel(), "fun", 0, 0, 0);
 		}
 		| parameter_list ',' ELLIPSIS {
 			$$ = new node();
@@ -2198,6 +2218,7 @@
 			$$ -> children = new node* [2];
 			$$ -> children[0] = $1;
 			$$ -> children[1] = $2;
+			gen(newlabel(), "param", 0, 0, $2 -> type.addr);
 		}
 		| declaration_specifiers abstract_declarator {
 			$$ = new node();
@@ -2227,6 +2248,7 @@
 			$$ -> children[0] = $1.ntnode;
 			s.back()->vartable[$1.ntnode->name] = rFlag();
 			offset += rFlag()->width;
+			gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 		}
 		| identifier_list ',' ID {
 			$$ = new node();
@@ -2239,6 +2261,8 @@
 			$$ -> children[2] = $3.ntnode;
 			s.back()->vartable[$3.ntnode->name] = rFlag();	
 			offset += rFlag()->width;
+
+			gen(newlabel(), "DEC", $3.ntnode->type.width, 0, $3.ntnode->type.addr);
 		}
 		;
 
@@ -2683,12 +2707,12 @@
 		;
 	switch_pre
 	: SWITCH '(' exp ')'{
-		    $$->type = $3->type;
-			offset += $$->type.width;
-			switch_addr = $$->type.addr;			
-			gen(newlabel(), "=", $$->type.addr, 0, $3->type.addr);
-			default_label=newlabel();
-			gen(nextinstr,"j",0,0,default_label);
+		    // $$->type = $3->type;
+			// offset += $$->type.width;
+			// switch_addr = $$->type.addr;			
+			// gen(newlabel(), "=", $$->type.addr, 0, $3->type.addr);
+			// default_label=newlabel();
+			// gen(nextinstr,"j",0,0,default_label);
 	};
 
 	iteration_statement

@@ -177,11 +177,33 @@ void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
     _itoa_s(arg2, num2, 10);
     char num3[25];
     _itoa_s(res, num3, 10);
+    string a1,a2,a3;
+    if (arg1 != 0){
+        a1 = "v" + string(num1);
+    } else if (arg1 == 0 || op == "DEC"){
+        a1 = string(num1);
+    }
+    if (arg2 != 0) {
+        a2 = "v" + string(num2);
+    } else {
+        a2 = string(num2);
+    }
+    if (res != 0) {
+        a3 = "v" + string(num3);
+    } else {
+        a3 = string(num3);
+    }
+    if (op == "=#") {
+        a1 = string(num1);
+    }
+    if (op == "fun") {
+        a3 = fun_name;
+    }
     code[label] = vector<string>();
     code[label].push_back(op);
-    code[label].push_back(string(num1));
-    code[label].push_back(string(num2));
-    code[label].push_back(string(num3));
+    code[label].push_back(a1);
+    code[label].push_back(a2);
+    code[label].push_back(a3);
 }
 
 vector<int>* merge(vector<int>* p1, vector<int>* p2, vector<int>* p3=new vector<int>()) {
