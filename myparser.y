@@ -54,7 +54,7 @@
 			return false;
 		for(int i = 0; i < temp1.size(); i++) {
 			if (temp1[i] != temp2[i]){
-				if(temp2[i] == "double" && isComputable(temp1[i]))
+				if(temp2[i] == "double" && isComputable(temp1[i])||temp1[i] == "double" && isComputable(temp2[i]))
 				{
 					cout<<"---------------------------\n";
 					cout<<"|warning: lose precision!!|\n";
