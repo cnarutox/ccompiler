@@ -194,7 +194,6 @@ void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
         }
         a1 = string(num1);
     } else if (arg1 == -1 && op == "DEC") {
-        cout<<"????????"<<endl;
         label = zhang_xing_own[res];
         if (code.count(label) > 0)code.erase(label);
         return;

@@ -206,7 +206,6 @@
 			$$->dvalue = $1.ntnode->dvalue;
 			$$->type = *(new typenode("double", 8));
 			offset += $$->type.width;
-			cout<<"width:"<<$$->type.width<<","<<$$->type.name<<endl;
 			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "=#", $1.ntnode->dvalue, 0, $$->type.addr);
 		}
@@ -500,7 +499,6 @@
 			else{
 				$$ -> type.addr = offset;
 				offset += $$ -> type.width;
-				cout<<"width:"<<$$->type.width<<","<<$$->type.name<<endl;
 				gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 				if ($1->name == "&") {
 					gen(newlabel(), "=&", $2->type.addr, 0, $$ -> type.addr);
@@ -633,7 +631,6 @@
 				cout<<"Mismatch of Operator Types in Multiplication Operations."<<endl;
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			cout<<"width:"<<$$->type.width<<","<<$$->type.name<<endl;
 			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "*", $1->type.addr, $3->type.addr, offset);
 			offset += max($1->type.width, $3->type.width);
@@ -653,7 +650,6 @@
 				cout<<"Divisional Operator Type Mismatch."<<endl;
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			cout<<"width:"<<$$->type.width<<","<<$$->type.name<<endl;
 			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "/", $1->type.addr, $3->type.addr, offset);
 			offset += max($1->type.width, $3->type.width);
@@ -672,7 +668,6 @@
 				cout<<"Complementation Operator Type Mismatch."<<endl;
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			cout<<"width:"<<$$->type.width<<","<<$$->type.name<<endl;
 			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "%", $1->type.addr, $3->type.addr, offset);
 			offset += max($1->type.width, $3->type.width);
@@ -2007,7 +2002,6 @@
 			$1.ntnode->type.addr = temp;
 			s.back()->vartable[$1.ntnode->name] = rFlag();
 			offset += rFlag()->width;
-			cout<<"width:"<<$1.ntnode->type.width<<","<<$1.ntnode->type.name<<endl;
 			gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 		}
 		| '(' declarator ')' {
@@ -2058,7 +2052,6 @@
 			$$->type = *rFlag();
 			$1->type = *rFlag();
 			offset += rFlag()->width;
-			cout<<"width:"<<$1->type.width<<","<<$1->type.name<<endl;
 			gen(newlabel(), "DEC", $1->type.width, 0, $1->type.addr);
 			//traverse(root);
 		}
@@ -2263,7 +2256,6 @@
 			s.back()->vartable[$1.ntnode->name] = rFlag();
 			offset += rFlag()->width;
 			$1.ntnode->type = *rFlag();
-			cout<<"width:"<<$1.ntnode->type.width<<","<<$1.ntnode->type.name<<endl;
 			gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 		}
 		| identifier_list ',' ID {
@@ -2280,7 +2272,6 @@
 			s.back()->vartable[$3.ntnode->name] = rFlag();	
 			offset += rFlag()->width;
 			$3.ntnode->type = *rFlag();
-			cout<<"width:"<<$3.ntnode->type.width<<","<<$3.ntnode->type.name<<endl;
 			gen(newlabel(), "DEC", $3.ntnode->type.width, 0, $3.ntnode->type.addr);
 		}
 		;
@@ -2886,7 +2877,7 @@
 			$$ -> name = "function_definition";
 			type3->right = &($1->type);
 			s.back()->vartable[fun_name] = type3;
-			cout<<"/./././././././"<<fun_addr<<endl;
+			cout<<"/./././././././"<<addr<<endl;
 			gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name !="void" ){
 				cout<<"type error in 1991!"<<endl;
