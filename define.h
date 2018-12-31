@@ -13,6 +13,7 @@ int offset = 0;
 int struct_width;
 int nextinstr = -1;
 int switch_addr;
+int fun_addr;
 int default_label;
 map<int, int> switch_map;
 vector<int> nextlist;
@@ -88,6 +89,8 @@ string var_name;
 string fun_name;
 bool flag = false;
 
+map<int, int> zhang_xing_own;
+
 typenode unsignednode("unsigned", 4);
 typenode shortnode("short", 2);
 typenode intnode("int", 4);
@@ -106,7 +109,9 @@ map<int, vector<string>> code;
 
 void show_code() {
     for (int i = 0; i < code.size(); i++) {
-		cout <<i<<": ("<<code[i][0]+", "+code[i][1]+", "+code[i][2]+", "+ code[i][3] +")"<<endl;
+        if (code.count(i) > 0) {
+		    cout <<i<<": ("<<code[i][0]+", "+code[i][1]+", "+code[i][2]+", "+ code[i][3] +")"<<endl;
+        }
     } 
 }
 
@@ -178,17 +183,28 @@ void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
     char num3[25];
     _itoa_s(res, num3, 10);
     string a1,a2,a3;
-    if (arg1 != 0){
+    if (arg1 != 0 && op != "DEC"){
         a1 = "v" + string(num1);
-    } else if (arg1 == 0 || op == "DEC"){
+    } else if (arg1 == 0 || (op == "DEC" && arg1 != -1)){
+        if (op == "DEC") {
+            if (zhang_xing_own.count(res) > 0) {
+                label = zhang_xing_own[res];
+            }
+            else zhang_xing_own[res] = label;
+        }
         a1 = string(num1);
+    } else if (arg1 == -1 && op == "DEC") {
+        cout<<"????????"<<endl;
+        label = zhang_xing_own[res];
+        if (code.count(label) > 0)code.erase(label);
+        return;
     }
     if (arg2 != 0) {
         a2 = "v" + string(num2);
     } else {
         a2 = string(num2);
     }
-    if (res != 0) {
+    if (res != 0 || op == "DEC") {
         a3 = "v" + string(num3);
     } else {
         a3 = string(num3);
@@ -204,6 +220,7 @@ void gen(int label, string op="", int arg1=0, int arg2=0, int res=0) {
     code[label].push_back(a1);
     code[label].push_back(a2);
     code[label].push_back(a3);
+    cout <<label<<": ("<<code[label][0]+", "+code[label][1]+", "+code[label][2]+", "+ code[label][3] +")"<<endl;
 }
 
 vector<int>* merge(vector<int>* p1, vector<int>* p2, vector<int>* p3=new vector<int>()) {
