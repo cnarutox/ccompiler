@@ -1,0 +1,325 @@
+options {
+    STATIC = false; // function should not be static
+    //UNICODE = true; // string should be transform to unicode
+}
+
+PARSER_BEGIN(Temp)
+package Try_Demo;
+import java.io.*;
+
+class Temp {
+    public static void main(String[] args) {
+        try {
+            BufferedReader br = new BufferedReader(
+                new FileReader(new File("src/main/java/Try_Demo/test.c")));
+            StringBuilder buf = new StringBuilder();
+            String s;
+            while ((s = br.readLine()) != null) {
+                buf.append("\n");
+                buf.append(s);
+            }
+            evaluate(buf.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    public static void evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        new Temp(reader).compilation_unit();
+    }
+}
+PARSER_END(Temp)
+
+/*****************************************************************/
+/*****************************************************************/
+/*****************************************************************/
+SKIP : // Ignoring spaces/tabs/newlines
+{
+	    " "
+	|   "\t"
+	|   "\n"
+	|   "\r"
+	|   "\f"
+}
+SPECIAL_TOKEN : // Ignoring line commit
+{
+    < LINE_COMMIT : "//"(~["\n","\r"])* ("\n"|"\r\n"|"\r")? >
+}
+MORE : // Ignoring block commit
+{
+    < "/*" > : IN_BLOCK_COMMIT
+}
+< IN_BLOCK_COMMIT > MORE :
+{
+    < ~[] >
+}
+< IN_BLOCK_COMMIT > SPECIAL_TOKEN :
+{
+    < BLOCK_COMMIT : "*/" > : DEFAULT
+}
+TOKEN : // Keywords and punctuation
+{
+	    < SEMIC : ";" >
+	|   < COLON : ":" >
+	|   < ASSIGN : ":=" >
+	|   < LBR : "(" >
+	|   < RBR : ")" >
+	|   < COMMA : "," >
+	|   < PLUS_SIGN : "+" >
+	|   < MINUS_SIGN : "-" >
+	|   < MULT_SIGN : "*" >
+	|   < DIV_SIGN : "/" >
+	|   < RCBR : "}" >
+	|   < LCBR : "{" >
+	|   < EXLM : "!" >
+	|   < QUESTION : "?" >
+	|   < PERCENT : "%" >
+	|   < EQUALS : "=" >
+	|   < NOT_EQUAL : "!=" >
+	|   < LEFT_BRACE : "<" >
+	|   < RIGHT_BRACE : ">" >
+	|   < LEFT_BRACE_EQUAL : "<=" >
+	|   < RIGHT_BRACE_EQUAL : ">=" >
+	|   < DOT : "." >
+	|   < AND : "and" >
+	|   < BOOL : "boolean" >
+	|   < CONST : "const" >
+	|   < DO : "do" >
+	|   < ELSE : "else" >
+	|   < FALSE : "false" >
+	|   < IF : "if" >
+	|   < INT : "int" >
+	|   < MAIN : "main" >
+	|   < NOT : "not" >
+	|   < OR : "or" >
+	|   < REAL : "real" >
+	|   < RETURN : "return" >
+	|   < STR : "string" >
+	|   < THEN : "then" >
+	|   < TRUE : "true" >
+	|   < VAR : "var" >
+	|   < VOID : "void" >
+	|   < CHAR : "char" >
+	|   < SHORT : "short" >
+	|   < LONG : "long" >
+	|   < WHILE : "while" >
+    |   < INCLUDE : "include" >
+    |   < MACRO : "#" >
+    |   < DEFINE : "define" >
+}
+TOKEN :
+{
+    < IDENTIFIER : ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", "0"-"9"])* >
+}
+TOKEN :
+{
+    < INTEGER : ["1"-"9"] (["0"-"9"])* ("U")? ("L")?
+            |   "0" ["x", "X"] (["0"-"9", "a"-"f", "A"-"F"])+ ("U")? ("L")?
+            |   "0" (["0"-"7"])* ("U")? ("L")?
+            >
+}
+MORE : // Strings
+{
+    < "\"" > : IN_STRING
+}
+< IN_STRING > MORE :
+{
+        < (~["\"", "\\", "\n", "\r"])+ >
+    |   < "\\"(["0"-"7"]){3} >
+    |   < "\\"~[] >
+}
+< IN_STRING > TOKEN :
+{
+    < STRING : "\"" > : DEFAULT
+}
+MORE : // CHARACTER
+{
+    < "'" > : IN_CHARACTER
+}
+< IN_CHARACTER > MORE :
+{
+        < ~["'", "\\", "\n", "\r"] >    : CHARACTER_TERM
+    |   < "\\"(["0"-"7"]){3} >          : CHARACTER_TERM
+    |   < "\\"~[] >                     : CHARACTER_TERM
+}
+< CHARACTER_TERM > TOKEN :
+{
+    < CHARACTER : "'" > : DEFAULT
+}
+TOKEN : // Anything not recognised so far
+{
+	< OTHER : ~[] >
+}
+
+/*****************************************************************/
+/*****************************************************************/
+/*****************************************************************/
+void compilation_unit() :
+{}
+{
+    macro_stmts() top_defs() < EOF >
+}
+void macro_stmts() : {}
+{
+    (< MACRO >(include_stmt()|define_stmt()))*
+}
+void include_stmt() : {}
+{
+    < INCLUDE > ((< LEFT_BRACE > <STRING> < RIGHT_BRACE >)|< STRING >)
+}
+void define_stmt() : {}
+{
+    < DEFINE > < IDENTIFIER > < INTEGER >
+}
+void top_defs() :{}
+{
+    (   LOOKAHEAD (type() < IDENTIFIER > "(" )
+        defun()
+    |   defvars()
+    )*
+}
+void type() :{}
+{
+    typedef_base()
+}
+void typedef_base() :{}
+{
+        < VOID >
+    |   < CHAR >
+    |   < SHORT >
+    |   < INT >
+    |   < LONG >
+}
+void name() :{}
+{
+    < IDENTIFIER >
+}
+void defun() : {}
+{
+    type() name() "(" params() ")" (block()|< SEMIC >)
+}
+void params() : {}
+{
+        LOOKAHEAD(")") {return;}
+    |   LOOKAHEAD(< VOID > ")") < VOID >
+    |   fixedparams() ["," "..."]
+}
+void fixedparams() : {}
+{
+    param() ( LOOKAHEAD(2) "," param())*
+}
+void param() : {}
+{
+    type() name()
+}
+void block() : {}
+{
+    "{" (deftmpvars())* stmts() "}"
+}
+void deftmpvars() : {}
+{
+    type() name() ["=" expr()]
+            ("," name() ["=" expr()])* < SEMIC >
+}
+void defvars() :{}
+{
+    type() name() ["=" expr()]
+        ("," name() ["=" expr()])* < SEMIC >
+}
+void expr() :
+{
+    Token x=null;
+}
+{
+
+    (name() | x=number())
+    {
+        if(x!=null){
+            System.out.println(x.image);
+            System.out.println(x.next);
+            System.out.println(x.kind);
+        }
+    }
+}
+void number() : {}
+{
+    < INTEGER >
+}
+void stmts() : {}
+{
+    (stmt())*
+}
+void stmt() : {}
+{
+        < SEMIC >
+    |   LOOKAHEAD(2) labeled_stmt()
+    |   goto_stmt()
+    |   expr() < SEMIC >
+    |   block()
+    |   assign_stmt()
+    |   if_stmt()
+    |   while_stmt()
+    |   dowhile_stmt()
+    |   for_stmt()
+    |   switch_stmt()
+    |   break_stmt()
+    |   continue_stmt()
+    |   return_stmt()
+}
+void labeled_stmt : {}
+{
+    < IDENTIFIER > < COLON >
+}
+void goto_stmt() : {}
+{
+    < GOTO > < COLON > < IDENTIFIER >
+}
+void assign_stmt() : {}
+{
+    < IDENTIFIER > "=" expr()
+}
+void if_stmt() : {}
+{
+    < IF > "(" expr() ")" stmts() [LOOKAHEAD(1) < ELSE > stmts()]
+}
+void while_stmt() : {}
+{
+    < WHILE > "(" expr() ")" stmts()
+}
+void dowhile_stmt() : {}
+{
+    < DO > stmts() <WHILE> "(" expr() ")" < SEMIC >
+}
+void for_stmt() : {}
+{
+    < FOR > "(" [expr()] < SEMIC > [expr()] < SEMIC > [expr()] ")" stmts()
+}
+void switch_stmt() : {}
+{
+    < SWITCH > "(" name() ")" "{"
+    (< CASE > constant() < COLON > stmts())*
+    [< DEFAULT > < COLON > stmts()]
+    "}"
+}
+void constant() : {}
+{
+    number() | < STRING > | < CHARACTER >
+}
+void break_stmt() : {}
+{
+    < BREAK > < SEMIC >
+}
+void continue_stmt() : {}
+{
+    < CONTINUE > < SEMIC >
+}
+void return_stmt() : {}
+{
+    < RETURN > [expr()] < SEMIC >
+}
+
