@@ -1,3 +1,4 @@
 *.pgw
-*.py
+*.v
+*.cpp
 .vscode/
