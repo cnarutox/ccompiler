@@ -25,6 +25,13 @@ def trans(lists):
     if lists[1] == 'fun':
         tri.append('FUNCTION')
         tri.append(lists[4])
+        tri.append(':')
+    elif lists[1] == 'call':
+        tri.append('CALL')
+        tri.append(lists[4])
+    elif lists[1] == 'ARG':
+        tri.append('ARG')
+        tri.append(lists[4])
     elif lists[1] == '=#':
         tri.append(lists[4])
         tri.append(':= #')

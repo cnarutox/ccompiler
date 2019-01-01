@@ -1,4 +1,6 @@
 
-DEC v5 4 
-DEC v9 8 
-v9 := # 0 
+FUNCTION main : 
+v3 := #1 
+v2 := v3 
+ARG v2 
+CALL print 

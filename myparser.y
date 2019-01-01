@@ -48,8 +48,10 @@
 		vector<string> temp2;
 		post_traverse(tp1, temp1);
 		post_traverse(tp2, temp2);
-		// show_string(temp1);
-		// show_string(temp2);
+		cout<<"%%%%%%%%%%%%%%%"<<endl;
+		show_string(temp1);
+		show_string(temp2);
+		cout<<"%%%%%%%%%%%%%%%%"<<endl;
 		if (temp1.size() != temp2.size())
 			return false;
 		for(int i = 0; i < temp1.size(); i++) {
@@ -205,8 +207,9 @@
 
 			$$->dvalue = $1.ntnode->dvalue;
 			$$->type = *(new typenode("double", 8));
-			offset += $$->type.width;
-			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			// offset += $$->type.width;
+			offset += 1;
+			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "=#", $1.ntnode->dvalue, 0, $$->type.addr);
 		}
 		| STRING_LITERAL{
@@ -293,6 +296,7 @@
 				$$->type = *temp;
 			}
 			s.pop_back();  
+			gen(newlabel(), "call", 0, 0, 0);
 		}
 		| postfix_pre_exp argument_exp_list ')'{
 			$$ = new node();
@@ -300,6 +304,7 @@
 			$$ -> length = 4;
 			$$->name="postfix_exp";
 			s.pop_back();  
+			gen(newlabel(), "call", 0, 0, 0);
 			vector<string> v_argument_list_temp; //??no value
 			typenode* type_exp = (search(fun_name, s.size()-1));
 			traverse_list(type_exp->left, v_argument_list_temp);//?
@@ -426,7 +431,7 @@
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 			v_argument_list.push_back($1->type.name);
-
+			gen(newlabel(), "ARG", 0, 0, $1->type.addr);
 			$$->type = $1->type;						
 		}
 		| argument_exp_list ',' assignment_exp{
@@ -498,8 +503,9 @@
 			}
 			else{
 				$$ -> type.addr = offset;
-				offset += $$ -> type.width;
-				gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+				// offset += $$ -> type.width;
+				offset += 1;
+				//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 				if ($1->name == "&") {
 					gen(newlabel(), "=&", $2->type.addr, 0, $$ -> type.addr);
 				}
@@ -631,9 +637,10 @@
 				cout<<"Mismatch of Operator Types in Multiplication Operations."<<endl;
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "*", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
+			// offset += max($1->type.width, $3->type.width);
+			offset += 1;
 												
 		}
 		| multiplicative_exp '/' cast_exp{
@@ -650,9 +657,11 @@
 				cout<<"Divisional Operator Type Mismatch."<<endl;
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "/", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
+			// offset += max($1->type.width, $3->type.width);
+			offset += 1;
+			
 		}
 		| multiplicative_exp '%' cast_exp{
 			$$ = new node();
@@ -668,9 +677,11 @@
 				cout<<"Complementation Operator Type Mismatch."<<endl;
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "%", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
+			// offset += max($1->type.width, $3->type.width); 
+			offset += 1;
+		
 		}
 		;
 
@@ -698,9 +709,10 @@
 				cout<<"Operator type r,  $4->type.addrmismatch."<<endl;	
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);	
+			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);	
 			gen(newlabel(), "+", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
+			// offset += max($1->type.width, $3->type.width);
+			offset += 1;
 		}
 		| additive_exp '-' multiplicative_exp{
 			$$ = new node();
@@ -711,9 +723,10 @@
 				cout<<"Operator type mismatch."<<endl;	
 			$$->type = $1->type;
 			$$->type.addr = offset;
-			gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 			gen(newlabel(), "-", $1->type.addr, $3->type.addr, offset);
-			offset += max($1->type.width, $3->type.width);
+			// offset += max($1->type.width, $3->type.width);
+			offset += 1;
 		}
 		;
 
@@ -1113,11 +1126,6 @@
 	assignment_exp
 		: conditional_exp{
 			//(1)谓词表达式
-
-
-
-
-
 			//(2)条件表达式 a<b?a:b
 			$$ = new node();
 			printf("635 ");
@@ -1994,15 +2002,16 @@
 			$$ -> length = 1;
 			$$->name="direct_declarator";
 			var_name = $1.ntnode->name;
-			//gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
+			////gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 			//cout << $1.ntnode->name << rFlag()->width << endl;
 			$$->type = *rFlag();
 			int temp = $1.ntnode->type.addr;
 			$1.ntnode->type = *rFlag();
 			$1.ntnode->type.addr = temp;
 			s.back()->vartable[$1.ntnode->name] = rFlag();
-			offset += rFlag()->width;
-			gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
+			// offset += rFlag()->width;
+			offset += 1;
+			//gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 		}
 		| '(' declarator ')' {
 			$$ = new node();
@@ -2051,8 +2060,9 @@
 			s.back()->vartable[var_name] = rFlag();
 			$$->type = *rFlag();
 			$1->type = *rFlag();
-			offset += rFlag()->width;
-			gen(newlabel(), "DEC", $1->type.width, 0, $1->type.addr);
+			// offset += rFlag()->width;
+			offset += 1;
+			//gen(newlabel(), "DEC", $1->type.width, 0, $1->type.addr);
 			//traverse(root);
 		}
 		| direct_declarator '[' ']' {
@@ -2256,9 +2266,10 @@
 			int tmp = $1.ntnode->type.addr;
 			rFlag()->addr = tmp;
 			s.back()->vartable[$1.ntnode->name] = rFlag();
-			offset += rFlag()->width;
+			// offset += rFlag()->width;
+			offset += 1;
 			$1.ntnode->type = *rFlag();
-			gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
+			//gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 		}
 		| identifier_list ',' ID {
 			$$ = new node();
@@ -2272,9 +2283,10 @@
 			int tmp = $3.ntnode->type.addr;
 			rFlag()->addr = tmp;
 			s.back()->vartable[$3.ntnode->name] = rFlag();	
-			offset += rFlag()->width;
+			// offset += rFlag()->width;
+			offset += 1;
 			$3.ntnode->type = *rFlag();
-			gen(newlabel(), "DEC", $3.ntnode->type.width, 0, $3.ntnode->type.addr);
+			//gen(newlabel(), "DEC", $3.ntnode->type.width, 0, $3.ntnode->type.addr);
 		}
 		;
 
@@ -2570,8 +2582,6 @@
 			printf("1728 ");
 			$$ -> name = "compound_statement";	
 			$$->nextlist = $2->nextlist;
-
-			show_code();
 		}
 		| '{' declaration_list statement_list '}' {
 			$$ = new node();
@@ -2841,7 +2851,6 @@
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
 			$$ -> children[0] = $1;
-			show_code();
 		}
 		| translation_unit external_declaration {
 			$$ = new node();
@@ -2851,7 +2860,6 @@
 			$$ -> children = new node* [2];
 			$$ -> children[0] = $1;
 			$$ -> children[1] = $2;
-			show_code();
 		}
 		;
 
@@ -2881,7 +2889,7 @@
 			$$ -> name = "function_definition";
 			type3->right = &($1->type);
 			s.back()->vartable[fun_name] = type3;
-			gen(newlabel(), "DEC", -1, 0, fun_addr);
+			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name !="void" ){
 				cout<<"type error in 1991!"<<endl;
 			}
@@ -2909,8 +2917,8 @@
 			type3->right = &($1->type);
 			s[s.size()-2]->vartable[fun_name] = type3;
 			cout<<"/./././././././"<<fun_addr<<endl;
-			gen(newlabel(), "DEC", -1, 0, fun_addr);
-			show_code();
+			//gen(newlabel(), "DEC", -1, 0, fun_addr);
+
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
 				cout<<"type error in 1991!"<<endl;
 			}	
@@ -2937,7 +2945,7 @@
 			type3->right = &($1->type);
 			s.back()->vartable[fun_name] = type3;
 			cout<<"/./././././././"<<fun_addr<<endl;
-			gen(newlabel(), "DEC", -1, 0, fun_addr);
+			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
 				cout<<"type error in 1991!"<<endl;
 			}		
@@ -2962,7 +2970,7 @@
 			type3->right = &($1->type);
 			s.back()->vartable[fun_name] = type3;
 			cout<<"/./././././././"<<fun_addr<<endl;
-			gen(newlabel(), "DEC", -1, 0, fun_addr);
+			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
 				cout<<"type error in 1991!"<<endl;
 			}	
@@ -3004,9 +3012,9 @@
 		if (parser.yycreate(&lexer)) {
 			if (lexer.yycreate(&parser)) {
 				n = parser.yyparse();
+				show_code();
 			}
 		}
-		show_code();
 		getchar();
 		return 0;
 	}

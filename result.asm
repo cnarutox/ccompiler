@@ -20,3 +20,13 @@ print:
     syscall
     move $v0,$0
     jr $ra
+main:
+	li $t1,1
+	move $t2,$t1
+	move $t0,$a0
+	move $a0,$t2
+	addi $sp,$sp,-4
+	sw $ra,0($sp)
+	jal print
+	lw $ra,0($sp)
+	addi $sp,$sp,4

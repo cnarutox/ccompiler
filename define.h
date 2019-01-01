@@ -112,9 +112,9 @@ void show_code()
 {
     for (int i = 0; i < code.size(); i++)
     {
-        if (code.count(i) > 0)
+        if (code.count(i) > 0 && code[i][0] != "#")
         {
-//          file << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
+            file << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
             cout << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
         }
     }
@@ -197,8 +197,6 @@ void gen(int label, string op = "", int arg1 = 0, int arg2 = 0, int res = 0)
     if (arg1 != 0 && op != "DEC")
     {
         a1 = "v" + string(num1);
-        cout<<"((1))";
-        show_code();
     }
     else if (arg1 == 0 || (op == "DEC" && arg1 != -1))
     {
@@ -207,29 +205,22 @@ void gen(int label, string op = "", int arg1 = 0, int arg2 = 0, int res = 0)
             if (zhang_xing_own.count(res) > 0)
             {
                 label = zhang_xing_own[res];
-                cout<<"((2))";
-                show_code();
             }
             else{
                 zhang_xing_own[res] = label;
-                cout<<"((3))";
-                show_code();
             }
         }
         a1 = string(num1);
     }
     else if (arg1 == -1 && op == "DEC")
     {
-        cout<<"((5))";
-        show_code();
         label = zhang_xing_own[res];
-        cout<<label<<"}}}}}}}}}}"<<endl;
-        if (code.count(label) > 0){
-            cout<<label<<"}}}}}}}}}}"<<endl;
-            code.erase(label);
+        if (code.count(label) > 0)
+        {
+            cout<<endl<<code.count(0)<<endl;
+            //code.erase(label);
+            code[label][0] = "#";
         }
-        cout<<"((4))";
-        show_code();
         return;
     }
     if (arg2 != 0)
@@ -252,7 +243,7 @@ void gen(int label, string op = "", int arg1 = 0, int arg2 = 0, int res = 0)
     {
         a1 = string(num1);
     }
-    if (op == "fun")
+    if (op == "fun" || op == "call")
     {
         a3 = fun_name;
     }
@@ -262,7 +253,6 @@ void gen(int label, string op = "", int arg1 = 0, int arg2 = 0, int res = 0)
     code[label].push_back(a2);
     code[label].push_back(a3);
     //cout << label << ": (" << code[label][0] + ", " + code[label][1] + ", " + code[label][2] + ", " + code[label][3] + ")" << endl;
-    show_code();
 }
 
 vector<int> *merge(vector<int> *p1, vector<int> *p2, vector<int> *p3 = new vector<int>())

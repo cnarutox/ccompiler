@@ -1,5 +1,9 @@
-
-
 FUNCTION main :
-temp0 := #0
+temp0 := #10
 var0 := temp0
+temp1 := #9
+var1 := temp1
+temp2 := #90
+var2 := temp2
+ARG var0
+CALL print
