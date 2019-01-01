@@ -271,14 +271,16 @@ def trans(lines):
         lists = lines[i]
         tri = []
         if lists[1] == 'fun':
-            if lists[2]==0:
+            if lists[2] == 0:
                 tri.extend(['FUNCTION', lists[4] + " :"])
                 tricode.append(tri)
-        #       if lists[2]==1:
-        #             if lists[4] not in var_dic:
-        #               var_dic[lists[4]] = 'temp' + str(M)
-        #               
-        #                   M += 1        
+            # if lists[2]==1:
+            #     if lists[4] not in var_dic:
+            #     var_dic[lists[4]] = 'temp' + str(M)
+            #     M += 1
+            #     tri.extend([var_dic[lists[4]],':=','CALL',lists[4]])
+            #     a
+        #  关终端啦~你复制一下这个文件吧，我现在会push上去  不改了？                   
         # 辛苦啦~  
         #        
             for i in range(0, len(param_list)):
