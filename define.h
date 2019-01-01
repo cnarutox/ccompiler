@@ -18,68 +18,68 @@ int default_label;
 map<int, int> switch_map;
 vector<int> nextlist;
 string struct_name;
-fstream file("code.txt");
+// fstream outfile("code.txt");
+ofstream files;
 struct typenode
 {
-    int addr;
-    int width;
-    string name;
-    typenode *left;
-    typenode *right;
-    typenode(string n = "", int w = 0)
-    {
-        name = n;
-        left = NULL;
-        right = NULL;
-        width = w;
-        addr = offset;
-        // cout << endl << "------------------offset:" << offset <<"-----------------"<<endl;
-    }
-    void copy(const typenode &type)
-    {
-        name = type.name;
-        width = type.width;
-        left = type.left;
-        right = type.right;
-    }
+	int addr;
+	int width;
+	string name;
+	typenode *left;
+	typenode *right;
+	typenode(string n = "", int w = 0)
+	{
+		name = n;
+		left = NULL;
+		right = NULL;
+		width = w;
+		addr = offset;
+		// cout << endl << "------------------offset:" << offset <<"-----------------"<<endl;
+	}
+	void copy(const typenode &type)
+	{
+		name = type.name;
+		width = type.width;
+		left = type.left;
+		right = type.right;
+	}
 };
 
 void traverse(typenode *root)
 {
-    // if (root != NULL)
-    //     cout << root->name << " "<<root->addr <<endl;
-    // if (root->left != NULL)
-    // {
-    //     cout << "left ";
-    //     traverse(root->left);
-    // }
-    // if (root->right != NULL)
-    // {
-    //     cout << "right ";
-    //     traverse(root->right);
-    // }
+	if (root != NULL)
+		cout << root->name << " " << root->addr << endl;
+	if (root->left != NULL)
+	{
+		cout << "left ";
+		traverse(root->left);
+	}
+	if (root->right != NULL)
+	{
+		cout << "right ";
+		traverse(root->right);
+	}
 }
 void traverse_list(typenode *root, vector<string> &v)
 {
-    if (root != NULL)
-    {
-        // cout<<"i am null!!"<<endl;
-        //cout << root->name << " " << endl;
-        if (root->right == NULL && root->left == NULL)
-        {
-            v.push_back(root->name);
-        }
-    }
-    if (root->left != NULL)
-    {
-        //cout << "left ";
-        traverse_list(root->left, v);
-    }
-    if (root->right != NULL)
-    {
-        //cout << "right ";
-        traverse_list(root->right, v);
-    }
+	if (root != NULL)
+	{
+		// cout<<"i am null!!"<<endl;
+		//cout << root->name << " " << endl;
+		if (root->right == NULL && root->left == NULL) {
+			v.push_back(root->name);
+		}
+	}
+	if (root->left != NULL)
+	{
+		//cout << "left ";
+		traverse_list(root->left, v);
+	}
+	if (root->right != NULL)
+	{
+		//cout << "right ";
+		traverse_list(root->right, v);
+	}
 }
 stack<typenode *> rtn_stmt;
 typenode *type;
@@ -108,33 +108,32 @@ stack<typenode *> struct_stack;
 vector<string> v_argument_list;
 map<int, vector<string>> code;
 
-void show_code()
-{
-    for (int i = 0; i < code.size(); i++)
-    {
-        if (code.count(i) > 0 && code[i][0] != "#")
-        {
-            file << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
-            cout << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
-        }
-    }
+void show_code() {
+	for (int i = 0; i < code.size(); i++) {
+		cout << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
+	}
+}
+void transcode() {
+	for (int i = 0; i < code.size(); i++) {
+		files << i << ":" << code[i][0] + "," + code[i][1] + "," + code[i][2] + "," + code[i][3] << "\n";
+	}
 }
 
 struct varmap
 {
-    int name;
-    varmap *parent;
-    map<string, typenode *> vartable;
-    varmap(int n = 0, varmap *p = NULL)
-    {
-        name = n;
-        parent = p;
-    }
+	int name;
+	varmap *parent;
+	map<string, typenode *> vartable;
+	varmap(int n = 0, varmap *p = NULL)
+	{
+		name = n;
+		parent = p;
+	}
 };
 
 varmap *varmap_temp;
 vector<varmap *> s; //fuhao-table
-//
+					//
 struct node
 {
     int id;
@@ -278,19 +277,19 @@ vector<int> *merge(vector<int> *p1, vector<int> *p2, vector<int> *p3 = new vecto
 
 bool isComputable(string s)
 {
-    if (s == "int" || s == "float" || s == "double" ||
-        s == "unsigned" || s == "signed" || s == "short" || s == "char")
-        return true;
-    else
-        return false;
+	if (s == "int" || s == "float" || s == "double" ||
+		s == "unsigned" || s == "signed" || s == "short" || s == "char")
+		return true;
+	else
+		return false;
 }
 
 bool isInteger(string s)
 {
-    if (s == "int" || s == "unsigned" || s == "signed" || s == "short" || s == "char")
-        return true;
-    else
-        return false;
+	if (s == "int" || s == "unsigned" || s == "signed" || s == "short" || s == "char")
+		return true;
+	else
+		return false;
 }
 
 typenode *create_struct(string name)
@@ -363,59 +362,59 @@ void traverse_vartable(int i, string tab = "--")
 
 typenode *search(string myname, int i)
 {
-    if (s[i]->vartable.count(myname) > 0)
-    {
-        // cout<<"s[i]->vartable[myname]"<<s[i]->vartable[myname]->name<<endl;
-        //cout<<myname<<" yes in "<<i<<endl;
-        //traverse(s[i]->vartable[myname]);
-        traverse_vartable(i);
-        //traverse(s[i]->vartable[myname]);
-        return s[i]->vartable[myname];
-    }
-    else
-    {
-        if (s[i]->vartable.count(myname) == 0 && i > 0)
-        {
-            //cout<<endl<<"not bottom!!!"<<endl;
-            i--;
-            return search(myname, i);
-        }
-        else
-        {
-            cout << "Cannot find " << myname << "!" << endl;
-            return NULL;
-        }
-    }
+	if (s[i]->vartable.count(myname) > 0)
+	{
+		// cout<<"s[i]->vartable[myname]"<<s[i]->vartable[myname]->name<<endl;
+		//cout<<myname<<" yes in "<<i<<endl;
+		//traverse(s[i]->vartable[myname]);
+		traverse_vartable(i);
+		//traverse(s[i]->vartable[myname]);
+		return s[i]->vartable[myname];
+	}
+	else
+	{
+		if (s[i]->vartable.count(myname) == 0 && i > 0)
+		{
+			//cout<<endl<<"not bottom!!!"<<endl;
+			i--;
+			return search(myname, i);
+		}
+		else
+		{
+			cout << "Cannot find " << myname << "!" << endl;
+			return NULL;
+		}
+	}
 }
 
 void wFlag(typenode &node)
 {
-    if (flag)
-    {
-        type2 = &node;
-        flag = false;
-    }
-    else
-    {
-        type = &node;
-        flag = true;
-    }
+	if (flag)
+	{
+		type2 = &node;
+		flag = false;
+	}
+	else
+	{
+		type = &node;
+		flag = true;
+	}
 }
 typenode *rFlag()
 {
-    typenode *tmp = new typenode();
-    if (flag == true)
-    {
-        (*tmp).copy(*type);
-        //cout<<"tmp.name"<<tmp.name<<endl;
-        //cout<<"tmp.left"<<tmp.left->name<<endl;
-        return tmp;
-    }
-    else
-    {
-        (*tmp).copy(*type2);
-        return tmp;
-    }
+	typenode *tmp = new typenode();
+	if (flag == true)
+	{
+		(*tmp).copy(*type);
+		//cout<<"tmp.name"<<tmp.name<<endl;
+		//cout<<"tmp.left"<<tmp.left->name<<endl;
+		return tmp;
+	}
+	else
+	{
+		(*tmp).copy(*type2);
+		return tmp;
+	}
 }
 
 // #define ERROR 0
@@ -468,24 +467,24 @@ typenode *rFlag()
 // #define LSQUBRAC 47
 // #define RSQUBRAC 48
 string Words[] = {
-    "ERROR", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
-    "SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF",
-    "ANNOTATION", "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST",
-    "CONTINUE", "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN",
-    "REGISTER", "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE",
-    "UNION ", "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL", "LOGIC",
-    "BOOLOP", "LSQUBRAC", "RSQUBRAC"};
+	"ERROR", "VOID", "MAIN", "LP", "RP", "LBRACE", "RBRACE", "TYPE", "ID",
+	"SEMICOL", "FOR", "ASSIGN", "NUMBER", "COMPARISON", "ADD", "MINUS", "IF",
+	"ANNOTATION", "MUTIPLY", "DIVIDE", "THEN", "BREAK", "CASE", "CONST",
+	"CONTINUE", "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN",
+	"REGISTER", "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE",
+	"UNION ", "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL", "LOGIC",
+	"BOOLOP", "LSQUBRAC", "RSQUBRAC" };
 struct Symbol
 {
-    Symbol(int word, string element, int line, void *value = NULL) : word(word), element(element), value(value), line(line)
-    {
-        if (value)
-            value = new string(element);
-    }
-    int word;
-    string element;
-    void *value;
-    int line;
+	Symbol(int word, string element, int line, void *value = NULL) : word(word), element(element), value(value), line(line)
+	{
+		if (value)
+			value = new string(element);
+	}
+	int word;
+	string element;
+	void *value;
+	int line;
 };
 vector<Symbol> symbols;
 // void reserve(int word, string element, int line = Line)

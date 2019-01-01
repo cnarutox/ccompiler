@@ -3,7 +3,7 @@
 	myparser.y
 	ParserWizard generated YACC file.
 
-	Date: 2018��10��28��
+	Date: 2018??10??28??
 	****************************************************************************/
 	#include "define.h"
 	#include "mylexer.h"
@@ -20,18 +20,18 @@
 		}
 	}
 	void show_vector(vector<typenode*> &v){
-		// vector<typenode*>::iterator iter;
-		// for (iter=v.begin();iter!=v.end();iter++){
-		// 	cout<<(*iter)->name<<' ';
-		// }
-		// cout<<endl;
+		vector<typenode*>::iterator iter;
+		for (iter=v.begin();iter!=v.end();iter++){
+			cout<<(*iter)->name<<' ';
+		}
+		cout<<endl;
 	}
 
 	void show_string(vector<string> &v) {
-		// for (int i=0; i<v.size();i++) {
-		// 	cout<<v[i]<<" ";
-		// }
-		// cout<<endl;
+		for (int i=0; i<v.size();i++) {
+			cout<<v[i]<<" ";
+		}
+		cout<<endl;
 	}
 
 	void post_traverse(typenode* root, vector<string> &v_temp)
@@ -56,12 +56,12 @@
 			return false;
 		for(int i = 0; i < temp1.size(); i++) {
 			if (temp1[i] != temp2[i]){
-				if(temp2[i] == "double" && isComputable(temp1[i])||temp1[i] == "double" && isComputable(temp2[i]))
+				if(temp2[i] == "double" && isComputable(temp1[i]))
 				{
-					cout<<"---------------------------\n";
+				//	cout<<"---------------------------\n";
 					cout<<"|warning: lose precision!!|\n";
 					cout<<"---------------------------\n";
-					return true;
+				//	return true;
 				}
 				return false;
 			}
@@ -334,9 +334,9 @@
 				}
 				if(i==v_argument_list_temp.size()){
 					//cout<<"i"<<i<<endl;//i=0;
-					cout<<"-----------------------"<<endl;
+					//cout<<"-----------------------"<<endl;
 					cout<<"|Argument_list matched!|"<<endl;
-					cout<<"-----------------------"<<endl;
+					//cout<<"-----------------------"<<endl;
 				}
 				else{
 					// cout<<"Argument_list matching failed."<<endl;
@@ -489,7 +489,7 @@
 				cout<<"Can't subtract from uncalculable types ."<<endl;
 		}
 		| unary_operator cast_exp{
-			//cast_exp:单目表达式/强制类型转换
+			//cast_exp:��Ŀ���ʽ/ǿ������ת��
 			$$ = new node();
 			printf("257 ");
 			$$ -> length = 2;
@@ -508,9 +508,15 @@
 				//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 				if ($1->name == "&") {
 					gen(newlabel(), "=&", $2->type.addr, 0, $$ -> type.addr);
+					typenode* temp = new typenode("pointer");
+					temp->left=&($2->type);
+					temp->width = 4;
+					traverse(temp);
+					$$->type=*temp;
 				}
 				if ($1->name == "*") {
 					gen(newlabel(), "=*", $2->type.addr, 0, $$ -> type.addr);
+					$$->type=*($2->type.left);
 				}
 			}
 		}
@@ -1111,22 +1117,22 @@
 			compare_traverse(&$3->type, v1);
 			compare_traverse(&$5->type, v2);
 			if (v1 == v2){
-				cout<<"------\n";
+			//	cout<<"------\n";
 				cout<<"|match|\n";
-				cout<<"------\n";
+			//	cout<<"------\n";
 			}	
 			else{
-				cout<<"-------\n"<<endl;
+			//	cout<<"-------\n"<<endl;
 				cout<<"mismatch!\n"<<endl;
-				cout<<"-------\n"<<endl;
+			//	cout<<"-------\n"<<endl;
 			}			
 		}
 		;
 
 	assignment_exp
 		: conditional_exp{
-			//(1)谓词表达式
-			//(2)条件表达式 a<b?a:b
+			//(1)???????
+			//(2)???????? a<b?a:b
 			$$ = new node();
 			printf("635 ");
 			$$ -> length = 1;
@@ -1147,17 +1153,16 @@
 			  
 			$$->type = $3->type;
 			if (check_type(&$1->type, &$3->type)){
-				cout<<"----------------"<<endl;
+			//	cout<<"----------------"<<endl;
 				cout<<"|Two sides equal|"<<endl;
-				cout<<"----------------"<<endl;
+			//	cout<<"----------------"<<endl;
 			}	
 			else{
-				cout<<"---------------------"<<endl;
+			//	cout<<"---------------------"<<endl;
 				cout<<"|Two sides don't equal|"<<endl;
-				cout<<"---------------------"<<endl;
+			//	cout<<"---------------------"<<endl;
 			}
 			gen(newlabel(), $2->name, $1->type.addr, $3->type.addr, $1->type.addr);
-
 			}
 		;
 
@@ -1340,8 +1345,8 @@
 			$$->children[0] = $1;
 			$$->children[1] = $2;	
 			$$->type=$1->type;	
-		}
-		| type_specifier{ // int
+		} 
+		| type_specifier{ // int int*
 			$$ = new node();
 			printf("799 ");
 			$$ -> length = 1;
@@ -1432,14 +1437,14 @@
 			show_string(v1);
 			show_string(v2);
 			if (check_type(&($1->type), &($3->type))){
-				cout<<"-------"<<endl;
+			//	cout<<"-------"<<endl;
 				cout<<"|match!|"<<endl;
-				cout<<"-------"<<endl;
+			//	cout<<"-------"<<endl;
 			}
 			else{
-				cout<<"----------"<<endl;
+			//	cout<<"----------"<<endl;
 				cout<<"|!mismatch|"<<endl;
-				cout<<"-----------"<<endl;
+			//	cout<<"-----------"<<endl;
 			}
 			gen(newlabel(), "=", $1->type.addr, $3->type.addr, $1->type.addr);
 		}
@@ -1608,6 +1613,10 @@
 			$$->children[0] = $1.ntnode;		
 		}
 		| type_specifier pointer{
+			$$=new node();
+			printf("999 ");
+			$$ -> length = 2;
+			$$->name="type_specifier";
 		}
 		;
 
@@ -2995,6 +3004,7 @@
 
 	int main(void)
 	{
+		files.open("D:\\code.txt");
 		s.push_back(new varmap());
 	//print-function
 		type3->right = &voidnode;
@@ -3002,10 +3012,10 @@
 		s[s.size()-1]->vartable["print"] = type3;
 		s.push_back(new varmap());
 
-	//  	FILE *stream;
-	//	freopen_s(&stream, "test.c", "r", stdin);
-	//	freopen_s(&stream, "out.txt", "w", stdout);
-		// cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
+	//  FILE *stream;
+	// 	freopen_s(&stream, "in.txt", "r", stdin);
+	// 	freopen_s(&stream, "out.txt", "w", stdout);
+	// 	cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
 		int n = 1;
 		mylexer lexer;
 		myparser parser;
@@ -3015,6 +3025,9 @@
 				show_code();
 			}
 		}
+		transcode();
+		files.close();
 		getchar();
+
 		return 0;
 	}
