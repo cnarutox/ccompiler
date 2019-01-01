@@ -3,7 +3,7 @@
 	myparser.y
 	ParserWizard generated YACC file.
 
-	Date: 2018??10??28??
+	Date: 2018��10��28��
 	****************************************************************************/
 	#include "define.h"
 	#include "mylexer.h"
@@ -22,16 +22,16 @@
 	void show_vector(vector<typenode*> &v){
 		vector<typenode*>::iterator iter;
 		for (iter=v.begin();iter!=v.end();iter++){
-			cout<<(*iter)->name<<' ';
+			// cout<<(*iter)->name<<' ';
 		}
-		cout<<endl;
+		// cout<<endl;
 	}
 
 	void show_string(vector<string> &v) {
-		for (int i=0; i<v.size();i++) {
-			cout<<v[i]<<" ";
-		}
-		cout<<endl;
+		// for(int i=0; i<v.size();i++) {
+		// 	cout<<v[i]<<" ";
+		// }
+		// cout<<endl;
 	}
 
 	void post_traverse(typenode* root, vector<string> &v_temp)
@@ -48,20 +48,18 @@
 		vector<string> temp2;
 		post_traverse(tp1, temp1);
 		post_traverse(tp2, temp2);
-		cout<<"%%%%%%%%%%%%%%%"<<endl;
 		show_string(temp1);
 		show_string(temp2);
-		cout<<"%%%%%%%%%%%%%%%%"<<endl;
 		if (temp1.size() != temp2.size())
 			return false;
 		for(int i = 0; i < temp1.size(); i++) {
 			if (temp1[i] != temp2[i]){
-				if(temp2[i] == "double" && isComputable(temp1[i]))
+				if(temp2[i] == "double" && isComputable(temp1[i])||temp1[i] == "double" && isComputable(temp2[i]))
 				{
-				//	cout<<"---------------------------\n";
+					cout<<endl<<"---------------------------\n";
 					cout<<"|warning: lose precision!!|\n";
 					cout<<"---------------------------\n";
-				//	return true;
+					return true;
 				}
 				return false;
 			}
@@ -115,7 +113,7 @@
 	%type <ntnode> initializer,initializer_list,statement,labeled_statement,compound_statement
 	%type <ntnode> declaration_list,statement_list,exp_statement
 	%type <ntnode> iteration_statement,jump_statement,translation_unit,external_declaration
-	%type <ntnode> function_definition,selection_statement,M, N, switch_pre
+	%type <ntnode> function_definition,selection_statement,M, N, P, switch_pre
 	%type <ntnode> open_statement, matched_statement, stmt,other,direct_pre_declarator
 
 
@@ -186,8 +184,11 @@
 			$$->children=new node* [1];
 			$$->children[0] = $1.ntnode;
 			
-			traverse_vartable(s.size()-1);
-			typenode* ptr = search($1.ntnode->name,s.size()-1);					
+			//traverse_vartable(s.size()-1);
+			typenode* ptr = search($1.ntnode->name,s.size()-1);
+			// cout<<"$1.ntnode->name:"<<$1.ntnode->name<<endl;
+			// cout<<"---------"<<ptr->name<<endl;
+			traverse(ptr);				
 			if(ptr != NULL)
 			{
 				$$->type = *ptr;
@@ -249,9 +250,12 @@
 
 		;
 
-		postfix_pre_exp
+		postfix_pre_exp//调用
 		: postfix_exp '('{
+			printf("241");
 			fun_name = var_name;
+			cout<<endl<<"-----------------"<<endl;
+			cout<<"241, fun_name:"<<fun_name<<endl;
 		}
 		;
 
@@ -281,12 +285,17 @@
 			$$->children[2] = $3;
 			$$->children[3] = $4.ntnode;
 			$$->type = *($1->type.right);
+			gen(newlabel(), "=#", 4, 0, offset);
+			gen(newlabel(), "*", offset - 1, offset, offset + 1);
+			offset++;
+			gen(newlabel(), "array", 0, offset, offset + 1);
+			// offset++;
 		}
-		|postfix_pre_exp ')'{
+		| postfix_pre_exp ')'{
 			$$ = new node();
 			printf("159 ");
 			$$ -> length = 3;
-			$$->name="postfix_exp";
+			$$->name="call_fun";
 			$$->children=new node* [3];
 			typenode* temp = search(fun_name, s.size()-1);
 			if(temp->right != NULL)
@@ -296,52 +305,67 @@
 				$$->type = *temp;
 			}
 			s.pop_back();  
-			gen(newlabel(), "call", 0, 0, 0);
+			if (temp->right->name != "void")
+				gen(newlabel(), "call", -1, 0, 0);
+			else gen(newlabel(), "call", 0, 0, 0);
+			call_fun_addr = nextinstr;
 		}
 		| postfix_pre_exp argument_exp_list ')'{
 			$$ = new node();
 			printf("168 ");
 			$$ -> length = 4;
-			$$->name="postfix_exp";
+			$$->name="call_fun";
 			s.pop_back();  
-			gen(newlabel(), "call", 0, 0, 0);
-			vector<string> v_argument_list_temp; //??no value
+			call_fun_addr = nextinstr;
+			vector<typenode*> v_argument_list_temp;
 			typenode* type_exp = (search(fun_name, s.size()-1));
-			traverse_list(type_exp->left, v_argument_list_temp);//?
-			//for(int x=0;x<v_argument_list_temp.size();x++){
-				//cout<<v_argument_list_temp[x]<<" ";
-			//}
-			//for(int x=0;x<v_argument_list.size();x++){
-				//cout<<v_argument_list[x]<<" ";
-			//}
+			traverse(type_exp->left);
+			traverse_argument(type_exp->left, v_argument_list_temp);
+			for(int x=0;x<v_argument_list_temp.size();x++){
+			}
+			if (type_exp->right->name != "void")
+				gen(newlabel(), "call", -1, 0, 0);
+			else gen(newlabel(), "call", 0, 0, 0);
+			// cout<<endl;
+			// cout<<"argument-------------------->"<<endl;						
+			for(int x=0;x<v_argument_list.size();x++){
+				// cout<<v_argument_list[x]->name<<" ";
+			}
+			// cout<<endl;
+			int itm = 0;
 			if(type_exp->name == "fun"){
-				int i=0;
-				if (v_argument_list_temp.size()!=v_argument_list.size()){
-					// cout<<"Argument_list matching failed."<<endl;
+				// cout<<"it is a function!!!"<<endl;
+				if(v_argument_list.size()!=v_argument_list_temp.size()){
+					cout<<endl<<"---------------------------------"<<endl;
+					cout<<"|Argument_list doesn't matched!!|"<<endl;
+					cout<<"--------------------------------"<<endl;
 				}
 				else{
-					// while(i<v_argument_list_temp.size()&&v_argument_list[i]!=v_argument_list_temp[i]){
-					// 	i++;
-					// 	cout<<v_argument_list[i]<<" "<<v_argument_list_temp[i]<<endl;
-						// }
-					for(i=0; i<v_argument_list_temp.size();i++){
-						if(v_argument_list[i]!=v_argument_list_temp[i])
+					while(itm<v_argument_list.size()){
+						if(check_type(v_argument_list[itm], v_argument_list_temp[itm]))
 						{
-							//cout<<"Argument_list matching failed."<<endl;
+							itm++;
+						}
+						else{
+							cout<<endl<<"---------------------------------"<<endl;
+							cout<<"|Argument_list doesn't matched!!|"<<endl;
+							cout<<"----------------------------------"<<endl;
 							break;
-						}			
+						}
 					}
 				}
-				if(i==v_argument_list_temp.size()){
-					//cout<<"i"<<i<<endl;//i=0;
-					//cout<<"-----------------------"<<endl;
-					cout<<"|Argument_list matched!|"<<endl;
-					//cout<<"-----------------------"<<endl;
+				if(itm == v_argument_list.size()){
+					// cout<<"-----------------------"<<endl;
+					// cout<<"|Argument_list matched!|"<<endl;
+					// cout<<"-----------------------"<<endl;
 				}
 				else{
-					// cout<<"Argument_list matching failed."<<endl;
+					cout<<endl<<"----------------------------------"<<endl;
+					cout<<"|Argument_list doesn't matched!!|"<<endl;
+					cout<<"----------------------------------"<<endl;
 				}
 			}
+			$$->type = *(type_exp->right);
 			// cout<<"clear v_argument_list"<<endl;
 			v_argument_list.clear();
 		}
@@ -364,11 +388,11 @@
 				if (pointer.name == "###")
 					cout << "struct doesn't have " << $3.ntnode->name << endl;
 				else{
-					cout<<"struct has "<<$3.ntnode->name<<endl;
+					// cout<<"struct has "<<$3.ntnode->name<<endl;
 				}
 				$$->type = pointer;
 				$$->type.addr = $1->type.addr + temp_addr;
-				cout<<"struct has ";
+				// cout<<"struct has ";
 			} 
 			else if($1->type.name == "array" && $1->type.right->name == "record"){
 				typenode pointer;
@@ -378,7 +402,7 @@
 				if (pointer.name == "#O#O#O")
 					cout << "struct doesn't have " << $3.ntnode->name << endl;
 				else{
-					cout<<"struct has "<<$3.ntnode->name<<endl;
+					// cout<<"struct has "<<$3.ntnode->name<<endl;
 				}
 				$$->type = pointer;
 			}
@@ -405,8 +429,11 @@
 			$$->children[0] = $1;
 			$$->children[1] = $2.ntnode;
 
-			if(!isComputable($1->type.name))
-				cout<<"No additive calculation can be made for uncalculable types."<<endl;
+			if(!isComputable($1->type.name)){
+				cout<<endl<<"--------------------------------------------------------------"<<endl;
+				cout<<"|No additive calculation can be made for uncalculable types!!|"<<endl;
+				cout<<"--------------------------------------------------------------"<<endl;
+			}
 		}
 		| postfix_exp DEC_OP{
 			$$ = new node();
@@ -417,8 +444,11 @@
 			$$->children[0] = $1;
 			$$->children[1] = $2.ntnode;
 
-			if(!isComputable($1->type.name))
-				cout<<"Can't subtract from uncalculable types."<<endl;
+			if(!isComputable($1->type.name)){
+				cout<<endl<<"------------------------------------------"<<endl;
+				cout<<"|Can't subtract from uncalculable types!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
+			}
 		}
 		;
 
@@ -430,7 +460,7 @@
 			$$->name="argument_exp_list";
 			$$->children=new node* [1];
 			$$->children[0] = $1;
-			v_argument_list.push_back($1->type.name);
+			v_argument_list.push_back(&($1->type));
 			gen(newlabel(), "ARG", 0, 0, $1->type.addr);
 			$$->type = $1->type;						
 		}
@@ -445,16 +475,16 @@
 			$$->children[2] = $3;
 
 			// v_argument_list.push_back($1->type.name);
-			v_argument_list.push_back($3->type.name);
+			v_argument_list.push_back(&($3->type));
 		}
-		;
+		; 
 
 	unary_exp
 		: postfix_exp{
 			$$ = new node();
 			printf("234 ");
 			$$ -> length = 1;
-			$$->name="unary_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -473,8 +503,11 @@
 			$$->children[0] = $1.ntnode;
 			$$->children[1] = $2;
 
-			if(!isComputable($2->type.name))
-				cout<<"No additive calculation can be made for uncalculable types."<<endl;
+			if(!isComputable($2->type.name)){
+				cout<<endl<<"-------------------------------------------------------------"<<endl;
+				cout<<"|No additive calculation can be made for uncalculable types!!|"<<endl;
+				cout<<"--------------------------------------------------------------"<<endl;
+			}															
 		}
 		| DEC_OP unary_exp{
 			$$ = new node();
@@ -485,11 +518,14 @@
 			$$->children[0] = $1.ntnode;
 			$$->children[1] = $2;
 
-			if(!isComputable($2->type.name))
-				cout<<"Can't subtract from uncalculable types ."<<endl;
+			if(!isComputable($2->type.name)){
+				cout<<endl<<"------------------------------------------"<<endl;
+				cout<<"|Can't subtract from uncalculable types!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
+			}
 		}
 		| unary_operator cast_exp{
-			//cast_exp:��Ŀ���ʽ/ǿ������ת��
+			//cast_exp:单目表达式/强制类型转换
 			$$ = new node();
 			printf("257 ");
 			$$ -> length = 2;
@@ -508,15 +544,9 @@
 				//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
 				if ($1->name == "&") {
 					gen(newlabel(), "=&", $2->type.addr, 0, $$ -> type.addr);
-					typenode* temp = new typenode("pointer");
-					temp->left=&($2->type);
-					temp->width = 4;
-					traverse(temp);
-					$$->type=*temp;
 				}
 				if ($1->name == "*") {
 					gen(newlabel(), "=*", $2->type.addr, 0, $$ -> type.addr);
-					$$->type=*($2->type.left);
 				}
 			}
 		}
@@ -533,7 +563,12 @@
 			{
 				$$->dvalue = $2->type.width; 
 			}
-			else cout<<"Unknown type, unable to perform sizeof operation."<<endl;
+			else 
+			{	
+				cout<<endl<<"---------------------------------------------------"<<endl;
+				cout<<"|Unknown type, unable to perform sizeof operation!!|"<<endl;
+				cout<<"---------------------------------------------------"<<endl;
+			}
 		}
 		| SIZEOF '(' type_name ')'{
 			$$ = new node();
@@ -548,7 +583,7 @@
 			s.pop_back();  
 
 			if($3->type.width!=0)$$->dvalue = $3->type.width;
-			else cout<<"Unknown type, unable to perform sizeof operation."<<endl;
+			else cout<<"!Unknown type, unable to perform sizeof operation!||"<<endl;
 		}
 		;
 
@@ -590,7 +625,7 @@
 			$$ = new node();
 			printf("332 ");
 			$$ -> length = 1;
-			$$->name="cast_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -618,16 +653,35 @@
 		: cast_exp{
 			$$ = new node();
 			printf("352 ");
-			$$ -> length = 1;
-			$$->name="multiplicative_exp";
-			$$->children=new node* [1];
-			$$->children[0] = $1;
-
+			$$->name = $1->name;
 			$$->dvalue = $1->dvalue;
 			$$->type = $1->type;	
 		    $$->truelist= $1->truelist;
 			$$->falselist= $1->falselist;
 			$$->nextlist = $1->nextlist;	
+		}
+		| multiplicative_exp '^' cast_exp{
+			$$ = new node();
+			printf("354 ");
+			$$ -> length = 3;
+			$$->name="multiplicative_exp";
+			$$->children=new node* [3];
+			$$->children[0] = $1;
+			$$->children[1] = $2.ntnode;
+			$$->children[2] = $3;
+
+			if (!isComputable($1->type.name) || !isComputable($3->type.name)){
+				cout<<"--------------------------------------------------------"<<endl;
+				cout<<"|Mismatch of Operator Types in Multiplication Operations!!|"<<endl;
+				cout<<"----------------------------------------------------------"<<endl;
+			}
+			$$->type = $1->type;
+			$$->type.addr = offset;
+			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
+			gen(newlabel(), "^", $1->type.addr, $3->type.addr, offset);
+			// offset += max($1->type.width, $3->type.width);
+			offset += 1;
+												
 		}
 		| multiplicative_exp '*' cast_exp{
 			$$ = new node();
@@ -639,8 +693,11 @@
 			$$->children[1] = $2.ntnode;
 			$$->children[2] = $3;
 
-			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-				cout<<"Mismatch of Operator Types in Multiplication Operations."<<endl;
+			if (!isComputable($1->type.name) || !isComputable($3->type.name)){
+				cout<<"-----------------------------------------------------------"<<endl;
+				cout<<"|Mismatch of Operator Types in Multiplication Operations!!|"<<endl;
+				cout<<"-----------------------------------------------------------"<<endl;
+			}
 			$$->type = $1->type;
 			$$->type.addr = offset;
 			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
@@ -660,7 +717,10 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-				cout<<"Divisional Operator Type Mismatch."<<endl;
+			{cout<<"------------------------------------------"<<endl;
+				cout<<"|Divisional Operator Type Mismatch!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
+			}				
 			$$->type = $1->type;
 			$$->type.addr = offset;
 			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
@@ -680,7 +740,10 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || isComputable($3->type.name))
-				cout<<"Complementation Operator Type Mismatch."<<endl;
+			{cout<<"------------------------------------------"<<endl;
+				cout<<"|Complementation Operator Type Mismatch!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
+			}
 			$$->type = $1->type;
 			$$->type.addr = offset;
 			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
@@ -696,7 +759,7 @@
 			$$ = new node();
 			printf("389 ");
 			$$ -> length = 1;
-			$$->name="additive_exp";
+            $$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -712,7 +775,10 @@
 			$$ -> length = 3;
 			$$->name="additive_exp";
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-				cout<<"Operator type r,  $4->type.addrmismatch."<<endl;	
+			{cout<<"------------------------------------------"<<endl;
+				cout<<"|Operator type r,  $4->type.addr>>mismatch!!|"<<endl;	
+				cout<<"------------------------------------------"<<endl;}
+				
 			$$->type = $1->type;
 			$$->type.addr = offset;
 			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);	
@@ -725,8 +791,12 @@
 			printf("405 ");
 			$$ -> length = 3;
 			$$->name="additive_exp";
-			if (!isComputable($1->type.name) || isComputable($3->type.name))
-				cout<<"Operator type mismatch."<<endl;	
+			if (!isComputable($1->type.name) || isComputable($3->type.name)){
+				cout<<"---------------------------"<<endl;			
+				cout<<"|Operator type mismatch!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
+			}
+					
 			$$->type = $1->type;
 			$$->type.addr = offset;
 			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
@@ -741,7 +811,7 @@
 			$$ = new node();
 			printf("417 ");
 			$$ -> length = 1;
-			$$->name="shift_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -762,7 +832,11 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-					cout<<"Shift Operator Operator Mismatch ."<<endl;
+			{
+				cout<<"-----------------------------------"<<endl;							
+				cout<<"|Shift Operator Operator Mismatch!!|"<<endl;
+				cout<<"-----------------------------------"<<endl;
+			}
 		}
 		| shift_exp RIGHT_OP additive_exp{
 			$$ = new node();
@@ -775,7 +849,11 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-					cout<<"Shift Operator Operator Mismatch ."<<endl;
+			{
+				cout<<"------------------------------------------"<<endl;
+					cout<<"|Shift Operator Operator Mismatch!!|"<<endl;
+					cout<<"------------------------------------------"<<endl;
+			}
 		}
 		;
 
@@ -784,7 +862,7 @@
 			$$ = new node();
 			printf("445 ");
 			$$ -> length = 1;
-			$$->name="relational_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -805,9 +883,12 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-					cout<<"Relational expression type mismatch ."<<endl;
+			{		cout<<"------------------------------------------"<<endl;
+					cout<<"|Relational expression type mismatch!!|"<<endl;
+					cout<<"------------------------------------------"<<endl;
+					}
 			gen(newlabel(), "j<", $1->type.addr, $3->type.addr); 
-			$$->truelist->push_back(nextinstr); 
+			$$->truelist->push_back(nextinstr);
 			$$->falselist->push_back(newlabel());
 			gen(nextinstr, "j");
 		}
@@ -818,7 +899,10 @@
 			$$->name="relational_exp";
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-					cout<<"Relational expression type mismatch ."<<endl;
+			{cout<<"------------------------------------------"<<endl;
+					cout<<"|Relational expression type mismatch!!|"<<endl;
+					cout<<"------------------------------------------"<<endl;
+			}
 			gen(newlabel(), "j>", $1->type.addr, $3->type.addr); 
 			$$->truelist->push_back(nextinstr); 
 			$$->falselist->push_back(newlabel());
@@ -835,7 +919,10 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-					cout<<"Relational expression type mismatch ."<<endl;
+			{cout<<"------------------------------------------"<<endl;
+					cout<<"|Relational expression type mismatch!!|"<<endl;
+cout<<"------------------------------------------"<<endl;
+			}					
 
 			gen(newlabel(), "j>", $1->type.addr, $3->type.addr); 
 			$$->falselist->push_back(nextinstr); 
@@ -853,8 +940,11 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-					cout<<"Relational expression type mismatch ."<<endl;
-
+			{
+					cout<<"------------------------------------------"<<endl;			
+					cout<<"|Relational expression type mismatch!!|"<<endl;
+					cout<<"------------------------------------------"<<endl;
+			}
 			gen(newlabel(), "j<", $1->type.addr, $3->type.addr); 
 			$$->falselist->push_back(nextinstr); 
 			$$->truelist->push_back(newlabel());
@@ -867,7 +957,7 @@
 			$$ = new node();
 			printf("491 ");
 			$$ -> length = 1;
-			$$->name="equality_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -889,7 +979,10 @@
 			$$->type=boolnode;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-					cout<<"Relational expression type mismatch ."<<endl;
+			{cout<<"------------------------------------------"<<endl;
+					cout<<"|Relational expression type mismatch!!|"<<endl;
+					cout<<"------------------------------------------"<<endl;
+					}
 			gen(newlabel(), "j=", $1->type.addr, $3->type.addr);  
 			$$->truelist->push_back(nextinstr);    
 			$$->falselist->push_back(newlabel());       
@@ -907,7 +1000,10 @@
 			$$->type=boolnode;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-				cout<<"Relational expression type mismatch ."<<endl;
+			{cout<<"------------------------------------------"<<endl;
+				cout<<"|Relational expression type mismatch!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
+			}
 			
 			int nextinstr = newlabel();
 			gen(nextinstr, "j=", $1->type.addr, $3->type.addr);  
@@ -923,7 +1019,7 @@
 			$$ = new node();
 			printf("519 ");
 			$$ -> length = 1;
-			$$->name="and_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -945,7 +1041,9 @@
 			$$->type=$3->type;
 
 			if (!isInteger($1->type.name) || !isInteger($3->type.name))
-					cout<<"Intersection Operator Type Mismatch ."<<endl;
+{cout<<"------------------------------------------"<<endl;			
+					cout<<"|Intersection Operator Type Mismatch!!|"<<endl;
+cout<<"------------------------------------------"<<endl;}					
 		}
 		;
 
@@ -954,7 +1052,7 @@
 			$$ = new node();
 			printf("538 ");
 			$$ -> length = 1;
-			$$->name="exclusive_or_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -976,7 +1074,10 @@
 			$$->type=$3->type;
 
 			if (!isInteger($1->type.name) || !isInteger($3->type.name))
-					cout<<"Intersection Operator Type Mismatch ."<<endl;
+			{cout<<"------------------------------------------"<<endl;
+			cout<<"|Intersection Operator Type Mismatch!!|"<<endl;
+			cout<<"------------------------------------------"<<endl;}
+					
 		}
 		;
 
@@ -985,7 +1086,7 @@
 			$$ = new node();
 			printf("557 ");
 			$$ -> length = 1;
-			$$->name="inclusive_or_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -1007,7 +1108,10 @@
 			$$->type=$3->type;
 
 			if (!isInteger($1->type.name) || !isInteger($3->type.name))
-					cout<<"Or operation left-right operand type mismatch "<<endl;
+			{cout<<"------------------------------------------"<<endl;
+			cout<<"|Or operation left-right operand type mismatch!!| "<<endl;
+			cout<<"------------------------------------------"<<endl;}
+					
 		}
 		;
 
@@ -1016,7 +1120,7 @@
 			$$ = new node();
 			printf("576 ");
 			$$ -> length = 1;
-			$$->name="logical_and_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -1059,6 +1163,14 @@
 			gen(nextinstr+1, "j");
 		}
 		;
+	P
+		: {
+			$$ = new node();
+			printf("586 ");
+			$$->nextlist->push_back(newlabel());
+			gen(nextinstr, "j");
+		}
+		;
 
 
 	logical_or_exp
@@ -1066,7 +1178,7 @@
 			$$ = new node();
 			printf("595 ");
 			$$ -> length = 1;
-			$$->name="logical_or_exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 
@@ -1094,7 +1206,7 @@
 			$$ = new node();
 			printf("614 ");
 			$$ -> length = 1;
-			$$->name="conditional_exp";		
+			$$->name = $1->name;	
 			$$->children=new node* [1];
 			$$->children[0] = $1;	
 
@@ -1117,30 +1229,29 @@
 			compare_traverse(&$3->type, v1);
 			compare_traverse(&$5->type, v2);
 			if (v1 == v2){
-			//	cout<<"------\n";
-				cout<<"|match|\n";
-			//	cout<<"------\n";
+				// cout<<"------\n";
+				// cout<<"|match|\n";
+				// cout<<"------\n";
 			}	
 			else{
-			//	cout<<"-------\n"<<endl;
-				cout<<"mismatch!\n"<<endl;
-			//	cout<<"-------\n"<<endl;
+				cout<<"-----------------"<<endl;
+				cout<<"|type mismatch!!|"<<endl;
+				cout<<"-----------------"<<endl;
 			}			
 		}
 		;
 
 	assignment_exp
 		: conditional_exp{
-			//(1)???????
-			//(2)???????? a<b?a:b
+			//(1)谓词表达式
+			//(2)条件表达式 a<b?a:b
 			$$ = new node();
 			printf("635 ");
 			$$ -> length = 1;
-			$$->name="assignment_exp";
-			$$->children=new node* [1];
-			$$->children[0] = $1;		
-
+			$$->name = $1->name;
 			$$->type = $1->type;
+			//(1)???????
+			//(2)???????? a<b?a:b
 			$$->truelist= $1->truelist;
 			$$->falselist= $1->falselist;
 			$$->nextlist = $1->nextlist;
@@ -1153,16 +1264,17 @@
 			  
 			$$->type = $3->type;
 			if (check_type(&$1->type, &$3->type)){
-			//	cout<<"----------------"<<endl;
-				cout<<"|Two sides equal|"<<endl;
-			//	cout<<"----------------"<<endl;
+				// cout<<"----------------"<<endl;
+				// cout<<"|Two sides equal|"<<endl;
+				// cout<<"----------------"<<endl;
 			}	
 			else{
-			//	cout<<"---------------------"<<endl;
-				cout<<"|Two sides don't equal|"<<endl;
-			//	cout<<"---------------------"<<endl;
+				cout<<"-------------------------"<<endl;
+				cout<<"|Two sides don't equal!!|"<<endl;
+				cout<<"-------------------------"<<endl;
 			}
 			gen(newlabel(), $2->name, $1->type.addr, $3->type.addr, $1->type.addr);
+
 			}
 		;
 
@@ -1262,7 +1374,7 @@
 			$$ = new node();
 			printf("740 ");
 			$$ -> length = 1;
-			$$->name="exp";
+			$$->name = $1->name;
 			$$->children=new node* [1];
 			$$->children[0] = $1;
 			$$->type=$1->type;
@@ -1345,15 +1457,16 @@
 			$$->children[0] = $1;
 			$$->children[1] = $2;	
 			$$->type=$1->type;	
-		} 
-		| type_specifier{ // int int*
+		}
+		| type_specifier{ // int
 			$$ = new node();
 			printf("799 ");
 			$$ -> length = 1;
 			$$->name="declaration_specifiers";
 			$$->children=new node* [1];
 			$$->children[0] = $1;
-			$$->type=$1->type;
+			$$->type=*rFlag();
+			// cout<<"[799: $$->type:]"<<$$->type.name<<endl;
 		}
 		| type_specifier declaration_specifiers{ // lont int
 			$$ = new node();
@@ -1428,6 +1541,10 @@
 			$$->children[1] = $2.ntnode;
 			$$->children[2] = $3;
 
+			if ($3 -> name == "call_fun") {
+				code[call_fun_addr][1] = "1"; 								
+			}
+
 			traverse_vartable(s.size()-1);
 			$$->type = $1->type;
 			vector<string> v1;
@@ -1436,15 +1553,19 @@
 			compare_traverse(&($3->type), v2);
 			show_string(v1);
 			show_string(v2);
+			// cout<<"*************858$3->type.name"<<$3->type.name<<endl;
+			// cout<<"*************858$1->type.name"<<$1->type.name<<endl;
 			if (check_type(&($1->type), &($3->type))){
-			//	cout<<"-------"<<endl;
-				cout<<"|match!|"<<endl;
-			//	cout<<"-------"<<endl;
+				// cout<<"--------"<<endl;
+				// cout<<"|match!|"<<endl;
+				// cout<<"--------"<<endl;
 			}
 			else{
-			//	cout<<"----------"<<endl;
-				cout<<"|!mismatch|"<<endl;
-			//	cout<<"-----------"<<endl;
+				// cout<<"-----"<<$1->type.name<<"------"<<endl;
+				cout<<"-----------------"<<endl;
+				cout<<"|type mismatch!!|"<<endl;
+				// cout<<"-----"<<$3->type.name<<"------"<<endl;
+				cout<<"-----------------"<<endl;
 			}
 			gen(newlabel(), "=", $1->type.addr, $3->type.addr, $1->type.addr);
 		}
@@ -1613,10 +1734,6 @@
 			$$->children[0] = $1.ntnode;		
 		}
 		| type_specifier pointer{
-			$$=new node();
-			printf("999 ");
-			$$ -> length = 2;
-			$$->name="type_specifier";
 		}
 		;
 
@@ -1999,7 +2116,10 @@
 		;
 	direct_pre_declarator
 		: direct_declarator '('{
-			fun_name = var_name;
+			printf("8521");
+			fun_name2 = var_name;
+			cout<<endl<<"-------------------"<<endl;
+			cout<<"8521 fun_name2:"<<fun_name2<<endl;
 			fun_addr = $1->type.addr;
 		}
 		;
@@ -2011,13 +2131,14 @@
 			$$ -> length = 1;
 			$$->name="direct_declarator";
 			var_name = $1.ntnode->name;
-			////gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
+			//gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
 			//cout << $1.ntnode->name << rFlag()->width << endl;
 			$$->type = *rFlag();
 			int temp = $1.ntnode->type.addr;
 			$1.ntnode->type = *rFlag();
 			$1.ntnode->type.addr = temp;
 			s.back()->vartable[$1.ntnode->name] = rFlag();
+		    var_set.insert($1.ntnode->type.addr);
 			// offset += rFlag()->width;
 			offset += 1;
 			//gen(newlabel(), "DEC", $1.ntnode->type.width, 0, $1.ntnode->type.addr);
@@ -2067,11 +2188,16 @@
 			int tmp = $1->type.addr;
 			rFlag()->addr = tmp;
 			s.back()->vartable[var_name] = rFlag();
+			// var_set.insert(var_name);
 			$$->type = *rFlag();
 			$1->type = *rFlag();
 			// offset += rFlag()->width;
 			offset += 1;
-			//gen(newlabel(), "DEC", $1->type.width, 0, $1->type.addr);
+			gen(newlabel(), "=#", 4, 0, offset - 1);
+			gen(newlabel(), "*", offset - 1, offset - 2, offset);
+			offset++;
+			gen(newlabel(), "DEC", offset - 1, 0, offset);
+			offset++;
 			//traverse(root);
 		}
 		| direct_declarator '[' ']' {
@@ -2108,8 +2234,9 @@
 			$$ -> length = 3;
 			$$->name="direct_declarator";
 			$$->children=new node* [3];
-			fun_name = var_name;
-
+			fun_name2 = var_name;
+			cout<<endl<<"----------------------"<<endl;
+			cout<<"1313->fun_name2:"<<fun_name2<<endl;
 			gen(newlabel(), "fun", 0, 0, 0);
 		}
 		;
@@ -2126,9 +2253,11 @@
 			typenode* temp = new typenode("pointer");
 			temp->left=rFlag();
 			temp->width = 4;
+			// cout<<"1325: temp->name:"<<temp->name<<endl;
 			flag = !flag;
 			wFlag(*temp);
-			traverse(temp);
+			// cout<<"1325-->"<<endl;						
+			// traverse(temp);
 		}
 		| '*' type_qualifier_list { // *const
 			$$ = new node ();
@@ -2193,6 +2322,8 @@
 			$$ -> children[0] = $1;
 
 			type3->left = rFlag();
+			// cout<<"[1378:type3->left]"<<type3->left->name<<endl;
+			// traverse(type3->left);
 
 			gen(newlabel(), "fun", 0, 0, 0);
 		}
@@ -2229,6 +2360,7 @@
 			typenode *temp = new typenode("X");
 			flag = !flag;
 			temp->left = rFlag();
+			// cout<<"1404"<<endl<<"rFlag()"<<temp->left->name<<endl;
 			flag = !flag;
 			temp->right = rFlag();
 			wFlag(*temp);
@@ -2265,7 +2397,7 @@
 		;
 
 	identifier_list
-		: ID {
+		: ID {	
 			$$ = new node();
 			printf("1441 ");
 			$$ -> name = "identifier_list";
@@ -2275,6 +2407,7 @@
 			int tmp = $1.ntnode->type.addr;
 			rFlag()->addr = tmp;
 			s.back()->vartable[$1.ntnode->name] = rFlag();
+            var_set.insert($1.ntnode->type.addr);
 			// offset += rFlag()->width;
 			offset += 1;
 			$1.ntnode->type = *rFlag();
@@ -2292,6 +2425,7 @@
 			int tmp = $3.ntnode->type.addr;
 			rFlag()->addr = tmp;
 			s.back()->vartable[$3.ntnode->name] = rFlag();	
+			var_set.insert($3.ntnode->type.addr);
 			// offset += rFlag()->width;
 			offset += 1;
 			$3.ntnode->type = *rFlag();
@@ -2449,7 +2583,7 @@
 		: assignment_exp  {
 			$$ = new node();
 			printf("1587 ");
-			$$ -> name = "initializer";
+			$$->name = $1->name;
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
 			$$ -> children[0] = $1;
@@ -2504,21 +2638,29 @@
 			$$ = new node();
 			printf("1635 ");
 			$$ -> name = "other";
+			$$ -> nextlist = $1->nextlist;
+			// cout << $1->nextlist->size() << "???????????????" << endl;
+			$$ -> truelist = $1 -> truelist;
+			$$ -> falselist = $1 -> falselist;
+			traverse_vartable(s.size()-1);
 		}
 		| exp_statement {
 			$$ = new node();
-			printf("1642 ");
-			$$ -> name = "other";
+			printf("1636 ");
+			$$->name = $1->name;
+			$$ -> nextlist = $1->nextlist;
 		}
 		|iteration_statement {
 			$$ = new node();
-			printf("1643 ");
+			printf("1637 ");
 			$$ -> name = "other";
+			$$ -> nextlist = $1->nextlist;
 		}
 		|jump_statement{
 			$$ = new node();
-			printf("1643 ");
+			printf("1638 ");
 			$$ -> name = "other";
+			$$ -> nextlist = $1->nextlist;
 		}
 		;
 	statement
@@ -2536,11 +2678,15 @@
 			$$ = new node();
 			printf("1669 ");
 			$$ -> name = "xx";
+			$$ -> nextlist = $1->nextlist;
+			$$ -> truelist = $1 -> truelist;
+			$$ -> falselist = $1 -> falselist;
 		}
 		| selection_statement {
 			$$ = new node();
 			printf("1670 ");
 			$$ -> name = "other";
+			$$->nextlist = $1->nextlist;
 		}
 		;	
 	default_pre
@@ -2585,6 +2731,8 @@
 			printf("1719 ");
 			$$ -> name = "compound_statement";
 			$$->nextlist = $2->nextlist;
+			$$ -> truelist = $2 -> truelist;
+			$$ -> falselist = $2 -> falselist;
 		}
 		| '{' declaration_list '}' {
 			$$ = new node();
@@ -2628,14 +2776,16 @@
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
 			$$ -> children[0] = $1;
+			$$ -> nextlist = $1->nextlist;
 		}
 		| statement_list M statement {
 			$$ = new node();
-			//cout<<"$2->instr:"<<$2->instr<<endl;
+			// cout<<"$2->instr:"<<$2->instr<<endl;
 			printf("1775 ");
 			$$ -> name = "statement_list";
+			cout << "--------------============";
 			backpatch($1->nextlist , $2->instr); 
-			$$->nextlist =$3->nextlist; 
+			$$->nextlist = $3->nextlist; 
 		}
 		;
 
@@ -2651,11 +2801,14 @@
 		| exp ';' {
 			$$ = new node();
 			printf("1793 ");
-			$$ -> name = "exp_statement";
+			$$->name = $1->name;
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
 			$$ -> children[0] = $1;
 			$$ -> children[1] = $2.ntnode;
+			$$ -> nextlist = $1->nextlist;
+			$$ -> falselist = $1 -> falselist;
+			$$ -> truelist = $1 -> truelist; 
 		}
 		;
 	stmt 
@@ -2667,6 +2820,7 @@
 			$$ -> children = new node* [1];
 			$$ -> children[0] = $1;
 			$$->type=$1->type;
+			$$->nextlist = $1->nextlist;
 		}
 		| open_statement {
 			$$ = new node(); 
@@ -2675,10 +2829,11 @@
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
 			$$ -> children[0] = $1;
+			$$->nextlist = $1->nextlist;
 		}
 		;
 	matched_statement
-		: IF '(' exp ')' M matched_statement N ELSE M matched_statement{
+		: IF '(' exp ')' M matched_statement P ELSE M matched_statement{
 			$$ = new node();
 			printf("1803 ");
 			$$ -> name = "matched_statement";
@@ -2706,12 +2861,14 @@
 			$$ -> name = "open_statement";
 			$$->type=$6->type;
 			s.pop_back();
-			traverse_vartable(s.size() - 1);
+			//traverse_vartable(s.size() - 1);
 			backpatch($3->truelist, $5->instr);
 			$$->nextlist =merge($3->falselist, $6->nextlist); 
-			 
+			for (int i = 0; i < $$->nextlist->size(); i++){
+				cout << $$->nextlist->at(i)<< "@";
+			}
 		}
-		| IF '(' exp ')' M matched_statement N ELSE M open_statement {
+		| IF '(' exp ')' M matched_statement P ELSE M open_statement {
 			$$ = new node();
 			printf("1817 ");
 			$$ -> name = "open_statement";
@@ -2730,6 +2887,7 @@
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
 			$$ -> children[0] = $1;
+			$$->nextlist = $1->nextlist;
 		}
 		| switch_pre statement {
 			$$ = new node();
@@ -2757,7 +2915,12 @@
 			backpatch($7->nextlist, $2->instr); 
 			$$->nextlist = $4->falselist;
 			gen(newlabel(), "j", 0, 0, $2->instr) ; 
+			cout << $2->instr << "@";
+			// s.pop_back();
+			traverse_vartable(s.size()-1);
+			s.pop_back(); 
 			s.pop_back();
+			traverse_vartable(s.size()-1);
 		}
 		| DO M statement WHILE M '(' exp ')' ';' {
 			$$ = new node();
@@ -2767,7 +2930,11 @@
 			backpatch($3->nextlist, $5->instr); 
 			$$->nextlist = $7->falselist;
 			gen(newlabel(), "j", 0, 0, $5->instr) ; 
+			cout<<"WHILE"<<endl;
+			traverse_vartable(s.size()-1);
 			s.pop_back(); 
+			s.pop_back();
+			traverse_vartable(s.size()-1);
 		}
 		| FOR '(' exp_statement M exp_statement ')' M statement {
 			$$ = new node();
@@ -2778,25 +2945,33 @@
 				s[s.size()-2]->vartable[iter->first] = iter->second;
 			}
 			backpatch($5->truelist, $8->instr);
-			backpatch($8->nextlist, $5->instr);
+			// backpatch($8->nextlist, $5->instr);
+			gen(newlabel(), "j", 0, 0, $4->instr);
+			$8->nextlist = makelist($5->instr);
 			$$->nextlist=$5->falselist;
 			s.pop_back();		  
 		}
-		| FOR '(' exp_statement M exp_statement M exp ')' M statement {
+		| FOR '(' exp_statement M exp_statement M exp P ')' M statement {
+			
 			$$ = new node();
 			printf("1875 ");
 			$$ -> name = "iteration_statement";
-			backpatch($5->truelist, $9->instr);
-			backpatch($10->nextlist, $6->instr);
-			backpatch($7->nextlist,$4->instr);
+			backpatch($5->truelist, $10->instr);
+			// backpatch($10->nextlist, $6->instr);
+			gen(newlabel(), "j", 0, 0, $6->instr);
+			$10->nextlist = makelist($6->instr);
+			backpatch($8->nextlist, $4->instr);
 			$$->nextlist= $5->falselist;
 			map<string, typenode*>::iterator iter;
 			for(iter = s.back()->vartable.begin();iter!=s.back()->vartable.end();iter++)
 			{
 				s[s.size()-2]->vartable[iter->first] = iter->second;
 			}
-			
+			cout<<"FOR"<<endl;
+			traverse_vartable(s.size()-1);
 			s.pop_back();
+			s.pop_back();
+			traverse_vartable(s.size()-1);
 		}
 		;
 
@@ -2848,7 +3023,8 @@
 			$$ -> children[0] = $1.ntnode;
 			$$ -> children[1] = $2;
 			$$ -> children[2] = $3.ntnode;	
-			rtn_stmt.push(&($2->type));	
+			rtn_stmt.push(&($2->type));
+			gen(newlabel(), "RETURN", 0, 0, $2->type.addr);
 		}
 		;
 
@@ -2897,17 +3073,22 @@
 			printf("1981 ");
 			$$ -> name = "function_definition";
 			type3->right = &($1->type);
-			s.back()->vartable[fun_name] = type3;
+			cout<<"$$$$$$$$$$$$$$$$$$$type3:"<<type3<<endl;
+			s.back()->vartable[fun_name2] = type3;
+			// var_set.insert(fun_name);
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name !="void" ){
-				cout<<"type error in 1991!"<<endl;
+				cout<<endl<<"-----------------------"<<endl;
+				cout<<"|must return a value!!|"<<endl;
+				cout<<"-----------------------"<<endl;
 			}
 			while(rtn_stmt.size()>0){ 
 			typenode *a = rtn_stmt.top();
 			//cout<<"stack top"<<a->name<<endl;
 			if(!check_type(a,&($1->type)))
 			{
-						cout<<"type error in 1991!"<<endl;
+				cout<<a->name+"mismatches with "
+				+$1->type.name<<endl;
 			}
 			rtn_stmt.pop();
 			}	
@@ -2917,30 +3098,47 @@
 			$$ = new node();
 			printf("1991 ");
 			$$ -> name = "function_definition";
-			$$ -> length = 3;
-			$$ -> children = new node* [3];
-			$$ -> children[0] = $1;
-			$$ -> children[1] = $2;
-			$$ -> children[2] = $3;
+			$$ -> nextlist = $3 -> nextlist;
 
+			
 			type3->right = &($1->type);
-			s[s.size()-2]->vartable[fun_name] = type3;
-			cout<<"/./././././././"<<fun_addr<<endl;
+			// cout<<"[1991:type3->right]:"<<$1->type.name<<endl;
+			// cout<<"fun_name------------>"<<fun_name<<endl;
+			
+			// var_set.insert(fun_name);
+			cout<<endl<<"---------------type3"<<type3->name<<endl;
+			cout<<"----------------fun_name2"<<fun_name2<<endl;
+			cout<<"6666666666666"<<endl;
+			s[s.size()-2]->vartable[fun_name2] = type3;
+			//s.back()->vartable[fun_name] = type3;
+			
+			//cout<<"/./././././././"<<fun_addr<<endl;
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
-				cout<<"type error in 1991!"<<endl;
-			}	
+				cout<<"-----------------------"<<endl;
+				cout<<"|must return a value!!|"<<endl;
+				cout<<"-----------------------"<<endl;
+			}
 			while(rtn_stmt.size()>0){
 				typenode *a = rtn_stmt.top();
 				if(!check_type(a,&($1->type)))
 				{
-						cout<<"type error in 1991!"<<endl;
+					if($1->type.name == "void"){
+						cout<<"------------------------------------------"<<endl;
+						cout<<"|cannot return " + a->name + " to void!!|"<<endl;
+						cout<<"------------------------------------------"<<endl;
+					}
+					else{
+						cout<<"------------------------------------------"<<endl;						
+						cout<<"|must return a value " + $1->type.name+"!!|"<<endl;
+						cout<<"------------------------------------------"<<endl;						
+					}
 				}
 				rtn_stmt.pop();
-			}	
+			}
+			s.pop_back();	
 			traverse_vartable(s.size()-1);	
-			s.pop_back();
 		}
 		| declarator declaration_list compound_statement {
 			$$ = new node();
@@ -2952,17 +3150,21 @@
 			$$ -> children[1] = $2;
 			$$ -> children[2] = $3;
 			type3->right = &($1->type);
-			s.back()->vartable[fun_name] = type3;
-			cout<<"/./././././././"<<fun_addr<<endl;
+			s.back()->vartable[fun_name2] = type3;
+			// var_set.insert(fun_name);
+			// cout<<"/./././././././"<<fun_addr<<endl;
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
-				cout<<"type error in 1991!"<<endl;
+				cout<<"------------------------------------------"<<endl;
+				cout<<"|must return a value " + type3->right->name+"!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
 			}		
 			while(rtn_stmt.size()>0){
 			typenode *a = rtn_stmt.top();
 			if(!check_type(a,&($1->type)))
-			{
-						cout<<"type error in 1991!"<<endl;
+			{cout<<"------------------"<<endl;
+				cout<<"|type error!!|"<<endl;
+				cout<<"--------------"<<endl;
 			}
 			rtn_stmt.pop();
 			}	
@@ -2977,17 +3179,21 @@
 			$$ -> children[0] = $1;
 			$$ -> children[1] = $2;
 			type3->right = &($1->type);
-			s.back()->vartable[fun_name] = type3;
-			cout<<"/./././././././"<<fun_addr<<endl;
+			s.back()->vartable[fun_name2] = type3;
+			// var_set.insert(fun_name);
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
-				cout<<"type error in 1991!"<<endl;
+				cout<<"------------------------------------------"<<endl;
+				cout<<"|must return a value " + type3->right->name+"!!|"<<endl;
+				cout<<"------------------------------------------"<<endl;
 			}	
 			while(rtn_stmt.size()>0){
 			typenode *a = rtn_stmt.top();
 			if(!check_type(a,&($1->type)))
 			{
-						cout<<"type error in 1991!"<<endl;
+				cout<<"--------------"<<endl;
+				cout<<"|type error!!|"<<endl;
+				cout<<"--------------"<<endl;
 			}
 			rtn_stmt.pop();
 			}	
@@ -3004,18 +3210,17 @@
 
 	int main(void)
 	{
-		files.open("D:\\code.txt");
 		s.push_back(new varmap());
 	//print-function
 		type3->right = &voidnode;
-		type3->left=&intnode;
+		type3->left = &intnode;
 		s[s.size()-1]->vartable["print"] = type3;
 		s.push_back(new varmap());
 
-	//  FILE *stream;
-	// 	freopen_s(&stream, "in.txt", "r", stdin);
-	// 	freopen_s(&stream, "out.txt", "w", stdout);
-	// 	cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
+	//  	FILE *stream;
+	//	freopen_s(&stream, "test.c", "r", stdin);
+	//	freopen_s(&stream, "out.txt", "w", stdout);
+		// cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
 		int n = 1;
 		mylexer lexer;
 		myparser parser;
@@ -3023,11 +3228,10 @@
 			if (lexer.yycreate(&parser)) {
 				n = parser.yyparse();
 				show_code();
+				transcode();
 			}
 		}
-		transcode();
-		files.close();
+		file.close();
 		getchar();
-
 		return 0;
 	}

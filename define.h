@@ -2,7 +2,8 @@
 #ifndef DUP_H
 #define DUP_H
 #include <map>
-#include <vector>
+#include <set>
+#include <vector>7
 #include <string>
 #include <iostream>
 #include <stack>
@@ -18,8 +19,10 @@ int default_label;
 map<int, int> switch_map;
 vector<int> nextlist;
 string struct_name;
-// fstream outfile("code.txt");
-ofstream files;
+set<int> var_set;
+fstream file("code.txt");
+int call_fun_addr;
+string fun_name2;
 struct typenode
 {
 	int addr;
@@ -47,18 +50,18 @@ struct typenode
 
 void traverse(typenode *root)
 {
-	if (root != NULL)
-		cout << root->name << " " << root->addr << endl;
-	if (root->left != NULL)
-	{
-		cout << "left ";
-		traverse(root->left);
-	}
-	if (root->right != NULL)
-	{
-		cout << "right ";
-		traverse(root->right);
-	}
+	// if (root != NULL)
+	// 	cout << root->name << " " << root->addr << endl;
+	// if (root->left != NULL)
+	// {
+	// 	cout << "left ";
+	// 	traverse(root->left);
+	// }
+	// if (root->right != NULL)
+	// {
+	// 	cout << "right ";
+	// 	traverse(root->right);
+	// }
 }
 void traverse_list(typenode *root, vector<string> &v)
 {
@@ -66,7 +69,8 @@ void traverse_list(typenode *root, vector<string> &v)
 	{
 		// cout<<"i am null!!"<<endl;
 		//cout << root->name << " " << endl;
-		if (root->right == NULL && root->left == NULL) {
+		if (root->right == NULL && root->left == NULL)
+		{
 			v.push_back(root->name);
 		}
 	}
@@ -79,6 +83,34 @@ void traverse_list(typenode *root, vector<string> &v)
 	{
 		//cout << "right ";
 		traverse_list(root->right, v);
+	}
+}
+
+void traverse_argument(typenode *root, vector<typenode *> &v)
+{
+
+	if (root->left && root->left->name == "X")
+	{
+		traverse_argument(root->left, v);
+	}
+	if (root->right && root->right->name == "X")
+	{
+		traverse_argument(root->right, v);
+	}
+	if (root != NULL && (root->left && root->left->name != "X" || root->right && root->right->name != "X"))
+	{
+		if (root->left->name != "X")
+		{
+			cout << "|||||||||||||||||||||||||||||" << endl;
+			cout << "add left" << root->left->name << endl;
+			v.push_back(root->left);
+		}
+		if (root->right->name != "X")
+		{
+			cout << "|||||||||||||||||||||||||||||" << endl;
+			cout << "add right" << root->right->name << endl;
+			v.push_back(root->right);
+		}
 	}
 }
 stack<typenode *> rtn_stmt;
@@ -105,17 +137,22 @@ typenode boolnode("bool", 1);
 map<string, typenode *> auto_define_type;
 stack<typenode *> struct_stack;
 
-vector<string> v_argument_list;
+vector<typenode *> v_argument_list;
 map<int, vector<string>> code;
 
-void show_code() {
-	for (int i = 0; i < code.size(); i++) {
+void show_code()
+{
+	for (int i = 0; i < code.size(); i++)
+	{
 		cout << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
 	}
 }
-void transcode() {
-	for (int i = 0; i < code.size(); i++) {
-		files << i << ":" << code[i][0] + "," + code[i][1] + "," + code[i][2] + "," + code[i][3] << "\n";
+void transcode()
+{
+	for (int i = 0; i < code.size(); i++)
+	{
+		file << i << ": (" << code[i][0] + ", " + code[i][1] + ", " + code[i][2] + ", " + code[i][3] + ")" << endl;
+		// file << i << ":" << code[i][0] + "," + code[i][1] + "," + code[i][2] + "," + code[i][3] << "\n";
 	}
 }
 
@@ -136,143 +173,159 @@ vector<varmap *> s; //fuhao-table
 					//
 struct node
 {
-    int id;
-    string name;
-    double dvalue;
-    int length;
-    node **children;
-    typenode type;
-    varmap *args;
-    int instr;
-    vector<int> *nextlist;
-    vector<int> *falselist;
-    vector<int> *truelist;
-    node(string n = "")
-    {
-        length = 0;
-        name = n;
-        nextlist = new vector<int>();
-        falselist = new vector<int>();
-        truelist = new vector<int>();
-    }
+	int id;
+	string name;
+	double dvalue;
+	int length;
+	node **children;
+	typenode type;
+	varmap *args;
+	int instr;
+	vector<int> *nextlist;
+	vector<int> *falselist;
+	vector<int> *truelist;
+	node(string n = "")
+	{
+		length = 0;
+		name = n;
+		nextlist = new vector<int>();
+		falselist = new vector<int>();
+		truelist = new vector<int>();
+	}
 };
 
-vector<int> makelist(int i = -1)
+vector<int> *makelist(int i = -1)
 {
-    vector<int> list;
-    if (i != -1)
-    {
-        list.push_back(i);
-    }
-    return list;
+	vector<int> list;
+	if (i != -1)
+	{
+		list.push_back(i);
+	}
+	return &list;
 }
 
 int newlabel()
 {
-    static int label = -1;
-    nextinstr = ++label;
-    return label;
+	static int label = -1;
+	nextinstr = ++label;
+	return label;
 }
 
 void backpatch(vector<int> *p, int index)
 {
-    char num[25];
-    _itoa_s(index, num, 10);
-    for (int i = 0; i < p->size(); i++)
-    {
-        code[(*p)[i]][3] = string(num);
-    }
+	cout << index << "@" << endl;
+	char num[25];
+	_itoa_s(index, num, 10);
+	for (int i = 0; i < p->size(); i++)
+	{
+		cout << "\]\]\]\]" << endl;
+		cout << (*p)[i] << endl;
+		code[(*p)[i]][3] = string(num);
+	}
 }
 
 void gen(int label, string op = "", int arg1 = 0, int arg2 = 0, int res = 0)
 {
-    char num1[25];
-    _itoa_s(arg1, num1, 10);
-    char num2[25];
-    _itoa_s(arg2, num2, 10);
-    char num3[25];
-    _itoa_s(res, num3, 10);
-    string a1, a2, a3;
-    if (arg1 != 0 && op != "DEC")
-    {
-        a1 = "v" + string(num1);
-    }
-    else if (arg1 == 0 || (op == "DEC" && arg1 != -1))
-    {
-        if (op == "DEC")
-        {
-            if (zhang_xing_own.count(res) > 0)
-            {
-                label = zhang_xing_own[res];
-            }
-            else{
-                zhang_xing_own[res] = label;
-            }
-        }
-        a1 = string(num1);
-    }
-    else if (arg1 == -1 && op == "DEC")
-    {
-        label = zhang_xing_own[res];
-        if (code.count(label) > 0)
-        {
-            cout<<endl<<code.count(0)<<endl;
-            //code.erase(label);
-            code[label][0] = "#";
-        }
-        return;
-    }
-    if (arg2 != 0)
-    {
-        a2 = "v" + string(num2);
-    }
-    else
-    {
-        a2 = string(num2);
-    }
-    if (res != 0 || op == "DEC")
-    {
-        a3 = "v" + string(num3);
-    }
-    else
-    {
-        a3 = string(num3);
-    }
-    if (op == "=#")
-    {
-        a1 = string(num1);
-    }
-    if (op == "fun" || op == "call")
-    {
-        a3 = fun_name;
-    }
-    code[label] = vector<string>();
-    code[label].push_back(op);
-    code[label].push_back(a1);
-    code[label].push_back(a2);
-    code[label].push_back(a3);
-    //cout << label << ": (" << code[label][0] + ", " + code[label][1] + ", " + code[label][2] + ", " + code[label][3] + ")" << endl;
+	char num1[25];
+	_itoa_s(arg1, num1, 10);
+	char num2[25];
+	_itoa_s(arg2, num2, 10);
+	char num3[25];
+	_itoa_s(res, num3, 10);
+	string a1, a2, a3;
+	string info;
+
+	if (arg1 > 0)
+	{
+		if (var_set.count(arg1) > 0)
+		{
+			a1 = "var" + string(num1);
+		}
+		else
+		{
+			a1 = "temp" + string(num1);
+		}
+	}
+	else if (arg1 == 0)
+	{
+		a1 = string(num1);
+	}
+	if (arg2 != 0)
+	{
+		if (var_set.count(arg2) > 0)
+		{
+			a2 = "var" + string(num2);
+		}
+		else
+		{
+			a2 = "temp" + string(num2);
+		}
+	}
+	else
+	{
+		a2 = string(num2);
+	}
+	if (res != 0 && op != "j" && op != "j=" && op != "j>" && op != "j<")
+	{
+		if (var_set.count(res) > 0)
+		{
+			a3 = "var" + string(num3);
+		}
+		else
+		{
+			a3 = "temp" + string(num3);
+		}
+	}
+	else
+	{
+		a3 = string(num3);
+	}
+	if (op == "=#")
+	{
+		a1 = string(num1);
+	}
+	if (op == "fun" || op == "call")
+	{
+		if (op == "fun")
+			a3 = fun_name2;
+		else
+		{
+			if (arg1 == -1)
+				a1 = "1";
+			a3 = fun_name;
+		}
+	}
+	if (op == "DEC")
+	{
+		a3 = "array" + string(num3);
+	}
+	code[label] = vector<string>();
+	code[label].push_back(op);
+	code[label].push_back(a1);
+	code[label].push_back(a2);
+	code[label].push_back(a3);
+	//cout << label << ": (" << code[label][0] + ", " + code[label][1] + ", " + code[label][2] + ", " + code[label][3] + ")" << endl;
 }
 
 vector<int> *merge(vector<int> *p1, vector<int> *p2, vector<int> *p3 = new vector<int>())
 {
-    vector<int> *res = new vector<int>();
-    for (int i = 0; i < p1->size(); i++)
-    {
-        res->push_back((*p1)[i]);
-    }
-    for (int i = 0; i < p2->size(); i++)
-    {
-        res->push_back((*p2)[i]);
-    }
-    if (p3->size() > 0)
-    {
-        for (int i = 0; i < p3->size(); i++)
-        {
-            res->push_back((*p3)[i]);
-        }
-    }
-    return res;
+	vector<int> *res = new vector<int>();
+	for (int i = 0; i < p1->size(); i++)
+	{
+		res->push_back((*p1)[i]);
+	}
+	for (int i = 0; i < p2->size(); i++)
+	{
+		res->push_back((*p2)[i]);
+	}
+	if (p3->size() > 0)
+	{
+		for (int i = 0; i < p3->size(); i++)
+		{
+			res->push_back((*p3)[i]);
+		}
+	}
+	return res;
 }
 
 bool isComputable(string s)
@@ -282,6 +335,13 @@ bool isComputable(string s)
 		return true;
 	else
 		return false;
+}
+
+bool compare_string(string s1, string s2)
+{
+	if (s1 == "double" && isComputable(s2) || s2 == "double" && isComputable(s1))
+		return true;
+	return false;
 }
 
 bool isInteger(string s)
@@ -294,70 +354,70 @@ bool isInteger(string s)
 
 typenode *create_struct(string name)
 {
-    int width_sum = 0;
+	int width_sum = 0;
 
-    map<string, typenode *>::iterator iter;
-    typenode *temp_ptr;
-    typenode *temp1;
-    typenode *temp2;
-    typenode *temp3 = new typenode("?");
-    for (iter = varmap_temp->vartable.begin(); iter != varmap_temp->vartable.end(); ++iter)
-    {
-        //cout << iter->first << ' ' << iter->second->name << ' ';
-        temp_ptr = new typenode(string(iter->first));
-        typenode *root = new typenode("X");
-        root->left = temp_ptr;
-        root->right = iter->second;
-        root->left->addr = width_sum;
-        //cout << iter->second->width << '%';
-        width_sum += iter->second->width;
-        struct_stack.push(root);
-    }
-    //cout<<endl;
-    while (struct_stack.size() >= 1)
-    {
-        //cout<<struct_stack.size()<<endl;
-        if (struct_stack.size() != 1)
-        {
-            temp1 = struct_stack.top();
-            struct_stack.pop();
-            temp2 = struct_stack.top();
-            struct_stack.pop();
-            typenode *temp_ptr2 = new typenode("X");
-            temp_ptr2->left = temp1;
-            temp_ptr2->right = temp2;
-            struct_stack.push(temp_ptr2);
-        }
-        else
-        {
-            temp3 = struct_stack.top();
-            struct_stack.pop();
-            break;
-        }
-    }
-    typenode *temp = new typenode("record");
-    temp->left = temp3;
-    struct_width = temp->width = width_sum;
-    offset -= struct_width;
-    //traverse(temp);
-    return auto_define_type[name] = temp;
+	map<string, typenode *>::iterator iter;
+	typenode *temp_ptr;
+	typenode *temp1;
+	typenode *temp2;
+	typenode *temp3 = new typenode("?");
+	for (iter = varmap_temp->vartable.begin(); iter != varmap_temp->vartable.end(); ++iter)
+	{
+		//cout << iter->first << ' ' << iter->second->name << ' ';
+		temp_ptr = new typenode(string(iter->first));
+		typenode *root = new typenode("X");
+		root->left = temp_ptr;
+		root->right = iter->second;
+		root->left->addr = width_sum;
+		//cout << iter->second->width << '%';
+		width_sum += iter->second->width;
+		struct_stack.push(root);
+	}
+	//cout<<endl;
+	while (struct_stack.size() >= 1)
+	{
+		//cout<<struct_stack.size()<<endl;
+		if (struct_stack.size() != 1)
+		{
+			temp1 = struct_stack.top();
+			struct_stack.pop();
+			temp2 = struct_stack.top();
+			struct_stack.pop();
+			typenode *temp_ptr2 = new typenode("X");
+			temp_ptr2->left = temp1;
+			temp_ptr2->right = temp2;
+			struct_stack.push(temp_ptr2);
+		}
+		else
+		{
+			temp3 = struct_stack.top();
+			struct_stack.pop();
+			break;
+		}
+	}
+	typenode *temp = new typenode("record");
+	temp->left = temp3;
+	struct_width = temp->width = width_sum;
+	offset -= struct_width;
+	//traverse(temp);
+	return auto_define_type[name] = temp;
 }
 
-void traverse_vartable(int i, string tab = "--")
+void traverse_vartable(int i, string tab = "**")
 {
-
-    cout << endl
-         << i << tab;
-    map<string, typenode *>::iterator iter;
-    for (iter = s[i]->vartable.begin(); iter != s[i]->vartable.end(); ++iter)
-    {
-        cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width << '; ' << endl;
-    }
-    if (i > 0)
-    {
-        i--;
-        traverse_vartable(i, tab + "--");
-    }
+	cout << endl
+		 << i << tab;
+	map<string, typenode *>::iterator iter;
+	for (iter = s[i]->vartable.begin(); iter != s[i]->vartable.end(); ++iter)
+	{
+		// cout << iter->first << ' ' << iter->second->name << ' ' << iter->second->addr << ' ' << iter->second->width << ';';
+		cout << iter->first << ' ' << iter->second->name << ';';
+	}
+	if (i > 0)
+	{
+		i--;
+		traverse_vartable(i, tab + "**");
+	}
 }
 
 typenode *search(string myname, int i)
@@ -367,7 +427,7 @@ typenode *search(string myname, int i)
 		// cout<<"s[i]->vartable[myname]"<<s[i]->vartable[myname]->name<<endl;
 		//cout<<myname<<" yes in "<<i<<endl;
 		//traverse(s[i]->vartable[myname]);
-		traverse_vartable(i);
+		//traverse_vartable(i);
 		//traverse(s[i]->vartable[myname]);
 		return s[i]->vartable[myname];
 	}
@@ -473,7 +533,7 @@ string Words[] = {
 	"CONTINUE", "DEFAULT", "DO", "ELSE", "ENUM", "EXTERN", "GOTO", "RETURN",
 	"REGISTER", "SIGNED", "SIZEOF", "STATIC", "STRUCT", "SWITCH", "TYPEDE",
 	"UNION ", "UNSIGN", "VOLATI", "WHILE", "COLON", "LITERAL", "LOGIC",
-	"BOOLOP", "LSQUBRAC", "RSQUBRAC" };
+	"BOOLOP", "LSQUBRAC", "RSQUBRAC"};
 struct Symbol
 {
 	Symbol(int word, string element, int line, void *value = NULL) : word(word), element(element), value(value), line(line)

@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 83 of your 30 day trial period.
+* You are on day 84 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.h
 * C++ header file generated from myparser.y.
 * 
-* Date: 01/01/19
-* Time: 13:13:13
+* Date: 01/02/19
+* Time: 01:23:47
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -31,7 +31,7 @@
 
 #ifndef YYSTYPE
 union tagYYSTYPE {
-#line 97 ".\\myparser.y"
+#line 95 ".\\myparser.y"
 
 		struct node* ntnode;
 		int value;
@@ -134,7 +134,7 @@ protected:
 	virtual void yycopyattribute(void YYFAR* dest, const void YYFAR* src, int count);
 
 public:
-#line 148 ".\\myparser.y"
+#line 146 ".\\myparser.y"
 
 		// place any extra class members here
 	
@@ -145,7 +145,7 @@ public:
 #define YYPARSERNAME myparser
 #endif
 
-#line 163 ".\\myparser.y"
+#line 161 ".\\myparser.y"
 
 	#ifndef YYSTYPE
 	#define YYSTYPE int

@@ -1,9 +1,23 @@
-FUNCTION main :
-temp0 := #10
-var0 := temp0
-temp1 := #9
-var1 := temp1
-temp2 := #90
-var2 := temp2
+FUNCTION func :
+PARAM var0
+LABEL label0 :
+temp0 := #0
+IF var0 > temp0 GOTO label1
+GOTO label2
+LABEL label1 :
+temp2 := #1
+temp3 := var0 - temp2
+var0 := temp3
 ARG var0
 CALL print
+GOTO label0
+LABEL label2 :
+temp4 := #0
+RETURN temp4
+FUNCTION main :
+temp5 := #5
+var1 := temp5
+ARG var1
+temp6 := CALL func
+temp7 := #0
+RETURN temp7
