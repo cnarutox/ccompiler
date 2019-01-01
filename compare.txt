@@ -1,24 +1,27 @@
-FUNCTION func :
-PARAM temp1
-FUNCTION func :
-LABEL label2  :
-temp3 := #0
-IF temp1 > temp3 GOTO label0
-GOTO label1
-LABEL label0  :
-temp7 := #1
-temp8 := temp1 - temp7
-temp1 := temp8
-ARG temp1
-CALL print
-GOTO label2
-LABEL label1  :
-temp11 := #0
-RETURN temp11
+LABEL label4  :
 FUNCTION main :
-temp13 := #5
-temp14 := temp13
-ARG temp14
-temp16 := CALL func
-0 := temp16
-RETURN temp15
+temp2 := #0
+temp3 := temp2
+LABEL label2  :
+temp5 := #4
+IF temp3 < temp5 GOTO label0
+GOTO label1
+LABEL label5  :
+temp9 := #1
+temp10 := temp3 + temp9
+temp3 := temp10
+GOTO label2
+LABEL label0  :
+temp13 := #2
+IF temp3 < temp13 GOTO label3
+GOTO label4
+LABEL label3  :
+temp15 := #1
+temp17 := #100
+temp18 := temp15 * temp17
+ARG temp18
+CALL print
+GOTO label5
+LABEL label1  :
+temp21 := #0
+RETURN temp21

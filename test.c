@@ -16,27 +16,31 @@
 //     }
 //     return i;
 // }
-int func(int i)
+// int func()
+// {
+//     return 10;
+// }
+// int main()
+// {
+//     int *p;
+//     int i = 5;
+//     p = &i;
+//     print(*p);
+// }
+
+int main()
 {
-    while(i > 0){
-      i = i - 1;
-      print(i);
+    int i;
+    for(i = 0; i < 4; i = i + 1)
+    {
+        if (i < 2)
+            print(1 * 100);
     }
     return 0;
 }
 
-int main()
-{
-    int j = 5;
-    func(j);
-    // do
-    // {
-    //     j = j - 1;
-    //     print(j);
-    // } while (j > 0);
-    return 0;
-}
-
+//5 4 3 2 1 0
+//结果是5 4
 // int main(){
 // int a[3];
 // a[0] = 5;

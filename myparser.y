@@ -3217,6 +3217,12 @@ cout<<"------------------------------------------"<<endl;}
 		s[s.size()-1]->vartable["print"] = type3;
 		s.push_back(new varmap());
 
+	//print-function
+		type3->right = &voidnode;
+		type3->left = &intnode;
+		s[s.size()-1]->vartable["read"] = type3;
+		s.push_back(new varmap());
+
 	//  	FILE *stream;
 	//	freopen_s(&stream, "test.c", "r", stdin);
 	//	freopen_s(&stream, "out.txt", "w", stdout);
