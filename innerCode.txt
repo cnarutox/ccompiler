@@ -1,0 +1,5 @@
+
+
+FUNCTION main :
+temp0 := #0
+var0 := temp0

@@ -1,26 +1,28 @@
 import re
 lines = []
 tricode = []
-with open("./intermediate.txt") as f:
+with open("./4yuan.txt") as f:
     line = f.readline()
     while line:
         print(line)
         s = []
+        line = line.replace(" (", "")
+        line = line.replace(")", "")
         a = line.split(',')
         b = a[0].split(':')
-        s.append(b[0])
-        s.append(b[1])
-        s.append(a[1])
-        s.append(a[2])
-        s.append(a[3].split('\n')[0])
-        print(s)
+        s.append(b[0].strip())
+        s.append(b[1].strip())
+        s.append(a[1].strip())
+        s.append(a[2].strip())
+        s.append(a[3].strip().split('\n')[0])
+        # print(s)
         lines.append(s)
         line = f.readline()
 
 
 def trans(lists):
     tri = []
-    if lists[0] == 'fun':
+    if lists[1] == 'fun':
         tri.append('FUNCTION')
         tri.append(lists[4])
     elif lists[1] == '=#':
@@ -88,8 +90,10 @@ def trans(lists):
     elif lists[1] == 'j':
         tri.append('GOTO')
         tri.append('label' + lists[4])
-    # elif lists[1]=='DEC':
-    #     print('这是声明语句，不考虑')
+    elif lists[1] == 'DEC':
+        tri.append('DEC')
+        tri.append(lists[4])
+        tri.append(lists[2])
     else:
         print('没考虑到：')
         print(lists)
@@ -101,7 +105,7 @@ for i in range(0, len(lines)):
         tricode.append(trans(lines[i]))
 print(tricode)
 
-m = open('test.asm', 'a')
+m = open('./compare.txt', 'w')
 for i in range(0, len(tricode)):
     st = ''
     for a in range(0, len(tricode[i])):

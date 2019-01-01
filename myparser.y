@@ -1380,7 +1380,7 @@
 			$$ -> length = 1;
 			$$->name="init_declarator_list";
 			$$->children=new node* [1];
-			$$->children[0] = $1;	
+			$$->children[0] = $1;
 
 			$$->type = $1->type;	
 		}
@@ -2090,6 +2090,8 @@
 			$$->name="direct_declarator";
 			$$->children=new node* [3];
 			fun_name = var_name;
+
+			gen(newlabel(), "fun", 0, 0, 0);
 		}
 		;
 
@@ -2568,6 +2570,8 @@
 			printf("1728 ");
 			$$ -> name = "compound_statement";	
 			$$->nextlist = $2->nextlist;
+
+			show_code();
 		}
 		| '{' declaration_list statement_list '}' {
 			$$ = new node();
@@ -2877,7 +2881,6 @@
 			$$ -> name = "function_definition";
 			type3->right = &($1->type);
 			s.back()->vartable[fun_name] = type3;
-			cout<<"/./././././././"<<addr<<endl;
 			gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name !="void" ){
 				cout<<"type error in 1991!"<<endl;
@@ -2907,6 +2910,7 @@
 			s[s.size()-2]->vartable[fun_name] = type3;
 			cout<<"/./././././././"<<fun_addr<<endl;
 			gen(newlabel(), "DEC", -1, 0, fun_addr);
+			show_code();
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
 				cout<<"type error in 1991!"<<endl;
 			}	
@@ -2990,10 +2994,10 @@
 		s[s.size()-1]->vartable["print"] = type3;
 		s.push_back(new varmap());
 
-	//  FILE *stream;
-	//	freopen_s(&stream, "in.txt", "r", stdin);
+	//  	FILE *stream;
+	//	freopen_s(&stream, "test.c", "r", stdin);
 	//	freopen_s(&stream, "out.txt", "w", stdout);
-		cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
+		// cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
 		int n = 1;
 		mylexer lexer;
 		myparser parser;
@@ -3002,6 +3006,7 @@
 				n = parser.yyparse();
 			}
 		}
+		show_code();
 		getchar();
 		return 0;
 	}
