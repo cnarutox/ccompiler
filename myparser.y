@@ -202,7 +202,7 @@
 			$$ = new node();
 			//printf("116 ");
 			$$ -> length = 1;
-			$$->name="primary_exp";
+			$$->name="constant";
 			$$->children=new node* [1];
 			$$->children[0] = $1.ntnode;
 
@@ -211,7 +211,7 @@
 			// offset += $$->type.width;
 			offset += 1;
 			//gen(newlabel(), "DEC", $$->type.width, 0, $$->type.addr);
-			gen(newlabel(), "=#", $1.ntnode->dvalue, 0, $$->type.addr);
+			//gen(newlabel(), "=#", $1.ntnode->dvalue, 0, $$->type.addr);
 		}
 		| STRING_LITERAL{
 			$$ = new node();
@@ -307,7 +307,7 @@
 			s.pop_back();  
 			if (temp->right->name != "void")
 			{
-				cout << "PRINTPRINT" + temp->right->name;
+				// cout << "PRINTPRINT" + temp->right->name;
 				gen(newlabel(), "call", -1, 0, 0);
 			}
 			else gen(newlabel(), "call", 0, 0, 0);
@@ -322,18 +322,18 @@
 			call_fun_addr = nextinstr;
 			vector<typenode*> v_argument_list_temp;
 			typenode* type_exp = (search(fun_name, s.size()-1));
-			cout<<"----------->type_exp.name"<<type_exp->name<<endl;
-			cout<<"----------->type_exp->left.name"<<type_exp->left->name<<endl;
+			// cout<<"----------->type_exp.name"<<type_exp->name<<endl;
+			// cout<<"----------->type_exp->left.name"<<type_exp->left->name<<endl;
 			traverse_argument(type_exp->left, v_argument_list_temp);
 			for(int x=0;x<v_argument_list_temp.size();x++){
 			}
 			if (type_exp->right->name != "void")
 			{
-				cout << "PRINTPRINT" + type_exp->right->name;
+				// cout << "PRINTPRINT" + type_exp->right->name;
 				gen(newlabel(), "call", -1, 0, 0);}
 			else gen(newlabel(), "call", 0, 0, 0);
 			// cout<<endl;
-			cout<<"parameter-------------------->"<<endl;
+			// cout<<"parameter-------------------->"<<endl;
 			for(int x=0;x<v_argument_list_temp.size();x++){
 				cout<<v_argument_list_temp[x]->name<<" ";
 			}
@@ -3034,6 +3034,7 @@ cout<<"------------------------------------------"<<endl;}
 			$$ -> children[2] = $3.ntnode;	
 			rtn_stmt.push(&($2->type));
 			gen(newlabel(), "RETURN", 0, 0, $2->type.addr);
+			
 		}
 		;
 
@@ -3228,7 +3229,7 @@ cout<<"------------------------------------------"<<endl;}
 		s.push_back(new varmap());
 
 	//print-function
-		type5->right = &voidnode;
+		type5->right = &intnode;
 		type5->left = &intnode;
 		s[s.size()-1]->vartable["read"] = type5;
 		s.push_back(new varmap());

@@ -300,6 +300,9 @@
 			{
 				if (arg1 == -1)
 					a1 = "1";
+				if (fun_name == "print"){
+					a1 = "0";
+				}
 				a3 = fun_name;
 			}
 		}

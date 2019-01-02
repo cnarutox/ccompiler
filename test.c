@@ -1,12 +1,16 @@
-// ��� = ���� / ��2^3��
 int main()
 {
-    int a = read();
-    int i;
-    for (i = 2; i < 5; i = i + 1)
-    {
-        a = a / 2;
-    }
-    print(a);
+    int i = 10;
+    int k = 12;
+    int j = 9;
+    int b = 13;
+    int a, c, d, z;
+    print(i);
+    k = j;
+    z = i;
+    print(z);
+    a = k;
+    c = i;
+    d = b;
     return 0;
 }

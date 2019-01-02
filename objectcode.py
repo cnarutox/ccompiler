@@ -1,5 +1,5 @@
+import os
 import re
-# import trans
 
 regs = [
     't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9', 's0', 's1', 's2',
@@ -31,22 +31,22 @@ def Load_Inter(filename):
 def Get_R(string):
     try:
         variables.remove(string)
-    except Exception:
+    except:
         pass
     if string in table:
-        return '$' + table[string]  # 如果已经存在寄存器分配，那么直接返回寄存器
+        return '$' + table[string]  #如果已经存在寄存器分配，那么直接返回寄存器
     else:
         keys = []
-        for key in table:  # 已经分配寄存器的变量key
+        for key in table:  #已经分配寄存器的变量key
             keys.append(key)
-        for key in keys:  # 当遇到未分配寄存器的变量时，清空之前所有分配的临时变量的映射关系！！！
+        for key in keys:  #当遇到未分配寄存器的变量时，清空之前所有分配的临时变量的映射关系！！！
             if 'temp' in key and key not in variables:  #
                 reg_ok[table[key]] = 1
                 del table[key]
-        for reg in regs:  # 对于所有寄存器
-            if reg_ok[reg] == 1:  # 如果寄存器可用
-                table[string] = reg  # 将可用寄存器分配给该变量，映射关系存到table中
-                reg_ok[reg] = 0  # 寄存器reg设置为已用
+        for reg in regs:  #对于所有寄存器
+            if reg_ok[reg] == 1:  #如果寄存器可用
+                table[string] = reg  #将可用寄存器分配给该变量，映射关系存到table中
+                reg_ok[reg] = 0  #寄存器reg设置为已用
                 return '$' + reg
 
 
@@ -142,6 +142,7 @@ _ret: .asciiz "\\n"
 .globl main
 .text
 read:
+    li $v0,4
     la $a0,_prompt
     syscall
     li $v0,5
@@ -165,12 +166,12 @@ print:
 
 def parser():
     for reg in regs:
-        reg_ok[reg] = 1  # 初始化，所有寄存器都可用
-    Inter = Load_Inter('./compare.txt')  # 读取中间代码
-    Load_Var(Inter)  # 第一遍扫描，记录所有变量
+        reg_ok[reg] = 1  #初始化，所有寄存器都可用
+    Inter = Load_Inter('./compare.txt')  #读取中间代码
+    Load_Var(Inter)  #第一遍扫描，记录所有变量
     Obj = []
     for line in Inter:
-        obj_line = translate(line)  # 翻译中间代码成MIPS汇编
+        obj_line = translate(line)  #翻译中间代码成MIPS汇编
         if obj_line == '':
             continue
         Obj.append(obj_line)
