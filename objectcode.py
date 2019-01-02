@@ -1,4 +1,5 @@
 import re
+# import trans
 
 regs = [
     't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9', 's0', 's1', 's2',
@@ -141,7 +142,6 @@ _ret: .asciiz "\\n"
 .globl main
 .text
 read:
-    li $v0,4
     la $a0,_prompt
     syscall
     li $v0,5

@@ -19,7 +19,7 @@ with open("./4yuan.txt") as f:
 
 var_dic = {}
 param_list = []
-label_dic = {}  # ��label��ź�0123��Ӧ����
+label_dic = {}
 N = 0
 M = 0
 
@@ -36,12 +36,12 @@ def varname(lines):
                 a = 'label' + str(len(label_dic))
                 label_dic[lists[4]] = a
 
-    for x in range(0, len(lines)):
-        lists = lines[x]
-        for j in range(2, 5):
-            if lists[j] not in var_dic:
-                var_dic[lists[j]] = 'temp' + str(M)
-                M += 1
+    # for x in range(0, len(lines)):
+    #     lists = lines[x]
+    #     for j in range(2, 5):
+    #         if lists[j] not in var_dic:
+    #             var_dic[lists[j]] = 'temp' + str(M)
+    #             M += 1
 
 
 def trans(lines):
@@ -58,86 +58,87 @@ def trans(lines):
             tricode.append(tri)
             for aa in range(0, len(param_list)):
                 tricode.append(param_list[aa])
-            param_list = []     
+            param_list = []
         elif lists[1] == 'call':
             if lists[2] == '0':
                 tri.extend(['CALL', lists[4]])
                 tricode.append(tri)
-            if lists[2] == '1':  # �з���ֵ
-                tri.extend(['temp' + str(M), ':=', 'CALL', lists[4]])
+            if lists[2] == '1':
+                tri.extend(['v' + str(M), ':=', 'CALL', lists[4]])
                 tricode.append(tri)
-                var_dic[str(i)] = 'temp' + str(M)
+                var_dic[str(i)] = 'v' + str(M)
                 M += 1
-                tri = [lines[i + 1][4], ':=', 'temp' + str(M - 1)]
+                tri = [lines[i + 1][4], ':=', 'v' + str(M - 1)]
                 tricode.append(tri)
                 i += 1
         elif lists[1] == 'ARG':
-            tri.extend(['ARG', var_dic[lists[4]]])
+            tri.extend(['ARG',lists[4]])
             tricode.append(tri)
         elif lists[1] == 'DEC':
-            tri.extend(['DEC',lists[4],lists[2]])
+            tri.extend(['DEC', lists[4], lists[2]])
             tricode.append(tri)
         elif lists[1] == 'RETURN':
-            tri.extend(['RETURN', var_dic[lists[4]]])
+            tri.extend(['RETURN', lists[4]])
             tricode.append(tri)
-        elif lists[1] == '=#':  #ȱcall fun
-            if lists[4] not in var_dic.keys():
-                var_dic[lists[4]]='temp'+str(M)
-                M+=1
-            tri.extend([var_dic[lists[4]], ':= #', lists[2]])
+        elif lists[1] == '=#':
+            # if lists[4] not in var_dic.keys():
+            #     var_dic[lists[4]] = 'temp' + str(M)
+            #     M += 1
+            tri.extend([lists[4], ':= #', lists[2]])
+            # tri.extend([lists[4], ':= #', lists[2]])
             tricode.append(tri)
         elif lists[1] == 'param':
-            tri.extend(['PARAM', var_dic[lists[4]]])
+            tri.extend(['PARAM',lists[4]])
             param_list.append(tri)
         elif lists[1] == '=':
-            if lists[4] not in var_dic.keys():
-                var_dic[lists[4]]='temp'+str(M)
-                M+=1
-            tri.extend([var_dic[lists[4]], ':=', var_dic[lists[3]]])
+            # if lists[4] not in var_dic.keys():
+            #     var_dic[lists[4]] = 'temp' + str(M)
+            #     M += 1
+            tri.extend([lists[4], ':=', lists[3]])
             tricode.append(tri)
         elif lists[1] == '=&':
-            if lists[4] not in var_dic.keys():
-                var_dic[lists[4]]='temp'+str(M)
-                M+=1
-            tri.extend([var_dic[lists[4]], ':= &', var_dic[lists[2]]])
+            # if lists[4] not in var_dic.keys():
+            #     var_dic[lists[4]] = 'temp' + str(M)
+            #     M += 1
+            tri.extend([lists[4], ':= &', lists[2]])
             tricode.append(tri)
         elif lists[1] == '=*':
-            if lists[4] not in var_dic.keys():
-                var_dic[lists[4]]='temp'+str(M)
-                M+=1
-            tri.extend([var_dic[lists[4]], ':= *', var_dic[lists[2]]])
+            # if lists[4] not in var_dic.keys():
+            #     var_dic[lists[4]] = 'temp' + str(M)
+            #     M += 1
+            tri.extend([lists[4], ':= *', lists[2]])
             tricode.append(tri)
         elif lists[1] == '+' or lists[1] == '-' or lists[1] == '*' or lists[1] == '/' or lists[1] == '%' or lists[1] == '^':
-            if lists[4] not in var_dic.keys():
-                var_dic[lists[4]]='temp'+str(M)
-                M+=1
-            tri.append(var_dic[lists[4]])
+            # if lists[4] not in var_dic.keys():
+            #     var_dic[lists[4]] = 'temp' + str(M)
+            #     M += 1
+            tri.append(lists[4])
             tri.append(':=')
-            tri.append(var_dic[lists[2]])
+            tri.append(lists[2])
             tri.append(lists[1])
-            tri.append(var_dic[lists[3]])
+            tri.append(lists[3])
             tricode.append(tri)
         elif lists[1] == 'j=':
             tri.append('IF')
-            tri.append(var_dic[lists[2]])
+            tri.append(lists[2])
             tri.append('==')
-            tri.append(var_dic[lists[3]])
+            tri.append(lists[3])
             tri.append('GOTO')
             tri.append(label_dic[lists[4]])
             tricode.append(tri)
         elif lists[1] == 'j<':
             tri.append('IF')
-            tri.append(var_dic[lists[2]])
+            tri.append(lists[2])
             tri.append('<')
-            tri.append(var_dic[lists[3]])
+            tri.append(lists[3])
             tri.append('GOTO')
             tri.append(label_dic[lists[4]])
             tricode.append(tri)
         elif lists[1] == 'j>':
             tri.append('IF')
-            tri.append(var_dic[lists[2]])
+            tri.append(lists[2])
             tri.append('>')
-            tri.append(var_dic[lists[3]])
+            tri.append(lists[3])
             tri.append('GOTO')
             tri.append(label_dic[lists[4]])
             tricode.append(tri)
@@ -146,14 +147,13 @@ def trans(lines):
             tri.append(label_dic[lists[4]])
             tricode.append(tri)
         else:
-            print('û���ǵ���')
+            print('不支持')
             print(lists)
         i += 1
 
 
 varname(lines)
 trans(lines)
-print(label_dic)
 m = open('.\\compare.txt', 'w')
 for i in range(0, len(tricode)):
     st = ''

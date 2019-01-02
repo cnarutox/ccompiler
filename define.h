@@ -20,7 +20,7 @@
 	vector<int> nextlist;
 	string struct_name;
 	set<int> var_set;
-	fstream file("code.txt");
+	fstream file("code.txt", ios::out|ios::trunc);
 	int call_fun_addr;
 	string fun_name2;
 	struct typenode
@@ -88,7 +88,9 @@
 
 	void traverse_argument(typenode *root, vector<typenode *> &v)
 	{
-
+		if (!root){
+			cout<<"root = NULL"<<endl;	
+		}
 		if (root->left && root->left->name == "X")
 		{
 			traverse_argument(root->left, v);
@@ -97,8 +99,14 @@
 		{
 			traverse_argument(root->right, v);
 		}
+		if (root != NULL && (root->left == NULL && root->right == NULL))
+		{
+			cout << "int 3if " << endl;
+			v.push_back(root);
+		}
 		if (root != NULL && (root->left && root->left->name != "X" || root->right && root->right->name != "X"))
 		{
+			cout<<"int 3if "<<endl;
 			if (root->left->name != "X")
 			{
 				cout << "|||||||||||||||||||||||||||||" << endl;
@@ -403,10 +411,9 @@
 		return auto_define_type[name] = temp;
 	}
 
-	void traverse_vartable(int i, string tab = "**")
+	void traverse_vartable(int i, string tab = "\t**")
 	{
-		cout << endl
-			<< i << tab;
+		cout << endl << i << tab;
 		map<string, typenode *>::iterator iter;
 		for (iter = s[i]->vartable.begin(); iter != s[i]->vartable.end(); ++iter)
 		{

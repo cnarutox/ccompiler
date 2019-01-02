@@ -1,14 +1,22 @@
 FUNCTION main :
-temp0 := #5
+temp0 := CALL read
 var0 := temp0
+temp1 := #2
+var1 := temp1
 LABEL label0 :
+temp2 := #5
+IF var1 < temp2 GOTO label1
+GOTO label2
+LABEL label1 :
+temp4 := #2
+temp5 := var0 / temp4
+var0 := temp5
+temp6 := #1
+temp7 := var1 + temp6
+var1 := temp7
+GOTO label0
+LABEL label2 :
 ARG var0
 CALL print
-temp1 := #1
-temp2 := var0 - temp1
-var0 := temp2
-temp3 := #0
-IF var0 > temp3 GOTO label0
-LABEL label1 :
-temp5 := #0
-RETURN temp5
+temp8 := #0
+RETURN temp8

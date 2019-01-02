@@ -178,7 +178,7 @@
 	primary_exp
 		: ID{
 			$$ = new node();
-			printf("108 ");
+			//printf("108 ");
 			$$ -> length = 1;
 			$$->name="primary_exp";
 			$$->children=new node* [1];
@@ -200,7 +200,7 @@
 		}
 		| CONSTANT{
 			$$ = new node();
-			printf("116 ");
+			//printf("116 ");
 			$$ -> length = 1;
 			$$->name="primary_exp";
 			$$->children=new node* [1];
@@ -215,7 +215,7 @@
 		}
 		| STRING_LITERAL{
 			$$ = new node();
-			printf("123 ");
+			//printf("123 ");
 			$$ -> length = 1;
 			$$->name="primary_exp";
 			$$->children=new node* [1];
@@ -223,7 +223,7 @@
 		}
 		| '(' exp ')'{
 			$$ = new node();
-			printf("130 ");
+			//printf("130 ");
 			$$ -> length = 3;
 			$$->name="primary_exp";	
 			s.pop_back();
@@ -233,7 +233,7 @@
 		}
 		| TRUE {
 			$$ = new node();
-			printf("125 ");
+			//printf("125 ");
 			$$->name="primary_exp";
 			int nextinstr = newlabel();			
 			$$->falselist->push_back(nextinstr);
@@ -241,7 +241,7 @@
 		}
 		| FALSE {
 			$$ = new node();
-			printf("126 ");
+			//printf("126 ");
 			$$->name="primary_exp";
 			int nextinstr = newlabel();
 			$$->falselist->push_back(nextinstr);
@@ -252,17 +252,17 @@
 
 		postfix_pre_exp//调用
 		: postfix_exp '('{
-			printf("241");
+			//printf("241");
 			fun_name = var_name;
-			cout<<endl<<"-----------------"<<endl;
-			cout<<"241, fun_name:"<<fun_name<<endl;
+			// cout<<endl<<"-----------------"<<endl;
+			// cout<<"241, fun_name:"<<fun_name<<endl;
 		}
 		;
 
 	postfix_exp
 		: primary_exp{
 			$$ = new node();
-			printf("142 ");
+			//printf("142 ");
 			$$ -> length = 1;
 			$$->name="postfix_exp";
 			$$->children=new node* [1];
@@ -276,7 +276,7 @@
 		}
 		| postfix_exp '[' exp ']'{	
 			$$ = new node();
-			printf("149 ");
+			//printf("149 ");
 			$$ -> length = 4;
 			$$->name="postfix_exp";
 			$$->children=new node* [4];
@@ -293,7 +293,7 @@
 		}
 		| postfix_pre_exp ')'{
 			$$ = new node();
-			printf("159 ");
+			//printf("159 ");
 			$$ -> length = 3;
 			$$->name="call_fun";
 			$$->children=new node* [3];
@@ -306,32 +306,43 @@
 			}
 			s.pop_back();  
 			if (temp->right->name != "void")
+			{
+				cout << "PRINTPRINT" + temp->right->name;
 				gen(newlabel(), "call", -1, 0, 0);
+			}
 			else gen(newlabel(), "call", 0, 0, 0);
 			call_fun_addr = nextinstr;
 		}
 		| postfix_pre_exp argument_exp_list ')'{
 			$$ = new node();
-			printf("168 ");
+			//printf("168 ");
 			$$ -> length = 4;
 			$$->name="call_fun";
 			s.pop_back();  
 			call_fun_addr = nextinstr;
 			vector<typenode*> v_argument_list_temp;
 			typenode* type_exp = (search(fun_name, s.size()-1));
-			traverse(type_exp->left);
+			cout<<"----------->type_exp.name"<<type_exp->name<<endl;
+			cout<<"----------->type_exp->left.name"<<type_exp->left->name<<endl;
 			traverse_argument(type_exp->left, v_argument_list_temp);
 			for(int x=0;x<v_argument_list_temp.size();x++){
 			}
 			if (type_exp->right->name != "void")
-				gen(newlabel(), "call", -1, 0, 0);
+			{
+				cout << "PRINTPRINT" + type_exp->right->name;
+				gen(newlabel(), "call", -1, 0, 0);}
 			else gen(newlabel(), "call", 0, 0, 0);
 			// cout<<endl;
-			// cout<<"argument-------------------->"<<endl;						
-			for(int x=0;x<v_argument_list.size();x++){
-				// cout<<v_argument_list[x]->name<<" ";
+			cout<<"parameter-------------------->"<<endl;
+			for(int x=0;x<v_argument_list_temp.size();x++){
+				cout<<v_argument_list_temp[x]->name<<" ";
 			}
-			// cout<<endl;
+			cout<<endl;
+			cout<<"argument-------------------->"<<endl;
+			for(int x=0;x<v_argument_list.size();x++){
+				cout<<v_argument_list[x]->name<<" ";
+			}
+			cout<<endl;
 			int itm = 0;
 			if(type_exp->name == "fun"){
 				// cout<<"it is a function!!!"<<endl;
@@ -371,7 +382,7 @@
 		}
 		| postfix_exp '.' ID{
 			$$ = new node();
-			printf("178 ");
+			//printf("178 ");
 			$$ -> length = 3;
 			$$->name="postfix_exp";
 			$$->children=new node* [3];
@@ -412,7 +423,7 @@
 		}
 		| postfix_exp PTR_OP ID{
 			$$ = new node();
-			printf("187 ");
+			//printf("187 ");
 			$$ -> length = 3;
 			$$->name="postfix_exp";
 			$$->children=new node* [3];
@@ -422,7 +433,7 @@
 		}
 		| postfix_exp INC_OP{
 			$$ = new node();
-			printf("196 ");
+			//printf("196 ");
 			$$ -> length = 2;
 			$$->name="postfix_exp";
 			$$->children=new node* [2];
@@ -437,7 +448,7 @@
 		}
 		| postfix_exp DEC_OP{
 			$$ = new node();
-			printf("204 ");
+			//printf("204 ");
 			$$ -> length = 2;
 			$$->name="postfix_exp";
 			$$->children=new node* [2];
@@ -455,7 +466,7 @@
 	argument_exp_list
 		: assignment_exp{
 			$$ = new node();
-			printf("215 ");
+			//printf("215 ");
 			$$ -> length = 1;
 			$$->name="argument_exp_list";
 			$$->children=new node* [1];
@@ -466,7 +477,7 @@
 		}
 		| argument_exp_list ',' assignment_exp{
 			$$ = new node();
-			printf("222 ");
+			//printf("222 ");
 			$$ -> length = 3;
 			$$->name="argument_exp_list";
 			$$->children=new node* [3];
@@ -482,7 +493,7 @@
 	unary_exp
 		: postfix_exp{
 			$$ = new node();
-			printf("234 ");
+			//printf("234 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -496,7 +507,7 @@
 		}
 		| INC_OP unary_exp{
 			$$ = new node();
-			printf("241 ");
+			//printf("241 ");
 			$$ -> length = 2;
 			$$->name="unary_exp";
 			$$->children=new node* [2];
@@ -511,7 +522,7 @@
 		}
 		| DEC_OP unary_exp{
 			$$ = new node();
-			printf("249 ");
+			//printf("249 ");
 			$$ -> length = 2;
 			$$->name="unary_exp";
 			$$->children=new node* [2];
@@ -527,7 +538,7 @@
 		| unary_operator cast_exp{
 			//cast_exp:单目表达式/强制类型转换
 			$$ = new node();
-			printf("257 ");
+			//printf("257 ");
 			$$ -> length = 2;
 			$$->name="unary_exp";
 			if($1->name == "!") {
@@ -552,7 +563,7 @@
 		}
 		| SIZEOF unary_exp{
 			$$ = new node();
-			printf("265 ");
+			//printf("265 ");
 			$$ -> length = 2;
 			$$->name="unary_exp";
 			$$->children=new node* [2];
@@ -572,7 +583,7 @@
 		}
 		| SIZEOF '(' type_name ')'{
 			$$ = new node();
-			printf("273 ");
+			//printf("273 ");
 			$$ -> length = 4;
 			$$->name="unary_exp";
 			$$->children=new node* [4];
@@ -590,32 +601,32 @@
 	unary_operator
 		: '&'{
 			$$ = new node();
-			printf("286 ");
+			//printf("286 ");
 			$$->name="&";
 		}
 		| '*'{
 			$$ = new node();
-			printf("293 ");
+			//printf("293 ");
 			$$->name="*";
 		}
 		| '+'{
 			$$ = new node();
-			printf("301 ");
+			//printf("301 ");
 			$$->name="+";
 		}
 		| '-'{
 			$$ = new node();
-			printf("308 ");
+			//printf("308 ");
 			$$->name="-";
 		}
 		| '~'{
 			$$ = new node();
-			printf("315 ");
+			//printf("315 ");
 			$$->name="~";
 		}
 		| '!'{
 			$$ = new node();
-			printf("322 ");
+			//printf("322 ");
 			$$->name="!";
 		}
 		;
@@ -623,7 +634,7 @@
 	cast_exp
 		: unary_exp{
 			$$ = new node();
-			printf("332 ");
+			//printf("332 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -637,7 +648,7 @@
 		}
 		| '(' type_name ')' cast_exp{
 			$$ = new node();
-			printf("339 ");
+			//printf("339 ");
 			$$ -> length = 4;
 			$$->name="cast_exp";
 			$$->children=new node* [1];
@@ -652,7 +663,7 @@
 	multiplicative_exp
 		: cast_exp{
 			$$ = new node();
-			printf("352 ");
+			//printf("352 ");
 			$$->name = $1->name;
 			$$->dvalue = $1->dvalue;
 			$$->type = $1->type;	
@@ -662,7 +673,7 @@
 		}
 		| multiplicative_exp '^' cast_exp{
 			$$ = new node();
-			printf("354 ");
+			//printf("354 ");
 			$$ -> length = 3;
 			$$->name="multiplicative_exp";
 			$$->children=new node* [3];
@@ -671,7 +682,7 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name)){
-				cout<<"--------------------------------------------------------"<<endl;
+				cout<<endl<<"--------------------------------------------------------"<<endl;
 				cout<<"|Mismatch of Operator Types in Multiplication Operations!!|"<<endl;
 				cout<<"----------------------------------------------------------"<<endl;
 			}
@@ -685,7 +696,7 @@
 		}
 		| multiplicative_exp '*' cast_exp{
 			$$ = new node();
-			printf("359 ");
+			//printf("359 ");
 			$$ -> length = 3;
 			$$->name="multiplicative_exp";
 			$$->children=new node* [3];
@@ -694,7 +705,7 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name)){
-				cout<<"-----------------------------------------------------------"<<endl;
+				cout<<endl<<"-----------------------------------------------------------"<<endl;
 				cout<<"|Mismatch of Operator Types in Multiplication Operations!!|"<<endl;
 				cout<<"-----------------------------------------------------------"<<endl;
 			}
@@ -708,7 +719,7 @@
 		}
 		| multiplicative_exp '/' cast_exp{
 			$$ = new node();
-			printf("368 ");
+			//printf("368 ");
 			$$ -> length = 3;
 			$$->name="multiplicative_exp";
 			$$->children=new node* [3];
@@ -717,7 +728,7 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-			{cout<<"------------------------------------------"<<endl;
+			{cout<<endl<<"------------------------------------------"<<endl;
 				cout<<"|Divisional Operator Type Mismatch!!|"<<endl;
 				cout<<"------------------------------------------"<<endl;
 			}				
@@ -731,7 +742,7 @@
 		}
 		| multiplicative_exp '%' cast_exp{
 			$$ = new node();
-			printf("377 ");
+			//printf("377 ");
 			$$ -> length = 3;
 			$$->name="multiplicative_exp";
 			$$->children=new node* [3];
@@ -740,7 +751,7 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || isComputable($3->type.name))
-			{cout<<"------------------------------------------"<<endl;
+			{cout<<endl<<"------------------------------------------"<<endl;
 				cout<<"|Complementation Operator Type Mismatch!!|"<<endl;
 				cout<<"------------------------------------------"<<endl;
 			}
@@ -757,7 +768,7 @@
 	additive_exp
 		: multiplicative_exp{
 			$$ = new node();
-			printf("389 ");
+			//printf("389 ");
 			$$ -> length = 1;
             $$->name = $1->name;
 			$$->children=new node* [1];
@@ -771,11 +782,11 @@
 		}
 		| additive_exp '+' multiplicative_exp{
 			$$ = new node();
-			printf("396 ");
+			//printf("396 ");
 			$$ -> length = 3;
 			$$->name="additive_exp";
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-			{cout<<"------------------------------------------"<<endl;
+			{cout<<endl<<"------------------------------------------"<<endl;
 				cout<<"|Operator type r,  $4->type.addr>>mismatch!!|"<<endl;	
 				cout<<"------------------------------------------"<<endl;}
 				
@@ -788,11 +799,11 @@
 		}
 		| additive_exp '-' multiplicative_exp{
 			$$ = new node();
-			printf("405 ");
+			//printf("405 ");
 			$$ -> length = 3;
 			$$->name="additive_exp";
 			if (!isComputable($1->type.name) || isComputable($3->type.name)){
-				cout<<"---------------------------"<<endl;			
+				cout<<endl<<"---------------------------"<<endl;			
 				cout<<"|Operator type mismatch!!|"<<endl;
 				cout<<"------------------------------------------"<<endl;
 			}
@@ -809,7 +820,7 @@
 	shift_exp
 		: additive_exp{
 			$$ = new node();
-			printf("417 ");
+			//printf("417 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -823,7 +834,7 @@
 		}
 		| shift_exp LEFT_OP additive_exp{
 			$$ = new node();
-			printf("424 ");
+			//printf("424 ");
 			$$ -> length = 3;
 			$$->name="shift_exp";
 			$$->children=new node* [3];
@@ -833,14 +844,14 @@
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
 			{
-				cout<<"-----------------------------------"<<endl;							
+				cout<<endl<<"-----------------------------------"<<endl;							
 				cout<<"|Shift Operator Operator Mismatch!!|"<<endl;
 				cout<<"-----------------------------------"<<endl;
 			}
 		}
 		| shift_exp RIGHT_OP additive_exp{
 			$$ = new node();
-			printf("433 ");
+			//printf("433 ");
 			$$ -> length = 3;
 			$$->name="shift_exp";
 			$$->children=new node* [3];
@@ -850,7 +861,7 @@
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
 			{
-				cout<<"------------------------------------------"<<endl;
+				cout<<endl<<"------------------------------------------"<<endl;
 					cout<<"|Shift Operator Operator Mismatch!!|"<<endl;
 					cout<<"------------------------------------------"<<endl;
 			}
@@ -860,7 +871,7 @@
 	relational_exp
 		: shift_exp{
 			$$ = new node();
-			printf("445 ");
+			//printf("445 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -874,7 +885,7 @@
 		}
 		| relational_exp '<' shift_exp{
 			$$ = new node();
-			printf("452 ");
+			//printf("452 ");
 			$$ -> length = 3;
 			$$->name="relational_exp";
 			$$->children=new node* [3];
@@ -883,7 +894,7 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-			{		cout<<"------------------------------------------"<<endl;
+			{		cout<<endl<<"------------------------------------------"<<endl;
 					cout<<"|Relational expression type mismatch!!|"<<endl;
 					cout<<"------------------------------------------"<<endl;
 					}
@@ -894,12 +905,12 @@
 		}
 		| relational_exp '>' shift_exp{
 			$$ = new node();
-			printf("461 ");
+			//printf("461 ");
 			$$ -> length = 3;
 			$$->name="relational_exp";
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-			{cout<<"------------------------------------------"<<endl;
+			{cout<<endl<<"------------------------------------------"<<endl;
 					cout<<"|Relational expression type mismatch!!|"<<endl;
 					cout<<"------------------------------------------"<<endl;
 			}
@@ -910,7 +921,7 @@
 		}
 		| relational_exp LE_OP shift_exp{
 			$$ = new node();
-			printf("470 ");
+			//printf("470 ");
 			$$ -> length = 3;
 			$$->name="relational_exp";
 			$$->children=new node* [3];
@@ -919,9 +930,9 @@
 			$$->children[2] = $3;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-			{cout<<"------------------------------------------"<<endl;
+			{		cout<<endl<<"------------------------------------------"<<endl;
 					cout<<"|Relational expression type mismatch!!|"<<endl;
-cout<<"------------------------------------------"<<endl;
+					cout<<"------------------------------------------"<<endl;
 			}					
 
 			gen(newlabel(), "j>", $1->type.addr, $3->type.addr); 
@@ -931,7 +942,7 @@ cout<<"------------------------------------------"<<endl;
 		}
 		| relational_exp GE_OP shift_exp{
 			$$ = new node();
-			printf("479 ");
+			//printf("479 ");
 			$$ -> length = 3;
 			$$->name="relational_exp";
 			$$->children=new node* [3];
@@ -955,7 +966,7 @@ cout<<"------------------------------------------"<<endl;
 	equality_exp
 		: relational_exp{
 			$$ = new node();
-			printf("491 ");
+			//printf("491 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -969,7 +980,7 @@ cout<<"------------------------------------------"<<endl;
 		}
 		| equality_exp EQ_OP relational_exp{
 			$$ = new node();
-			printf("498 ");
+			//printf("498 ");
 			$$ -> length = 3;
 			$$->name="equality_exp";
 			$$->children=new node* [3];
@@ -979,7 +990,7 @@ cout<<"------------------------------------------"<<endl;
 			$$->type=boolnode;
 
 			if (!isComputable($1->type.name) || !isComputable($3->type.name))
-			{cout<<"------------------------------------------"<<endl;
+			{cout<<endl<<"------------------------------------------"<<endl;
 					cout<<"|Relational expression type mismatch!!|"<<endl;
 					cout<<"------------------------------------------"<<endl;
 					}
@@ -990,7 +1001,7 @@ cout<<"------------------------------------------"<<endl;
 		}
 		| equality_exp NE_OP relational_exp{
 			$$ = new node();
-			printf("507 ");
+			//printf("507 ");
 			$$ -> length = 3;
 			$$->name="equality_exp";
 			$$->children=new node* [3];
@@ -1017,7 +1028,7 @@ cout<<"------------------------------------------"<<endl;
 	and_exp
 		: equality_exp{
 			$$ = new node();
-			printf("519 ");
+			//printf("519 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -1031,7 +1042,7 @@ cout<<"------------------------------------------"<<endl;
 		}
 		| and_exp '&' equality_exp{
 			$$ = new node();
-			printf("526 ");
+			//printf("526 ");
 			$$ -> length = 3;
 			$$->name="and_exp";
 			$$->children=new node* [3];
@@ -1050,7 +1061,7 @@ cout<<"------------------------------------------"<<endl;}
 	exclusive_or_exp
 		: and_exp{
 			$$ = new node();
-			printf("538 ");
+			//printf("538 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -1064,7 +1075,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| exclusive_or_exp '^' and_exp{
 			$$ = new node();
-			printf("545 ");
+			//printf("545 ");
 			$$ -> length = 3;
 			$$->name="exclusive_or_exp";
 			$$->children=new node* [3];
@@ -1084,7 +1095,7 @@ cout<<"------------------------------------------"<<endl;}
 	inclusive_or_exp
 		: exclusive_or_exp{
 			$$ = new node();
-			printf("557 ");
+			//printf("557 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -1098,7 +1109,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| inclusive_or_exp '|' exclusive_or_exp{
 			$$ = new node();
-			printf("564 ");
+			//printf("564 ");
 			$$ -> length = 3;
 			$$->name="inclusive_or_exp";
 			$$->children=new node* [3];
@@ -1118,7 +1129,7 @@ cout<<"------------------------------------------"<<endl;}
 	logical_and_exp
 		: inclusive_or_exp{
 			$$ = new node();
-			printf("576 ");
+			//printf("576 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -1132,7 +1143,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| logical_and_exp AND_OP M inclusive_or_exp{
 			$$ = new node();
-			printf("583 ");
+			//printf("583 ");
 			$$ -> length = 3;
 			$$->name="logical_and_exp";
 			$$->children=new node* [3];
@@ -1149,7 +1160,7 @@ cout<<"------------------------------------------"<<endl;}
 	M
 		: {
 			$$ = new node();
-			printf("584 ");
+			//printf("584 ");
 			$$->name="M";
 			$$->instr = nextinstr + 1;
 		}
@@ -1158,7 +1169,7 @@ cout<<"------------------------------------------"<<endl;}
 	N
 		: {
 			$$ = new node();
-			printf("585 ");
+			//printf("585 ");
 			$$->nextlist->push_back(nextinstr + 1);
 			gen(nextinstr+1, "j");
 		}
@@ -1166,7 +1177,7 @@ cout<<"------------------------------------------"<<endl;}
 	P
 		: {
 			$$ = new node();
-			printf("586 ");
+			//printf("586 ");
 			$$->nextlist->push_back(newlabel());
 			gen(nextinstr, "j");
 		}
@@ -1176,7 +1187,7 @@ cout<<"------------------------------------------"<<endl;}
 	logical_or_exp
 		: logical_and_exp{
 			$$ = new node();
-			printf("595 ");
+			//printf("595 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -1191,7 +1202,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| logical_or_exp OR_OP M logical_and_exp{
 			$$ = new node();
-			printf("602 ");
+			//printf("602 ");
 			$$ -> length = 3;
 			$$->name="logical_or_exp";
 			$$->type=boolnode;
@@ -1204,7 +1215,7 @@ cout<<"------------------------------------------"<<endl;}
 	conditional_exp
 		: logical_or_exp{
 			$$ = new node();
-			printf("614 ");
+			//printf("614 ");
 			$$ -> length = 1;
 			$$->name = $1->name;	
 			$$->children=new node* [1];
@@ -1219,7 +1230,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| logical_or_exp '?' exp ':' conditional_exp{
 			$$ = new node();
-			printf("621 ");
+			//printf("621 ");
 			$$ -> length = 5;
 			$$->name="conditional_exp";
 			$$->type=$3->type;
@@ -1246,7 +1257,7 @@ cout<<"------------------------------------------"<<endl;}
 			//(1)谓词表达式
 			//(2)条件表达式 a<b?a:b
 			$$ = new node();
-			printf("635 ");
+			//printf("635 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->type = $1->type;
@@ -1258,7 +1269,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| unary_exp assignment_operator assignment_exp{
 			$$ = new node();
-			printf("642 ");
+			//printf("642 ");
 			$$ -> length = 3;
 			$$->name="assignment_exp";
 			  
@@ -1270,7 +1281,7 @@ cout<<"------------------------------------------"<<endl;}
 			}	
 			else{
 				cout<<"-------------------------"<<endl;
-				cout<<"|Two sides don't equal!!|"<<endl;
+				cout<<"| two sides don't match!!|"<<endl;
 				cout<<"-------------------------"<<endl;
 			}
 			gen(newlabel(), $2->name, $1->type.addr, $3->type.addr, $1->type.addr);
@@ -1281,7 +1292,7 @@ cout<<"------------------------------------------"<<endl;}
 	assignment_operator
 		: '='{
 			$$ = new node();
-			printf("654 ");
+			//printf("654 ");
 			$$ -> length = 1;
 			$$->name="=";
 			$$->children=new node* [1];
@@ -1289,7 +1300,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| MUL_ASSIGN{
 			$$ = new node();
-			printf("661 ");
+			//printf("661 ");
 			$$ -> length = 1;
 			$$->name="*=";
 			$$->children=new node* [1];
@@ -1297,7 +1308,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| DIV_ASSIGN{
 			$$ = new node();
-			printf("668 ");
+			//printf("668 ");
 			$$ -> length = 1;
 			$$->name="/=";
 			$$->children=new node* [1];
@@ -1305,7 +1316,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| MOD_ASSIGN{
 			$$ = new node();
-			printf("675 ");
+			//printf("675 ");
 			$$ -> length = 1;
 			$$->name="%=";
 			$$->children=new node* [1];
@@ -1313,7 +1324,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| ADD_ASSIGN{
 			$$ = new node();
-			printf("682 ");
+			//printf("682 ");
 			$$ -> length = 1;
 			$$->name="+=";
 			$$->children=new node* [1];
@@ -1321,7 +1332,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| SUB_ASSIGN{
 			$$ = new node();
-			printf("689 ");
+			//printf("689 ");
 			$$ -> length = 1;
 			$$->name="-=";
 			$$->children=new node* [1];
@@ -1329,7 +1340,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| LEFT_ASSIGN{
 			$$ = new node();
-			printf("696 ");
+			//printf("696 ");
 			$$ -> length = 1;
 			$$->name="<<=";
 			$$->children=new node* [1];
@@ -1337,7 +1348,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| RIGHT_ASSIGN{
 			$$ = new node();
-			printf("703 ");
+			//printf("703 ");
 			$$ -> length = 1;
 			$$->name=">>=";
 			$$->children=new node* [1];
@@ -1345,7 +1356,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| AND_ASSIGN{
 			$$ = new node();
-			printf("710 ");
+			//printf("710 ");
 			$$ -> length = 1;
 			$$->name="&=";
 			$$->children=new node* [1];
@@ -1353,7 +1364,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| XOR_ASSIGN{
 			$$ = new node();
-			printf("717 ");
+			//printf("717 ");
 			$$ -> length = 1;
 			$$->name="^=";
 			$$->children=new node* [1];
@@ -1361,7 +1372,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| OR_ASSIGN{
 			$$ = new node();
-			printf("724 ");
+			//printf("724 ");
 			$$ -> length = 1;
 			$$->name="|=";
 			$$->children=new node* [1];
@@ -1372,7 +1383,7 @@ cout<<"------------------------------------------"<<endl;}
 	exp
 		: assignment_exp{
 			$$ = new node();
-			printf("740 ");
+			//printf("740 ");
 			$$ -> length = 1;
 			$$->name = $1->name;
 			$$->children=new node* [1];
@@ -1384,7 +1395,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| exp ',' assignment_exp{
 			$$ = new node();
-			printf("741 ");
+			//printf("741 ");
 			$$ -> length = 3;
 			$$->name="exp";
 			$$->children=new node* [3];
@@ -1400,7 +1411,7 @@ cout<<"------------------------------------------"<<endl;}
 	constant_exp
 		: conditional_exp{
 			$$ = new node();
-			printf("753 ");
+			//printf("753 ");
 			$$ -> length = 1;
 			$$->name="constant_exp";
 			$$->children=new node* [1];
@@ -1413,7 +1424,7 @@ cout<<"------------------------------------------"<<endl;}
 	declaration
 		: declaration_specifiers ';'{
 			$$ = new node();
-			printf("763 ");
+			//printf("763 ");
 			$$ -> length = 2;
 			$$->name="declaration";
 			$$->children=new node* [2];
@@ -1422,7 +1433,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declaration_specifiers init_declarator_list ';'{
 			$$ = new node();
-			printf("771 ");
+			//printf("771 ");
 			$$ -> length = 3;
 			$$->name="declaration";
 			$$->children=new node* [3];
@@ -1433,14 +1444,14 @@ cout<<"------------------------------------------"<<endl;}
 			$$->type = $1->type;		
 		}
 		// | ID ID ';'{
-		// 	printf("772");
+		// 	//printf("772");
 		// }
 		;
 
 	declaration_specifiers
 		: storage_class_specifier{ //static
 			$$ = new node();
-			printf("783 ");
+			//printf("783 ");
 			$$ -> length = 1;
 			$$->name="declaration_specifiers";
 			$$->children=new node* [1];
@@ -1450,7 +1461,7 @@ cout<<"------------------------------------------"<<endl;}
 		| storage_class_specifier declaration_specifiers //extern static
 		{
 			$$ = new node();
-			printf("791 ");
+			//printf("791 ");
 			$$ -> length = 2;
 			$$->name="declaration_specifiers";
 			$$->children=new node* [2];
@@ -1460,7 +1471,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_specifier{ // int
 			$$ = new node();
-			printf("799 ");
+			//printf("799 ");
 			$$ -> length = 1;
 			$$->name="declaration_specifiers";
 			$$->children=new node* [1];
@@ -1470,7 +1481,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_specifier declaration_specifiers{ // lont int
 			$$ = new node();
-			printf("806 ");
+			//printf("806 ");
 			$$ -> length = 2;
 			$$->name="declaration_specifiers";
 			$$->children=new node* [2];
@@ -1480,7 +1491,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_qualifier{ //const
 			$$ = new node();
-			printf("814 ");
+			//printf("814 ");
 			$$ -> length = 1;
 			$$->name="declaration_specifiers";
 			$$->children=new node* [1];
@@ -1489,7 +1500,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_qualifier declaration_specifiers{ //const int
 			$$ = new node();
-			printf("821 ");
+			//printf("821 ");
 			$$ -> length = 2;
 			$$->name="declaration_specifiers";
 			$$->children=new node* [2];
@@ -1502,7 +1513,7 @@ cout<<"------------------------------------------"<<endl;}
 	init_declarator_list
 		: init_declarator{
 			$$ = new node();
-			printf("832 ");
+			//printf("832 ");
 			$$ -> length = 1;
 			$$->name="init_declarator_list";
 			$$->children=new node* [1];
@@ -1512,7 +1523,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| init_declarator_list ',' init_declarator{
 			$$ = new node();
-			printf("839 ");
+			//printf("839 ");
 			$$ -> length = 3;
 			$$->name="init_declarator_list";
 			$$->children=new node* [3];
@@ -1525,7 +1536,7 @@ cout<<"------------------------------------------"<<endl;}
 	init_declarator
 		: declarator{
 			$$ = new node();
-			printf("851 ");
+			//printf("851 ");
 			$$ -> length = 1;
 			$$->name="init_declarator";
 			$$->children=new node* [1];
@@ -1533,7 +1544,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declarator '=' initializer{
 			$$ = new node();
-			printf("858 ");
+			//printf("858 ");
 			$$ -> length = 3;
 			$$->name="init_declarator";
 			$$->children=new node* [3];
@@ -1562,8 +1573,8 @@ cout<<"------------------------------------------"<<endl;}
 			}
 			else{
 				// cout<<"-----"<<$1->type.name<<"------"<<endl;
-				cout<<"-----------------"<<endl;
-				cout<<"|type mismatch!!|"<<endl;
+				cout<<endl<<"-----------------"<<endl;
+				cout<<"|" + $1->type.name + " cannot match " + $3->type.name + "!!|"<<endl;
 				// cout<<"-----"<<$3->type.name<<"------"<<endl;
 				cout<<"-----------------"<<endl;
 			}
@@ -1574,7 +1585,7 @@ cout<<"------------------------------------------"<<endl;}
 	storage_class_specifier
 		: TYPEDEF{
 			$$ = new node();
-			printf("870 ");
+			//printf("870 ");
 			$$ -> length = 1;
 			$$->name="storage_class_specifier";
 			$$->children=new node* [1];
@@ -1582,7 +1593,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| EXTERN{
 			$$ = new node();
-			printf("877 ");
+			//printf("877 ");
 			$$ -> length = 1;
 			$$->name="storage_class_specifier";
 			$$->children=new node* [1];
@@ -1590,7 +1601,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| STATIC{
 			$$ = new node();
-			printf("884 ");
+			//printf("884 ");
 			$$ -> length = 1;
 			$$->name="storage_class_specifier";
 			$$->children=new node* [1];
@@ -1598,7 +1609,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| AUTO{
 			$$ = new node();
-			printf("891 ");
+			//printf("891 ");
 			$$ -> length = 1;
 			$$->name="storage_class_specifier";
 			$$->children=new node* [1];
@@ -1606,7 +1617,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| REGISTER{
 			$$ = new node();
-			printf("898 ");
+			//printf("898 ");
 			$$ -> length = 1;
 			$$->name="storage_class_specifier";
 			$$->children=new node* [1];
@@ -1617,7 +1628,7 @@ cout<<"------------------------------------------"<<endl;}
 	type_specifier
 		: VOID{
 			$$ = new node();
-			printf("908 ");
+			//printf("908 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1627,7 +1638,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| CHAR{
 			$$ = new node();
-			printf("915 ");
+			//printf("915 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1637,7 +1648,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| SHORT{
 			$$ = new node();
-			printf("922 ");
+			//printf("922 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1647,7 +1658,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| INT{
 			$$ = new node();
-			printf("929 ");
+			//printf("929 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1657,7 +1668,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| LONG{
 			$$ = new node();
-			printf("936 ");
+			//printf("936 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1667,7 +1678,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| FLOAT{
 			$$ = new node();
-			printf("943 ");
+			//printf("943 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1677,7 +1688,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| DOUBLE{
 			$$ = new node();
-			printf("950 ");
+			//printf("950 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1687,7 +1698,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| SIGNED{
 			$$ = new node();
-			printf("957 ");
+			//printf("957 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1697,7 +1708,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| UNSIGNED{
 			$$ = new node();
-			printf("964 ");
+			//printf("964 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1707,7 +1718,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| struct_or_union_specifier{
 			$$ = new node();
-			printf("971 ");
+			//printf("971 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1719,7 +1730,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| enum_specifier{
 			$$ = new node();
-			printf("978 ");
+			//printf("978 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1727,7 +1738,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| TYPE_NAME{
 			$$ = new node();
-			printf("985 ");
+			//printf("985 ");
 			$$ -> length = 1;
 			$$->name="type_specifier";
 			$$->children=new node* [1];
@@ -1740,14 +1751,14 @@ cout<<"------------------------------------------"<<endl;}
 	struct_or_union_def
 		: struct_or_union ID '{' declaration_list '}' {
 			$$ = new node();
-			printf("986 ");
+			//printf("986 ");
 			wFlag(*(create_struct($2.ntnode->name)));
 		}
 		|
 		struct_or_union '{' declaration_list '}' {
 			static int i = 1;
 			$$ = new node();
-			printf("987 ");
+			//printf("987 ");
 			wFlag(*(create_struct("struct" + to_string(i))));
 			s.back()->vartable["struct" + to_string(i++)] = rFlag();
 		}
@@ -1755,21 +1766,21 @@ cout<<"------------------------------------------"<<endl;}
 		def_concat
 		:';'{
 			$$ = new node();
-			printf("988 ");
+			//printf("988 ");
 		}
 		| init_declarator_list ';'{
 			$$ = new node();
-			printf("989 ");
+			//printf("989 ");
 		}
 		;
 	struct_or_union_specifier
 		: struct_or_union_def def_concat {
 			$$ = new node();
-			printf("990 ");
+			//printf("990 ");
 		}
 		| struct_or_union ID {
 			$$ = new node();
-			printf("991 ");
+			//printf("991 ");
 			
 			map<string, typenode*>::iterator i;
 			if ((i = auto_define_type.find($2.ntnode->name)) != auto_define_type.end())
@@ -1783,7 +1794,7 @@ cout<<"------------------------------------------"<<endl;}
 	/* struct_or_union_specifier
 		: struct_or_union ID '{' declaration_list '}' ';' {  //struct a { int a = 0;};
 			$$ = new node();
-			printf("995 ");
+			//printf("995 ");
 			$$ -> length = 6;
 			$$->name="struct_or_union_specifier";
 			$$->children=new node* [6];
@@ -1798,7 +1809,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| struct_or_union ID '{' declaration_list '}' init_declarator_list ';' { // match!
 			$$ = new node();
-			printf("1006 ");
+			//printf("1006 ");
 			$$ -> length = 7;
 			$$->name="struct_or_union_specifier";
 			$$->children=new node* [7];
@@ -1814,7 +1825,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| struct_or_union '{' declaration_list '}' ';' { // struct a {int a = 0;};
 			$$ = new node();
-			printf("1007 ");
+			//printf("1007 ");
 			$$ -> length = 5;
 			$$->name="struct_or_union_specifier";
 			$$->children=new node* [5];
@@ -1826,7 +1837,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| struct_or_union '{' declaration_list '}' init_declarator_list ';' { //struct {int a = 0;}a[2];
 			$$ = new node();
-			printf("1008 ");
+			//printf("1008 ");
 			$$ -> length = 6;
 			$$->name="struct_or_union_specifier";
 			$$->children=new node* [6];
@@ -1839,7 +1850,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| struct_or_union ID { // struct a
 			$$ = new node();
-			printf("1016 ");
+			//printf("1016 ");
 			$$ -> length = 2;
 			$$->name="struct_or_union_specifier";
 			$$->children=new node* [2];
@@ -1858,7 +1869,7 @@ cout<<"------------------------------------------"<<endl;}
 	struct_or_union
 		: STRUCT{
 			$$ = new node();
-			printf("1027 ");
+			//printf("1027 ");
 			$$ -> length = 1;
 			$$->name="struct_or_union";
 			$$->children=new node* [1];
@@ -1866,7 +1877,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| UNION{
 			$$ = new node();
-			printf("1034 ");
+			//printf("1034 ");
 			$$ -> length = 1;
 			$$->name="struct_or_union";
 			$$->children=new node* [1];
@@ -1877,7 +1888,7 @@ cout<<"------------------------------------------"<<endl;}
 	struct_declaration_list
 		: struct_declaration{
 			$$ = new node();
-			printf("1044 ");
+			//printf("1044 ");
 			$$ -> length = 1;
 			$$->name="struct_declaration_list";
 			$$->children=new node* [1];
@@ -1885,7 +1896,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| struct_declaration_list struct_declaration{
 			$$ = new node();
-			printf("1051 ");
+			//printf("1051 ");
 			$$ -> length = 2;
 			$$->name="struct_declaration_list";
 			$$->children=new node* [2];
@@ -1897,7 +1908,7 @@ cout<<"------------------------------------------"<<endl;}
 	struct_declaration
 		: specifier_qualifier_list struct_declarator_list ';' {
 			$$ = new node();
-			printf("1062 ");
+			//printf("1062 ");
 			$$ -> length = 3;
 			$$->name="struct_declaration";
 			$$->children=new node* [3];
@@ -1907,7 +1918,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| assignment_exp struct_declarator_list ';' {
 			$$ = new node();
-			printf("1062 ");
+			//printf("1062 ");
 			$$ -> length = 3;
 			$$->name="struct_declaration";
 			$$->children=new node* [3];
@@ -1920,7 +1931,7 @@ cout<<"------------------------------------------"<<endl;}
 	specifier_qualifier_list
 		: type_specifier specifier_qualifier_list{
 			$$ = new node();
-			printf("1074 ");
+			//printf("1074 ");
 			$$ -> length = 2;
 			$$->name="specifier_qualifier_list";
 			$$->children=new node* [2];
@@ -1929,7 +1940,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_specifier{
 			$$ = new node();
-			printf("1082 ");
+			//printf("1082 ");
 			$$ -> length = 1;
 			$$->name="specifier_qualifier_list";
 			$$->children=new node* [1];
@@ -1937,7 +1948,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_qualifier specifier_qualifier_list{
 			$$ = new node();
-			printf("1089 ");
+			//printf("1089 ");
 			$$ -> length = 2;
 			$$->name="specifier_qualifier_list";
 			$$->children=new node* [2];
@@ -1946,7 +1957,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_qualifier{
 			$$ = new node();
-			printf("1097 ");
+			//printf("1097 ");
 			$$ -> length = 1;
 			$$->name="specifier_qualifier_list";
 			$$->children=new node* [1];
@@ -1957,7 +1968,7 @@ cout<<"------------------------------------------"<<endl;}
 	struct_declarator_list
 		: struct_declarator{
 			$$ = new node();
-			printf("1107 ");
+			//printf("1107 ");
 			$$ -> length = 1;
 			$$->name="struct_declarator_list";
 			$$->children=new node* [1];
@@ -1965,7 +1976,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| struct_declarator_list ',' struct_declarator{
 			$$ = new node();
-			printf("1114 ");
+			//printf("1114 ");
 			$$ -> length = 3;
 			$$->name="struct_declarator_list";
 			$$->children=new node* [3];
@@ -1978,7 +1989,7 @@ cout<<"------------------------------------------"<<endl;}
 	struct_declarator
 		: declarator{
 			$$ = new node();
-			printf("1126 ");
+			//printf("1126 ");
 			$$ -> length = 1;
 			$$->name="struct_declarator";
 			$$->children=new node* [1];
@@ -1986,7 +1997,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| ':' constant_exp{
 			$$ = new node();
-			printf("1133 ");
+			//printf("1133 ");
 			$$ -> length = 2;
 			$$->name="struct_declarator";
 			$$->children=new node* [2];
@@ -1995,7 +2006,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declarator ':' constant_exp{
 			$$ = new node();
-			printf("1141 ");
+			//printf("1141 ");
 			$$ -> length = 3;
 			$$->name="struct_declarator";
 			$$->children=new node* [3];
@@ -2008,7 +2019,7 @@ cout<<"------------------------------------------"<<endl;}
 	enum_specifier
 		: ENUM '{' enumerator_list '}' { //enum {a=1,b}
 			$$ = new node();
-			printf("1153 ");
+			//printf("1153 ");
 			$$ -> length = 4;
 			$$->name="enum_specifier";
 			$$->children=new node* [4];
@@ -2019,7 +2030,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| ENUM ID '{' enumerator_list '}' { //enum q{a,b}
 			$$ = new node();
-			printf("1163 ");
+			//printf("1163 ");
 			$$ -> length = 5;
 			$$->name="enum_specifier";
 			$$->children=new node* [5];
@@ -2031,7 +2042,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| ENUM ID {
 			$$ = new node();
-			printf("1174 ");
+			//printf("1174 ");
 			$$ -> length = 2;
 			$$->name="enum_specifier";
 			$$->children=new node* [2];
@@ -2043,7 +2054,7 @@ cout<<"------------------------------------------"<<endl;}
 	enumerator_list
 		: enumerator{
 			$$ = new node();
-			printf("1185 ");
+			//printf("1185 ");
 			$$ -> length = 1;
 			$$->name="enumerator_list";
 			$$->children=new node* [1];
@@ -2051,7 +2062,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| enumerator_list ',' enumerator{
 			$$ = new node();
-			printf("1192 ");
+			//printf("1192 ");
 			$$ -> length = 3;
 			$$->name="enumerator_list";
 		}
@@ -2060,7 +2071,7 @@ cout<<"------------------------------------------"<<endl;}
 	enumerator
 		: ID{
 			$$ = new node();
-			printf("1204 ");
+			//printf("1204 ");
 			$$ -> length = 1;
 			$$->name="enumerator";
 			$$->children=new node* [1];
@@ -2068,7 +2079,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| ID '=' constant_exp{
 			$$ = new node();
-			printf("1211 ");
+			//printf("1211 ");
 			$$ -> length = 3;
 			$$->name="enumerator";
 			$$->children=new node* [3];
@@ -2081,7 +2092,7 @@ cout<<"------------------------------------------"<<endl;}
 	type_qualifier
 		: CONST{
 			$$ = new node();
-			printf("1223 ");
+			//printf("1223 ");
 			$$ -> length = 1;
 			$$->name="type_qualifier";
 			$$->children=new node* [1];
@@ -2089,7 +2100,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| VOLATILE{
 			$$ = new node();
-			printf("1230 ");
+			//printf("1230 ");
 			$$ -> length = 1;
 			$$->name="type_qualifier";
 			$$->children=new node* [1];
@@ -2100,13 +2111,13 @@ cout<<"------------------------------------------"<<endl;}
 	declarator
 		: pointer direct_declarator{
 			$$ = new node();
-			printf("1240 ");
+			//printf("1240 ");
 			$$ -> length = 2;
 			$$->name="declarator";
 		}
 		| direct_declarator{
 			$$ = new node();
-			printf("1248 ");
+			//printf("1248 ");
 			$$ -> length = 1;
 			$$->name="declarator";
 			$$->children=new node* [1];
@@ -2116,10 +2127,10 @@ cout<<"------------------------------------------"<<endl;}
 		;
 	direct_pre_declarator
 		: direct_declarator '('{
-			printf("8521");
+			//printf("8521");
 			fun_name2 = var_name;
-			cout<<endl<<"-------------------"<<endl;
-			cout<<"8521 fun_name2:"<<fun_name2<<endl;
+			// cout<<endl<<"-------------------"<<endl;
+			// cout<<"8521 fun_name2:"<<fun_name2<<endl;
 			fun_addr = $1->type.addr;
 		}
 		;
@@ -2127,7 +2138,7 @@ cout<<"------------------------------------------"<<endl;}
 	direct_declarator
 		: ID{
 			$$ = new node();
-			printf("1258 ");
+			//printf("1258 ");
 			$$ -> length = 1;
 			$$->name="direct_declarator";
 			var_name = $1.ntnode->name;
@@ -2145,7 +2156,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '(' declarator ')' {
 			$$ = new node();
-			printf("1265 ");
+			//printf("1265 ");
 			$$ -> length = 3;
 			$$->name="direct_declarator";
 			$$->children=new node* [3];
@@ -2157,7 +2168,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_declarator '[' constant_exp ']' {
 			$$ = new node();
-			printf("1274 ");
+			//printf("1274 ");
 			$$ -> length = 4;
 			$$->name="direct_declarator";
 			$$->children=new node* [4];
@@ -2202,7 +2213,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_declarator '[' ']' {
 			$$ = new node();
-			printf("1284 ");
+			//printf("1284 ");
 			$$ -> length = 3;
 			$$->name="direct_declarator";
 			$$->children=new node* [3];
@@ -2212,14 +2223,14 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_pre_declarator parameter_type_list ')' {
 			$$ = new node();
-			printf("1293 ");
+			//printf("1293 ");
 			$$ -> length = 4;
 			$$->name="direct_declarator";
 			$$->children=new node* [4];
 		}
 		| direct_pre_declarator identifier_list ')' {
 			$$ = new node();
-			printf("1303 ");
+			//printf("1303 ");
 			$$ -> length = 4;
 			$$->name="direct_declarator";
 			map<string, typenode*>::iterator iter;
@@ -2230,13 +2241,13 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_pre_declarator ')' {
 			$$ = new node();
-			printf("1313 ");
+			//printf("1313 ");
 			$$ -> length = 3;
 			$$->name="direct_declarator";
 			$$->children=new node* [3];
 			fun_name2 = var_name;
-			cout<<endl<<"----------------------"<<endl;
-			cout<<"1313->fun_name2:"<<fun_name2<<endl;
+			// cout<<endl<<"----------------------"<<endl;
+			// cout<<"1313->fun_name2:"<<fun_name2<<endl;
 			gen(newlabel(), "fun", 0, 0, 0);
 		}
 		;
@@ -2244,7 +2255,7 @@ cout<<"------------------------------------------"<<endl;}
 	pointer
 		: '*' {
 			$$ = new node();
-			printf("1325 ");
+			//printf("1325 ");
 			$$ -> name = "pointer";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2294,7 +2305,7 @@ cout<<"------------------------------------------"<<endl;}
 	type_qualifier_list
 		: type_qualifier {
 			$$ = new node();
-			printf("1359 ");
+			//printf("1359 ");
 			$$ -> name = "type_qualifier_list";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2302,7 +2313,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| type_qualifier_list type_qualifier {
 			$$ = new node();
-			printf("1366 ");
+			//printf("1366 ");
 			$$ -> name = "type_qualifier_list";
 			$$ -> children = new node* [2];
 			$$ -> length = 2;
@@ -2315,7 +2326,7 @@ cout<<"------------------------------------------"<<endl;}
 	parameter_type_list
 		: parameter_list {
 			$$ = new node();
-			printf("1378 ");
+			//printf("1378 ");
 			$$ -> name = "parameter_type_list";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2329,7 +2340,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| parameter_list ',' ELLIPSIS {
 			$$ = new node();
-			printf("1385 ");
+			//printf("1385 ");
 			$$ -> name = "parameter_type_list";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2342,7 +2353,7 @@ cout<<"------------------------------------------"<<endl;}
 	parameter_list
 		: parameter_declaration {
 			$$ = new node();
-			printf("1397 ");
+			//printf("1397 ");
 			$$ -> name = "parameter_list";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2350,7 +2361,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| parameter_list ',' parameter_declaration {
 			$$ = new node();
-			printf("1404 ");
+			//printf("1404 ");
 			$$ -> name = "parameter_list";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2370,7 +2381,7 @@ cout<<"------------------------------------------"<<endl;}
 	parameter_declaration
 		: declaration_specifiers declarator {
 			$$ = new node();
-			printf("1416 ");
+			//printf("1416 ");
 			$$ -> name = "parameter_declaration";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -2380,7 +2391,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declaration_specifiers abstract_declarator {
 			$$ = new node();
-			printf("1424 ");
+			//printf("1424 ");
 			$$ -> name = "parameter_declaration";
 			$$ -> children = new node* [2];
 			$$ -> children[0] = $1;
@@ -2388,7 +2399,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declaration_specifiers {
 			$$ = new node();
-			printf("1431 ");
+			//printf("1431 ");
 			$$ -> name = "parameter_declaration";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2399,7 +2410,7 @@ cout<<"------------------------------------------"<<endl;}
 	identifier_list
 		: ID {	
 			$$ = new node();
-			printf("1441 ");
+			//printf("1441 ");
 			$$ -> name = "identifier_list";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2415,7 +2426,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| identifier_list ',' ID {
 			$$ = new node();
-			printf("1448 ");   
+			//printf("1448 ");   
 			$$ -> name = "identifier_list";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2436,7 +2447,7 @@ cout<<"------------------------------------------"<<endl;}
 	type_name
 		: specifier_qualifier_list  {
 			$$ = new node();
-			printf("1460 ");
+			//printf("1460 ");
 			$$ -> name = "type_name";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2444,7 +2455,7 @@ cout<<"------------------------------------------"<<endl;}
 		}  
 		| specifier_qualifier_list abstract_declarator  {
 			$$ = new node();
-			printf("1467 ");  
+			//printf("1467 ");  
 			$$ -> name = "type_name";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -2456,7 +2467,7 @@ cout<<"------------------------------------------"<<endl;}
 	abstract_declarator
 		: pointer {
 			$$ = new node();
-			printf("1478 ");
+			//printf("1478 ");
 			$$ -> name = "abstract_declarator";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2464,7 +2475,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_abstract_declarator {
 			$$ = new node();
-			printf("1485 ");
+			//printf("1485 ");
 			$$ -> name = "abstract_declarator";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2472,7 +2483,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| pointer direct_abstract_declarator {
 			$$ = new node();
-			printf("1492 ");
+			//printf("1492 ");
 			$$ -> name = "abstract_declarator";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -2484,7 +2495,7 @@ cout<<"------------------------------------------"<<endl;}
 	direct_abstract_declarator
 		: '(' abstract_declarator ')' {
 			$$ = new node();
-			printf("1503 ");
+			//printf("1503 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2495,7 +2506,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '[' ']' {
 			$$ = new node();
-			printf("1512 ");
+			//printf("1512 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 2;		
 			$$ -> children = new node* [2];
@@ -2504,7 +2515,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '[' constant_exp ']' {
 			$$ = new node();
-			printf("1520 ");
+			//printf("1520 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2514,7 +2525,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_abstract_declarator '[' ']' {
 			$$ = new node();
-			printf("1529 ");
+			//printf("1529 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2524,7 +2535,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_abstract_declarator '[' constant_exp ']' {
 			$$ = new node();
-			printf("1538 ");
+			//printf("1538 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 4;
 			$$ -> children = new node* [4];
@@ -2535,7 +2546,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '(' ')' {
 			$$ = new node();
-			printf("1548 ");
+			//printf("1548 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -2545,7 +2556,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '(' parameter_type_list ')' {
 			$$ = new node();
-			printf("1556 ");
+			//printf("1556 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2556,7 +2567,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_abstract_declarator '(' ')' {
 			$$ = new node();
-			printf("1565 ");
+			//printf("1565 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2567,7 +2578,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| direct_abstract_declarator '(' parameter_type_list ')' {
 			$$ = new node();
-			printf("1574 ");
+			//printf("1574 ");
 			$$ -> name = "direct_abstract_declarator";
 			$$ -> length = 4;
 			$$ -> children = new node* [4];
@@ -2582,7 +2593,7 @@ cout<<"------------------------------------------"<<endl;}
 	initializer
 		: assignment_exp  {
 			$$ = new node();
-			printf("1587 ");
+			//printf("1587 ");
 			$$->name = $1->name;
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2592,7 +2603,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '{' initializer_list '}'  {
 			$$ = new node();
-			printf("1594 ");
+			//printf("1594 ");
 			$$ -> name = "initializer";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2602,7 +2613,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '{' initializer_list ',' '}'  {
 			$$ = new node();
-			printf("1603 ");
+			//printf("1603 ");
 			$$ -> name = "initializer";
 			$$ -> length = 4;
 			$$ -> children = new node* [4];
@@ -2616,7 +2627,7 @@ cout<<"------------------------------------------"<<endl;}
 	initializer_list
 		: initializer  {
 			$$ = new node();
-			printf("1616 ");
+			//printf("1616 ");
 			$$ -> name = "initializer_list";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2624,7 +2635,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| initializer_list ',' initializer  {
 			$$ = new node();
-			printf("1623 ");
+			//printf("1623 ");
 			$$ -> name = "initializer_list";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2636,7 +2647,7 @@ cout<<"------------------------------------------"<<endl;}
 	other
 		:compound_statement {
 			$$ = new node();
-			printf("1635 ");
+			//printf("1635 ");
 			$$ -> name = "other";
 			$$ -> nextlist = $1->nextlist;
 			// cout << $1->nextlist->size() << "???????????????" << endl;
@@ -2646,19 +2657,19 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| exp_statement {
 			$$ = new node();
-			printf("1636 ");
+			//printf("1636 ");
 			$$->name = $1->name;
 			$$ -> nextlist = $1->nextlist;
 		}
 		|iteration_statement {
 			$$ = new node();
-			printf("1637 ");
+			//printf("1637 ");
 			$$ -> name = "other";
 			$$ -> nextlist = $1->nextlist;
 		}
 		|jump_statement{
 			$$ = new node();
-			printf("1638 ");
+			//printf("1638 ");
 			$$ -> name = "other";
 			$$ -> nextlist = $1->nextlist;
 		}
@@ -2666,7 +2677,7 @@ cout<<"------------------------------------------"<<endl;}
 	statement
 		: labeled_statement {
 			$$ = new node();
-			printf("1644 ");
+			//printf("1644 ");
 			$$ -> name = "statement";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2676,7 +2687,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| other {
 			$$ = new node();
-			printf("1669 ");
+			//printf("1669 ");
 			$$ -> name = "xx";
 			$$ -> nextlist = $1->nextlist;
 			$$ -> truelist = $1 -> truelist;
@@ -2684,7 +2695,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| selection_statement {
 			$$ = new node();
-			printf("1670 ");
+			//printf("1670 ");
 			$$ -> name = "other";
 			$$->nextlist = $1->nextlist;
 		}
@@ -2696,7 +2707,7 @@ cout<<"------------------------------------------"<<endl;}
 	labeled_statement
 		: ID ':' statement  {
 			$$ = new node();
-			printf("1680 ");
+			//printf("1680 ");
 			$$ -> name = "labeled_statement";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2706,12 +2717,12 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| CASE constant_exp ':' M statement  {
 			$$ = new node();
-			printf("1689 ");
+			//printf("1689 ");
 			$$ -> name = "labeled_statement";
 		}
 		| default_pre statement  {
 			$$ = new node();
-			printf("1699 ");
+			//printf("1699 ");
 			$$ -> name = "labeled_statement";
 		}
 		;
@@ -2719,7 +2730,7 @@ cout<<"------------------------------------------"<<endl;}
 	compound_statement
 		: '{' '}' {
 			$$ = new node();
-			printf("1711 ");
+			//printf("1711 ");
 			$$ -> name = "compound_statement";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -2728,7 +2739,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '{' statement_list '}' {
 			$$ = new node();
-			printf("1719 ");
+			//printf("1719 ");
 			$$ -> name = "compound_statement";
 			$$->nextlist = $2->nextlist;
 			$$ -> truelist = $2 -> truelist;
@@ -2736,13 +2747,13 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| '{' declaration_list '}' {
 			$$ = new node();
-			printf("1728 ");
+			//printf("1728 ");
 			$$ -> name = "compound_statement";	
 			$$->nextlist = $2->nextlist;
 		}
 		| '{' declaration_list statement_list '}' {
 			$$ = new node();
-			printf("1737 ");
+			//printf("1737 ");
 			$$ -> name = "compound_statement";
 			$$->nextlist= $3->nextlist ;
 		}
@@ -2751,7 +2762,7 @@ cout<<"------------------------------------------"<<endl;}
 	declaration_list
 		: declaration {
 			$$ = new node();
-			printf("1750 ");
+			//printf("1750 ");
 			$$ -> name = "declaration_list";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2761,7 +2772,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declaration_list M declaration {
 			$$ = new node();
-			printf("1757 ");
+			//printf("1757 ");
 			$$ -> name = "declaration_list";
 			backpatch($1->nextlist , $2->instr); 
 			$$->nextlist =$3->nextlist; 
@@ -2771,7 +2782,7 @@ cout<<"------------------------------------------"<<endl;}
 	statement_list
 		: statement {
 			$$ = new node();
-			printf("1768 ");
+			//printf("1768 ");
 			$$ -> name = "statement_list";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2781,7 +2792,7 @@ cout<<"------------------------------------------"<<endl;}
 		| statement_list M statement {
 			$$ = new node();
 			// cout<<"$2->instr:"<<$2->instr<<endl;
-			printf("1775 ");
+			//printf("1775 ");
 			$$ -> name = "statement_list";
 			cout << "--------------============";
 			backpatch($1->nextlist , $2->instr); 
@@ -2792,7 +2803,7 @@ cout<<"------------------------------------------"<<endl;}
 	exp_statement
 		: ';' {
 			$$ = new node();
-			printf("1786 ");
+			//printf("1786 ");
 			$$ -> name = "exp_statement";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2800,7 +2811,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| exp ';' {
 			$$ = new node();
-			printf("1793 ");
+			//printf("1793 ");
 			$$->name = $1->name;
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -2814,7 +2825,7 @@ cout<<"------------------------------------------"<<endl;}
 	stmt 
 		: matched_statement {
 			$$ = new node();
-			printf("1794 ");
+			//printf("1794 ");
 			$$ -> name = "stmt";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2824,7 +2835,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| open_statement {
 			$$ = new node(); 
-			printf("1795 ");
+			//printf("1795 ");
 			$$ -> name = "stmt";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2835,7 +2846,7 @@ cout<<"------------------------------------------"<<endl;}
 	matched_statement
 		: IF '(' exp ')' M matched_statement P ELSE M matched_statement{
 			$$ = new node();
-			printf("1803 ");
+			//printf("1803 ");
 			$$ -> name = "matched_statement";
 			backpatch($3->truelist, $5->instr);  
 			backpatch($3->falselist, $9->instr);    
@@ -2845,7 +2856,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| other {
 			$$ = new node();
-			printf("1815 ");
+			//printf("1815 ");
 			$$ -> name = "matched_statement";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2855,22 +2866,19 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		;
 	open_statement
-		: IF '(' exp ')' M stmt {
+		: IF '(' exp ')' M stmt P{
 			$$ = new node();
-			printf("1816 ");
+			//printf("1816 ");
 			$$ -> name = "open_statement";
 			$$->type=$6->type;
 			s.pop_back();
 			//traverse_vartable(s.size() - 1);
 			backpatch($3->truelist, $5->instr);
-			$$->nextlist =merge($3->falselist, $6->nextlist); 
-			for (int i = 0; i < $$->nextlist->size(); i++){
-				cout << $$->nextlist->at(i)<< "@";
-			}
+			$$->nextlist =merge($3->falselist, $7->nextlist); 
 		}
 		| IF '(' exp ')' M matched_statement P ELSE M open_statement {
 			$$ = new node();
-			printf("1817 ");
+			//printf("1817 ");
 			$$ -> name = "open_statement";
 			s.pop_back();
 			traverse_vartable(s.size() - 1);
@@ -2882,7 +2890,7 @@ cout<<"------------------------------------------"<<endl;}
 	selection_statement
 		: stmt {
 			$$ = new node();
-			printf("1818 ");
+			//printf("1818 ");
 			$$ -> name = "selection_statement";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -2891,7 +2899,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| switch_pre statement {
 			$$ = new node();
-			printf("1825 ");
+			//printf("1825 ");
 			$$ -> name = "selection_statement";
 			s.pop_back();  
 		}
@@ -2909,7 +2917,7 @@ cout<<"------------------------------------------"<<endl;}
 	iteration_statement
 		: WHILE M '(' exp ')' M statement {
 			$$ = new node();
-			printf("1839 ");
+			//printf("1839 ");
 			$$ -> name = "iteration_statement";
 			backpatch($4->truelist, $6->instr); 
 			backpatch($7->nextlist, $2->instr); 
@@ -2924,7 +2932,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| DO M statement WHILE M '(' exp ')' ';' {
 			$$ = new node();
-			printf("1850 ");
+			//printf("1850 ");
 			$$ -> name = "iteration_statement";
 			backpatch($7->truelist, $2->instr); 
 			backpatch($3->nextlist, $5->instr); 
@@ -2936,7 +2944,7 @@ cout<<"------------------------------------------"<<endl;}
 			s.pop_back();
 			traverse_vartable(s.size()-1);
 		}
-		| FOR '(' exp_statement M exp_statement ')' M statement {
+| FOR '(' exp_statement M exp_statement ')' M statement {
 			$$ = new node();
 			printf("1863 ");
 			$$ -> name = "iteration_statement";
@@ -2975,10 +2983,11 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		;
 
+
 	jump_statement
 		: GOTO ID ';'  {
 			$$ = new node();
-			printf("1891 ");
+			//printf("1891 ");
 			$$ -> name = "jump_statement";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -2988,7 +2997,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| CONTINUE ';'  {
 			$$ = new node();
-			printf("1900 ");
+			//printf("1900 ");
 			$$ -> name = "jump_statement";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -2997,7 +3006,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| BREAK ';'  {
 			$$ = new node();
-			printf("1908 ");
+			//printf("1908 ");
 			$$ -> name = "jump_statement";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -3006,7 +3015,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| RETURN ';'  {
 			$$ = new node();
-			printf("1916 ");
+			//printf("1916 ");
 			$$ -> name = "jump_statement";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -3016,7 +3025,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| RETURN exp ';'  {
 			$$ = new node();
-			printf("1924 ");
+			//printf("1924 ");
 			$$ -> name = "jump_statement";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -3031,7 +3040,7 @@ cout<<"------------------------------------------"<<endl;}
 	translation_unit
 		: external_declaration {
 			$$ = new node();
-			printf("1946 ");
+			//printf("1946 ");
 			$$ -> name = "translation_unit";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -3039,7 +3048,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| translation_unit external_declaration {
 			$$ = new node();
-			printf("1953 ");
+			//printf("1953 ");
 			$$ -> name = "translation_unit";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -3051,7 +3060,7 @@ cout<<"------------------------------------------"<<endl;}
 	external_declaration
 		: function_definition {
 			$$ = new node();
-			printf("1964 ");
+			//printf("1964 ");
 			$$ -> name = "external_declaration";
 			$$ -> length = 1;
 			$$ -> children = new node* [1];
@@ -3059,7 +3068,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declaration {
 			$$ = new node();
-			printf("1971 ");
+			//printf("1971 ");
 			$$ -> name = "external_declaration";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -3070,10 +3079,10 @@ cout<<"------------------------------------------"<<endl;}
 	function_definition
 		: declaration_specifiers declarator declaration_list compound_statement {
 			$$ = new node();
-			printf("1981 ");
+			//printf("1981 ");
 			$$ -> name = "function_definition";
 			type3->right = &($1->type);
-			cout<<"$$$$$$$$$$$$$$$$$$$type3:"<<type3<<endl;
+			//cout<<"$$$$$$$$$$$$$$$$$$$type3:"<<type3<<endl;
 			s.back()->vartable[fun_name2] = type3;
 			// var_set.insert(fun_name);
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
@@ -3096,7 +3105,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declaration_specifiers declarator compound_statement {
 			$$ = new node();
-			printf("1991 ");
+			//printf("1991 ");
 			$$ -> name = "function_definition";
 			$$ -> nextlist = $3 -> nextlist;
 
@@ -3106,9 +3115,9 @@ cout<<"------------------------------------------"<<endl;}
 			// cout<<"fun_name------------>"<<fun_name<<endl;
 			
 			// var_set.insert(fun_name);
-			cout<<endl<<"---------------type3"<<type3->name<<endl;
-			cout<<"----------------fun_name2"<<fun_name2<<endl;
-			cout<<"6666666666666"<<endl;
+			// cout<<endl<<"---------------type3"<<type3->name<<endl;
+			// cout<<"----------------fun_name2"<<fun_name2<<endl;
+			// cout<<"6666666666666"<<endl;
 			s[s.size()-2]->vartable[fun_name2] = type3;
 			//s.back()->vartable[fun_name] = type3;
 			
@@ -3116,7 +3125,7 @@ cout<<"------------------------------------------"<<endl;}
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
-				cout<<"-----------------------"<<endl;
+				cout<<endl<<"-----------------------"<<endl;
 				cout<<"|must return a value!!|"<<endl;
 				cout<<"-----------------------"<<endl;
 			}
@@ -3125,14 +3134,14 @@ cout<<"------------------------------------------"<<endl;}
 				if(!check_type(a,&($1->type)))
 				{
 					if($1->type.name == "void"){
-						cout<<"------------------------------------------"<<endl;
+						cout<<endl<<"-------------------------------"<<endl;
 						cout<<"|cannot return " + a->name + " to void!!|"<<endl;
-						cout<<"------------------------------------------"<<endl;
+						cout<<"-------------------------------"<<endl;
 					}
 					else{
-						cout<<"------------------------------------------"<<endl;						
-						cout<<"|must return a value " + $1->type.name+"!!|"<<endl;
-						cout<<"------------------------------------------"<<endl;						
+						cout<<endl<<"-------------------------------"<<endl;						
+						cout<<"|must return " + $1->type.name + ", not " + a->name + "!!|"<<endl;
+						cout<<"-------------------------------"<<endl;						
 					}
 				}
 				rtn_stmt.pop();
@@ -3142,7 +3151,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declarator declaration_list compound_statement {
 			$$ = new node();
-			printf("2000 ");
+			//printf("2000 ");
 			$$ -> name = "function_definition";
 			$$ -> length = 3;
 			$$ -> children = new node* [3];
@@ -3155,7 +3164,7 @@ cout<<"------------------------------------------"<<endl;}
 			// cout<<"/./././././././"<<fun_addr<<endl;
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
-				cout<<"------------------------------------------"<<endl;
+				cout<<endl<<"------------------------------------------"<<endl;
 				cout<<"|must return a value " + type3->right->name+"!!|"<<endl;
 				cout<<"------------------------------------------"<<endl;
 			}		
@@ -3172,7 +3181,7 @@ cout<<"------------------------------------------"<<endl;}
 		}
 		| declarator compound_statement {
 			$$ = new node();
-			printf("2009 ");
+			//printf("2009 ");
 			$$ -> name = "function_definition";
 			$$ -> length = 2;
 			$$ -> children = new node* [2];
@@ -3183,7 +3192,7 @@ cout<<"------------------------------------------"<<endl;}
 			// var_set.insert(fun_name);
 			//gen(newlabel(), "DEC", -1, 0, fun_addr);
 			if (rtn_stmt.size() == 0 && type3->right->name != "void"){
-				cout<<"------------------------------------------"<<endl;
+				cout<<endl<<"------------------------------------------"<<endl;
 				cout<<"|must return a value " + type3->right->name+"!!|"<<endl;
 				cout<<"------------------------------------------"<<endl;
 			}	
@@ -3212,15 +3221,16 @@ cout<<"------------------------------------------"<<endl;}
 	{
 		s.push_back(new varmap());
 	//print-function
-		type3->right = &voidnode;
-		type3->left = &intnode;
-		s[s.size()-1]->vartable["print"] = type3;
+		typenode *type5 = new typenode("fun");
+		type5->right = &voidnode;
+		type5->left = &intnode;
+		s[s.size()-1]->vartable["print"] = type5;
 		s.push_back(new varmap());
 
 	//print-function
-		type3->right = &voidnode;
-		type3->left = &intnode;
-		s[s.size()-1]->vartable["read"] = type3;
+		type5->right = &voidnode;
+		type5->left = &intnode;
+		s[s.size()-1]->vartable["read"] = type5;
 		s.push_back(new varmap());
 
 	//  	FILE *stream;

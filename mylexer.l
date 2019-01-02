@@ -119,7 +119,7 @@ ws		{delim}+
 letter	[A-Za-z_]
 digit	[0-9]
 id		{letter}({letter}|{digit})*
-number	{digit}+(\.{digit}+)?([Ee][+-]?{digit}+)?
+number	(-)?{digit}+(\.{digit}+)?([Ee][+-]?{digit}+)?
 literal \"(\\.|[^"\\])*\"
 annotation "/*"([^\*]|(\*)*[^\*/])*(\*)*"*/"
 single \/\/[^\n]*

@@ -1,27 +1,22 @@
-LABEL label4  :
 FUNCTION main :
-temp2 := #0
-temp3 := temp2
-LABEL label2  :
-temp5 := #4
-IF temp3 < temp5 GOTO label0
-GOTO label1
-LABEL label5  :
-temp9 := #1
-temp10 := temp3 + temp9
-temp3 := temp10
+temp0 := CALL read
+var0 := temp0
+temp1 := #2
+var1 := temp1
+LABEL label0 :
+temp2 := #5
+IF var1 < temp2 GOTO label1
 GOTO label2
-LABEL label0  :
-temp13 := #2
-IF temp3 < temp13 GOTO label3
-GOTO label4
-LABEL label3  :
-temp15 := #1
-temp17 := #100
-temp18 := temp15 * temp17
-ARG temp18
+LABEL label1 :
+temp4 := #2
+temp5 := var0 / temp4
+var0 := temp5
+temp6 := #1
+temp7 := var1 + temp6
+var1 := temp7
+GOTO label0
+LABEL label2 :
+ARG var0
 CALL print
-GOTO label5
-LABEL label1  :
-temp21 := #0
-RETURN temp21
+temp8 := #0
+RETURN temp8
