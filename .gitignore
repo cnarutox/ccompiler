@@ -3,3 +3,4 @@
 *.cpp
 .vscode/
 __pycache__/
+*.opendb

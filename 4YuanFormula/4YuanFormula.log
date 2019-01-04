@@ -1,0 +1,29 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  myparser.cpp
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\myparser.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(6): warning C4067: 预处理器指令后有意外标记 - 应输入换行符
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(153): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(160): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(227): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(229): warning C4129: “]”: 不可识别的字符转义序列
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(324): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(328): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(334): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(55): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(214): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(328): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(337): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(342): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(355): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(1067): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\myparser.y(2189): warning C4244: “*=”: 从“double”转换到“int”，可能丢失数据
+  mylexer.cpp
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\mylexer.l(38): warning C4091: “extern ”: 没有声明变量时忽略“typenode”的左侧
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\mylexer.l(49): warning C4091: “extern ”: 没有声明变量时忽略“varmap”的左侧
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\mylexer.l(73): warning C4091: “extern ”: 没有声明变量时忽略“node”的左侧
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\4yuanformula\mylexer.l(78): warning C4018: “<”: 有符号/无符号不匹配
+  正在生成代码...
+c:\users\cwx\onedrive\课程资料\编译原理\yacc\define.h(212): warning C4172: 返回局部变量或临时变量的地址: list
+  4YuanFormula.vcxproj -> C:\Users\cwx\OneDrive\课程资料\编译原理\yacc\4YuanFormula\.\4YuanFormula.exe
+  4YuanFormula.vcxproj -> .\4YuanFormula.pdb (Full PDB)

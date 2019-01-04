@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="..\4yuan.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\mylexer.cpp" />
+    <ClCompile Include="..\myparser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\mylexer.h" />
+    <ClInclude Include="..\myparser.h" />
+    <ClInclude Include="..\define.h" />
+  </ItemGroup>
+</Project>

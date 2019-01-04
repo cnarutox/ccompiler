@@ -1,4 +1,3 @@
-import os
 import re
 
 regs = [
@@ -166,12 +165,12 @@ print:
 
 def parser():
     for reg in regs:
-        reg_ok[reg] = 1  #初始化，所有寄存器都可用
-    Inter = Load_Inter('./compare.txt')  #读取中间代码
-    Load_Var(Inter)  #第一遍扫描，记录所有变量
+        reg_ok[reg] = 1  # 初始化，所有寄存器都可用
+    Inter = Load_Inter('./innerCode.txt')  # 读取中间代码
+    Load_Var(Inter)  # 第一遍扫描，记录所有变量
     Obj = []
     for line in Inter:
-        obj_line = translate(line)  #翻译中间代码成MIPS汇编
+        obj_line = translate(line)  # 翻译中间代码成MIPS汇编
         if obj_line == '':
             continue
         Obj.append(obj_line)

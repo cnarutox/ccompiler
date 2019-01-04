@@ -3234,10 +3234,10 @@ cout<<"------------------------------------------"<<endl;}
 		s[s.size()-1]->vartable["read"] = type5;
 		s.push_back(new varmap());
 
-	//  	FILE *stream;
-	//	freopen_s(&stream, "test.c", "r", stdin);
+		FILE *stream;
+		freopen_s(&stream, "../input.c", "r", stdin);
 	//	freopen_s(&stream, "out.txt", "w", stdout);
-		// cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
+	//	cout << "Name\t\tElement\t\tValue\t\tLine" << endl;
 		int n = 1;
 		mylexer lexer;
 		myparser parser;

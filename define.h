@@ -20,7 +20,7 @@
 	vector<int> nextlist;
 	string struct_name;
 	set<int> var_set;
-	fstream file("code.txt", ios::out|ios::trunc);
+	fstream file("../4yuan.txt", ios::out|ios::trunc);
 	int call_fun_addr;
 	string fun_name2;
 	struct typenode

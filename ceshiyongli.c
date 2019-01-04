@@ -29,55 +29,8 @@ int main()
     return 0;
 }
 
-√ int func(int a)
-{
-    print(a);
-    return a;
-}
-
-int main()
-{
-    int j = func(4);
-    print(j);
-    // print(j + 1);
-    return 0;
-}
-
-√ int func()
-{
-    print(4);
-    return 0;
-}
-
-int main()
-{
-    int j = func();
-    return 0;
-}
-
-× int func()
-{
-    int i = 5;
-    do
-    {
-        i = i - 1;
-        print(i);
-    } while (i > 0);
-    return 1;
-}
-
-int main()
-{
-    int j = func();
-    return 1;
-}
-
 void main()
 {
-    //binbinadorable
-    /*
-432100122
-*/
     int i;
     i = 5;
     do
@@ -125,7 +78,6 @@ void main()
     }
     return 0;
 }
-//输出：0，1，2，3
 
 -----------------------------逻辑运算符-- ----------------------------
 √ int main()
