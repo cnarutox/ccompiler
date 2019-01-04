@@ -1,49 +1,15 @@
 FUNCTION main :
-temp3 := #0
-var2 := temp3
-temp5 := #1
-var4 := temp5
-temp7 := #1
-var6 := temp7
-IF var2 < var4 GOTO label0
-GOTO label1
-LABEL label0  :
-temp8 := #0
-ARG temp8
+var2 := #10
+var4 := #12
+var6 := #9
+var8 := #13
+ARG var2
 CALL print
-GOTO label1
-LABEL label1  :
-IF var4 == var6 GOTO label2
-GOTO label3
-LABEL label2  :
-temp9 := #1
-ARG temp9
+var4 := var6
+var13 := var2
+ARG var13
 CALL print
-GOTO label3
-LABEL label3  :
-IF var4 < var2 GOTO label4
-GOTO label5
-LABEL label5  :
-temp10 := #2
-ARG temp10
-CALL print
-GOTO label4
-LABEL label4  :
-IF var2 == var4 GOTO label6
-GOTO label7
-LABEL label7  :
-temp11 := #3
-ARG temp11
-CALL print
-GOTO label6
-LABEL label6  :
-IF var2 == var6 GOTO label8
-GOTO label9
-LABEL label8  :
-temp12 := #4
-ARG temp12
-CALL print
-GOTO label9
-LABEL label9  :
-temp13 := #0
-RETURN temp13
+var10 := var4
+var11 := var2
+var12 := var8
+RETURN #0
