@@ -14,4 +14,9 @@
 > ##### 最终执行```objectcode.py```将中间代码转为MIPS汇编到```result.asm```中
 >> ```python ./objectcode.py```
 > ##### 打开```./QtSpim/QtSpim.exe```，导入```result.asm```汇编即可执行！
+> ![QtSpim](img/QtSpim.png)
+> ![console](img/console.png)
+>
+> 另：生成四元式后，可一键自动生成MIPS汇编，因为此脚本集成了代码优化，所以不是很推荐
+>> ```python mips.py```
 - ### Java CC 实现
