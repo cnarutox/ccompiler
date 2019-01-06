@@ -493,7 +493,15 @@ Node if_stmt() :
     Node else_node=null;
 }
 {
-    < IF > "(" cond=expr() ")" if_node=block() [LOOKAHEAD(1) < ELSE > else_node=block()]
+    < IF > "(" cond=expr() ")"
+    (   LOOKAHEAD(< LCBR >) if_node=block()
+    |   if_node=stmt()
+    )
+    [LOOKAHEAD(1) < ELSE >
+        (   LOOKAHEAD(< LCBR >) else_node=block()
+        |   else_node=stmt()
+        )
+    ]
     {
         return new Node("if").addChildren(cond,if_node,else_node);
     }
@@ -504,7 +512,8 @@ Node while_stmt() :
     Node stmts_node;
 }
 {
-    < WHILE > < LBR > cond=expr() < RBR > stmts_node=block()
+    < WHILE > < LBR > cond=expr() < RBR >
+    ( LOOKAHEAD(< LCBR >) stmts_node=block()|stmts_node=stmt())
     {
         return new Node("while").addChildren(cond,stmts_node);
     }
@@ -515,23 +524,24 @@ Node dowhile_stmt() :
     Node stmts_node;
 }
 {
-    < DO > stmts_node=block() < WHILE > < LBR > cond=expr() < RBR> < SEMIC >
+    < DO > (LOOKAHEAD(< LCBR >) stmts_node=block()|stmts_node=stmt()) < WHILE > < LBR > cond=expr() < RBR> < SEMIC >
     {
          return new Node("dowhile").addChildren(stmts_node,cond);
     }
 }
 Node for_stmt() :
 {
-    Node for_0=null;
-    Node for_1=null;
-    Node for_2=null;
+    Node for_0=Node.NullNode;
+    Node for_1=Node.NullNode;
+    Node for_2=Node.NullNode;
     Node stmts_node;
 }
 {
     < FOR > < LBR > (for_0=def_vars()|for_0=assigns_stmt()|< SEMIC >)
-    [for_1=expr()] < SEMIC > [for_2=expr()] < RBR > stmts_node=block()
+    [for_1=expr()] < SEMIC > [for_2=expr()] < RBR >
+    (LOOKAHEAD(< LCBR >) stmts_node=block()|stmts_node=stmt())
     {
-        return new Node("for").addChildren_s(for_0,for_1,for_2,stmts_node);
+        return new Node("for").addChildren(for_0,for_1,for_2,stmts_node);
     }
 }
 Node switch_stmt() :
@@ -664,7 +674,8 @@ Node assign_op() :
 }
 {
     (
-        op=< ADD_EQUAL >
+        op=< ASSIGN >
+    |   op=< ADD_EQUAL >
     |   op=< MINUS_EQUAL >
     |   op=< MULT_EQUAL >
     |   op=< DIV_EQUAL >

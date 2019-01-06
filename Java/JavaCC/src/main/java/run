@@ -1,0 +1,1 @@
+java -cp /Users/xuanchuanbu/javacc-master/target/javacc.jar javacc temp.jjt

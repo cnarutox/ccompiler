@@ -48,3 +48,4 @@ int main(){
     }
     return 0;
 }
+a=a*(b+2);
