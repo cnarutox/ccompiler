@@ -40,5 +40,5 @@
 >> 实现了 FourTermStyle 类，静态添加四元式并注册顺序 ID，newTemp（） 可以生成临时变量，可以实现跳转语句的回填。
 ---
 - ### 特性&特点
-![文法](https://www.chenwx.com/wp-content/uploads/2019/01/文法.png)
-![We](https://www.chenwx.com/wp-content/uploads/2019/01/we.jpg)
+![https://www.chenwx.com/wp-content/uploads/2019/01/文法.png](https://www.chenwx.com/wp-content/uploads/2019/01/文法.png)
+![https://www.chenwx.com/wp-content/uploads/2019/01/we.jpg](https://www.chenwx.com/wp-content/uploads/2019/01/we.jpg)
