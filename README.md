@@ -1,4 +1,4 @@
-# CComplier
+# C Complier Based on MIPS
 ## 基于MIPS汇编的C语言编译器
 - ### Lex Yacc C++ 实现
 > ##### 进入项目根目录
